@@ -2,18 +2,28 @@ package by.shyshaliaksey.webproject.model.entity;
 
 public abstract class AbstractUser {
 
+	private int id;
 	private String email;
 	private String login;
 	private String imageUrl;
 	private Role role;
 	
-	protected AbstractUser(String email, String login, String imageUrl, Role role) {
+	protected AbstractUser(int id, String email, String login, String imageUrl, Role role) {
+		this.id = id;
 		this.email = email;
 		this.login = login;
 		this.imageUrl = imageUrl;
 		this.role = role;
 	}
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getEmail() {
 		return email;
 	}

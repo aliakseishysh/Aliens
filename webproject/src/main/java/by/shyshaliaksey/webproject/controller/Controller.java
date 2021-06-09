@@ -17,7 +17,7 @@ import java.util.List;
 
 import by.shyshaliaksey.webproject.controller.command.Command;
 import by.shyshaliaksey.webproject.controller.command.CommandFactory;
-import by.shyshaliaksey.webproject.model.dao.ConnectionPool;
+import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
 
 
 /**
@@ -40,12 +40,6 @@ public class Controller extends HttpServlet implements Servlet {
     @Override
 	public void init(ServletConfig config) throws ServletException {
     	super.init(config);
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -53,14 +47,13 @@ public class Controller extends HttpServlet implements Servlet {
 	 */
 	@Override
 	public void destroy() {
-		ConnectionPool.getInstance().releaseConnectionPool();
+		ConnectionPool.getInstance().destroyConnectionPool();
 	}
 
 	@Override
 	public void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		List<Command> commands = CommandFactory.defineCommand(request);
-		ServletContext servletContext = getServletContext();
-		commands.forEach(command -> command.execute(servletContext, request, response));
+		Command command = CommandFactory.defineCommand(request);
+		command.execute(request, response);
 	}
 
 }

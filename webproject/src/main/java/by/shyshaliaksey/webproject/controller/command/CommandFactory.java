@@ -1,63 +1,55 @@
 package by.shyshaliaksey.webproject.controller.command;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import by.shyshaliaksey.webproject.controller.command.redirect.RedirectAboutCommand;
+import by.shyshaliaksey.webproject.controller.command.redirect.RedirectAlienProfileCommand;
+import by.shyshaliaksey.webproject.controller.command.redirect.RedirectHomeCommand;
+import by.shyshaliaksey.webproject.controller.command.redirect.RedirectLoginCommand;
+import by.shyshaliaksey.webproject.controller.command.redirect.RedirectRegisterCommand;
+import by.shyshaliaksey.webproject.controller.command.redirect.RedirectUserProfileCommand;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 public class CommandFactory {
 
 	private static final String COMMAND_ATTRIBUTE = "command";
 	
-	public static List<Command> defineCommand(HttpServletRequest request) {
-		List<Command> commands = new ArrayList<>();
+	public static Command defineCommand(HttpServletRequest request) {
+		Command command;
 		String commandString = request.getParameter(COMMAND_ATTRIBUTE);
 		CommandValue commandValue = CommandValue.valueOf(commandString);
 		switch (commandValue) {
 		case REDIRECT_HOME:
-			commands.add(new GetAliensListCommand());
-			commands.add(new RedirectCommand(commandValue));
+			command = new RedirectHomeCommand();
 			break;
 		case REDIRECT_USER_PROFILE:
-			commands.add(new SetCurrentUser());
-			commands.add(new RedirectCommand(commandValue));
+			command = new RedirectUserProfileCommand();
 			break;
 		case REDIRECT_ALIEN_PROFILE:
-			commands.add(new SetCurrentAlien());
-			commands.add(new RedirectCommand(commandValue));
+			command = new RedirectAlienProfileCommand();
 			break;
 		case REDIRECT_LOGIN:
-			commands.add(new RedirectCommand(commandValue));
+			command = new RedirectLoginCommand();
 			break;
 		case REDIRECT_ABOUT:
-			commands.add(new RedirectCommand(commandValue));
+			command = new RedirectAboutCommand();
 			break;
 		case REDIRECT_REGISTER:
-			commands.add(new RedirectCommand(commandValue));
+			command = new RedirectRegisterCommand();
 			break;
 		case REGISTER_USER:
-			commands.add(new RegisterUserCommand());
-			/*
-			 * TODO variation if bad registration??
-			 */
-			commands.add(new RedirectCommand(CommandValue.REDIRECT_LOGIN));
+			command = new RegisterUserCommand();
 			break;
 		case LOGIN_USER:
-			commands.add(new LoginUserCommand());
-			commands.add(new SetCurrentUser());
-			commands.add(new GetAliensListCommand());
-			commands.add(new RedirectCommand(CommandValue.REDIRECT_HOME));
+			command = new LoginUserCommand();
 			break;
 		case LOGOUT_USER:
-			commands.add(new LogoutUserCommand());
-			commands.add(new GetAliensListCommand());
-			commands.add(new RedirectCommand(CommandValue.REDIRECT_HOME));
+			command = new LogoutUserCommand();
 			break;
 		default:
 			throw new IllegalArgumentException("Value not present in CommandValue: " + commandString);
 		}
-		return commands;
+		return command;
 	}
 	
 }
