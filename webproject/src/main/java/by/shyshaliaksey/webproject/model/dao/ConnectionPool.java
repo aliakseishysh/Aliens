@@ -43,12 +43,11 @@ public class ConnectionPool {
 		Connection connection1;
 		Connection connection2;
 		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
 			connection1 = DriverManager.getConnection(DATABASE_URL + DATABASE_TIMEZONE, DATABASE_USERNAME, DATABASE_PASSWORD);
 			connection2 = DriverManager.getConnection(DATABASE_URL + DATABASE_TIMEZONE, DATABASE_USERNAME, DATABASE_PASSWORD);
 			freeConnections.push(connection1);
 			freeConnections.push(connection2);
-		} catch (SQLException | ClassNotFoundException e) {
+		} catch (SQLException e) {
 			logger.log(Level.ERROR, "ConnectionPool creation error: {}", e.getMessage());
 		}
 	}
@@ -71,6 +70,28 @@ public class ConnectionPool {
 	public void releaseConnection(Connection connection) {
 		occupiedConnections.remove(connection);
 		freeConnections.push(connection);
+	}
+	
+	public void releaseConnectionPool() {
+		while (!freeConnections.isEmpty()) {
+			Connection connection = freeConnections.poll();
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		while (!occupiedConnections.isEmpty()) {
+			Connection connection = occupiedConnections.poll();
+			try {
+				connection.rollback();
+				connection.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	

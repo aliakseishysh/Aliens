@@ -5,12 +5,11 @@
                          https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
 	version="5.0">
 	<servlet>
-		<servlet-name>DatabaseTest</servlet-name>
-		<servlet-class>by.shyshaliaksey.webproject.view.DatabaseTest</servlet-class>
+		<servlet-name>Controller</servlet-name>
+		<servlet-class>by.shyshaliaksey.webproject.controller.Controller</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>DatabaseTest</servlet-name>
-		<url-pattern>/DatabaseTest</url-pattern>
+		<servlet-name>Controller</servlet-name>
+		<url-pattern>/controller</url-pattern>
 	</servlet-mapping>
-	
 </web-app>

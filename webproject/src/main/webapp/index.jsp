@@ -1,9 +1,4 @@
-<html>
-<head>
-<title>Aliens</title>
-</head>
-<body>
-	<h1>Data From Database</h1>
-	<jsp:include page="/DatabaseTest"/>
-</body>
-</html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<c:redirect url="/controller?command=REDIRECT_HOME"/>
+

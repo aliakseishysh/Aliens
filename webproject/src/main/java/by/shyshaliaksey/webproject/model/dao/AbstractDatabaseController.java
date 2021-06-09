@@ -5,9 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import by.shyshaliaksey.webproject.model.entity.AbstractUser;
+import by.shyshaliaksey.webproject.model.entity.Alien;
+import by.shyshaliaksey.webproject.model.entity.Role;
 
 
-public abstract class AbstractDatabaseController<T> {
+
+public abstract class AbstractDatabaseController {
 
 	private Connection connection;
 	private ConnectionPool connectionPool;
@@ -17,8 +21,12 @@ public abstract class AbstractDatabaseController<T> {
 		connection = connectionPool.getFreeConnection();
 	}
 	
-	public abstract List<T> getAll();
-	
+	public abstract List<Alien> getAllAliens();
+	public abstract int registerUser(String email, String login, String password, String imagePath, Role role);
+	public abstract boolean loginUser(String email, String password);
+	public abstract String getLoginByEmail(String email);
+	public abstract AbstractUser getUserInfoByLogin(String login);
+	public abstract Alien getAlienInfoById(int id);
 	
 	public void releaseConnection() {
 		connectionPool.releaseConnection(connection);
