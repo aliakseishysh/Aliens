@@ -23,18 +23,18 @@
 					src="<c:url value="${alien.getImageUrl()}"/>" alt="no image">
 				
 				<div class="media-body">
-					<h2 class="account-heading">${alien.getName()}</h2>
+					<h2 class="account-heading" id="alien-name" >${alien.getName()}</h2>
 					<p class="h4">${alien.getSmallDescription()}</p>
 				</div>
 				<c:choose>
 					<c:when test="${currentUser.getRole().getValue() == 'user'}">
+						
 						<div class="justify-content-end">
 			    			<div class="row">
-			        			<div class="col-md-2">
 			            			<div class="stars">
 			                		<form action="">
-			                			<label class="control-label col-sm-2" for="email">Rating:</label>
-										<div class="col-sm-13">
+			                			<label class="control-label" for="star">Rating:</label>
+										<div class="col-md-13">
 											<input class="star star-5" id="star-5" type="radio" name="star" value="5" /> 
 											<label class="star star-5" for="star-5"></label> 
 											<input class="star star-4" id="star-4" type="radio" name="star" value="4"/> 
@@ -48,7 +48,10 @@
 			    						</div>
 			                		</form>
 			           				</div>
-			        			</div>
+			    			</div>
+		    				<div class="row">
+		    					<label class="control-label" for="average-rating">Average Rating:&nbsp;</label>
+		    					<p class="" id="average-rating">"${averageRating}"</p>	
 			    			</div>
 						</div>	
 					</c:when>

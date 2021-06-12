@@ -30,6 +30,8 @@ public class AlienDaoImpl implements AlienDao {
 	
 	private static final String FIND_BY_ID = String.join(SPACE, FIND_ALL, "WHERE alien_id=?");
 
+	private static final String FIND_BY_NAME = String.join(SPACE, FIND_ALL, "WHERE _name=?");
+	
 	public static AlienDaoImpl getInstance() {
 		return instance;
 	}
@@ -79,8 +81,24 @@ public class AlienDaoImpl implements AlienDao {
 
 	@Override
 	public Optional<Alien> findByName(String alienName) throws DaoException {
-		// TODO Auto-generated method stub
-		return null;
+		Optional<Alien> alien = Optional.empty();
+		try (Connection connection = ConnectionPool.getInstance().getFreeConnection();
+				PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME)) {
+			statement.setString(1, alienName);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				int alienId = resultSet.getInt(1);
+				String name = resultSet.getString(2);
+				String descriptionSmall = resultSet.getString(3);
+				String descriptionBig = resultSet.getString(4);
+				String imagePath = resultSet.getString(5);
+				alien = Optional.of(new Alien(alienId, name, descriptionSmall, descriptionBig, imagePath));
+			}
+		} catch (SQLException e) {
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_BY_ID, e.getMessage());
+			throw new DaoException("Can not proceed request: " + FIND_BY_ID, e);
+		}
+		return alien;
 	}
 
 	@Override

@@ -46,6 +46,9 @@ public class CommandFactory {
 		case LOGOUT_USER:
 			command = new LogoutUserCommand();
 			break;
+		case UPDATE_RATING:
+			command = new UpdateRatingCommand();
+			break;
 		default:
 			throw new IllegalArgumentException("Value not present in CommandValue: " + commandString);
 		}

@@ -137,7 +137,7 @@ public class UserDaoImpl implements UserDao {
 			throws DaoException {
 		int rowsAdded = 0;
 		try (Connection connection = ConnectionPool.getInstance().getFreeConnection();
-				PreparedStatement statement = connection.prepareStatement(FIND_BY_EMAIL)) {
+				PreparedStatement statement = connection.prepareStatement(REGISTER)) {
 			statement.setString(1, email);
 			statement.setString(2, login);
 			statement.setString(3, passwordHash);
@@ -145,8 +145,8 @@ public class UserDaoImpl implements UserDao {
 			statement.setInt(5, role.ordinal() + 1);
 			rowsAdded = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_BY_EMAIL, e.getMessage());
-			throw new DaoException("Can not proceed request: " + FIND_BY_EMAIL, e);
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", REGISTER, e.getMessage());
+			throw new DaoException("Can not proceed request: " + REGISTER, e);
 		}
 		return rowsAdded == 1;
 	}
