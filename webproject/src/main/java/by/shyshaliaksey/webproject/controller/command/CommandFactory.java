@@ -1,23 +1,28 @@
 package by.shyshaliaksey.webproject.controller.command;
 
-import by.shyshaliaksey.webproject.controller.command.redirect.RedirectAboutCommand;
-import by.shyshaliaksey.webproject.controller.command.redirect.RedirectAlienProfileCommand;
-import by.shyshaliaksey.webproject.controller.command.redirect.RedirectHomeCommand;
-import by.shyshaliaksey.webproject.controller.command.redirect.RedirectLoginCommand;
-import by.shyshaliaksey.webproject.controller.command.redirect.RedirectRegisterCommand;
-import by.shyshaliaksey.webproject.controller.command.redirect.RedirectUserProfileCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.FindUserRateCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.LoginUserCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.LogoutUserCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.RegisterUserCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.UpdateRatingCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.UpdateUserImageCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.UpdateUserInfoCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.UpdateUserPasswordCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.redirect.RedirectAboutCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.redirect.RedirectAlienProfileCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.redirect.RedirectHomeCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.redirect.RedirectLoginCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.redirect.RedirectRegisterCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.redirect.RedirectUserProfileCommand;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class CommandFactory {
 
-	private static final String COMMAND_ATTRIBUTE = "command";
-
 	private CommandFactory() {
 	}
 
-	public static Command defineCommand(HttpServletRequest request) {
-		String commandString = request.getParameter(COMMAND_ATTRIBUTE);
-		CommandValue commandValue = CommandValue.valueOf(commandString);
+	public static Command defineCommand(String commandName) {
+		CommandValue commandValue = CommandValue.valueOf(commandName);
 		Command command = switch (commandValue) {
 		case REDIRECT_HOME -> new RedirectHomeCommand();
 		case REDIRECT_USER_PROFILE -> new RedirectUserProfileCommand();
@@ -33,7 +38,7 @@ public class CommandFactory {
 		case UPDATE_USER_IMAGE -> new UpdateUserImageCommand();
 		case UPDATE_USER_PASSWORD -> new UpdateUserPasswordCommand();
 		case FIND_USER_RATE -> new FindUserRateCommand();
-		default -> throw new IllegalArgumentException("Value is not present in CommandValue: " + commandString);
+		default -> throw new IllegalArgumentException("Value is not present in CommandValue: " + commandName);
 		};
 		return command;
 	}

@@ -1,5 +1,10 @@
 package by.shyshaliaksey.webproject.model.dao.impl;
 
+import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_ID;
+import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_NAME;
+import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_DESCRIPTION_SMALL;
+import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_DESCRIPTION_FULL;
+import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_IMAGE_URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,15 +26,10 @@ import by.shyshaliaksey.webproject.model.entity.Alien;
 public class AlienDaoImpl implements AlienDao {
 
 	private static final Logger logger = LogManager.getRootLogger();
-
 	private static final AlienDaoImpl instance = new AlienDaoImpl();
-	
 	private static final String SPACE = " ";
-
 	private static final String FIND_ALL = "SELECT * FROM aliens";
-	
 	private static final String FIND_BY_ID = String.join(SPACE, FIND_ALL, "WHERE alien_id=?");
-
 	private static final String FIND_BY_NAME = String.join(SPACE, FIND_ALL, "WHERE _name=?");
 	
 	public static AlienDaoImpl getInstance() {
@@ -39,15 +39,15 @@ public class AlienDaoImpl implements AlienDao {
 	@Override
 	public List<Alien> findAll() throws DaoException {
 		List<Alien> aliens = new ArrayList<>();
-		try (Connection connection = ConnectionPool.getInstance().getFreeConnection();
+		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				Statement statement = connection.createStatement()) {
 			ResultSet resultSet = statement.executeQuery(FIND_ALL);
 			while (resultSet.next()) {
-				int alienId = resultSet.getInt(1);
-				String name = resultSet.getString(2);
-				String descriptionSmall = resultSet.getString(3);
-				String descriptionBig = resultSet.getString(4);
-				String imagePath = resultSet.getString(5);
+				int alienId = resultSet.getInt(ALIEN_ID);
+				String name = resultSet.getString(ALIEN_NAME);
+				String descriptionSmall = resultSet.getString(ALIEN_DESCRIPTION_SMALL);
+				String descriptionBig = resultSet.getString(ALIEN_DESCRIPTION_FULL);
+				String imagePath = resultSet.getString(ALIEN_IMAGE_URL);
 				Alien alien = new Alien(alienId, name, descriptionSmall, descriptionBig, imagePath);
 				aliens.add(alien);
 			}
@@ -61,15 +61,15 @@ public class AlienDaoImpl implements AlienDao {
 	@Override
 	public Optional<Alien> findById(int alienId) throws DaoException {
 		Optional<Alien> alien = Optional.empty();
-		try (Connection connection = ConnectionPool.getInstance().getFreeConnection();
+		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(FIND_BY_ID)) {
 			statement.setInt(1, alienId);
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
-				String name = resultSet.getString(2);
-				String descriptionSmall = resultSet.getString(3);
-				String descriptionBig = resultSet.getString(4);
-				String imagePath = resultSet.getString(5);
+				String name = resultSet.getString(ALIEN_NAME);
+				String descriptionSmall = resultSet.getString(ALIEN_DESCRIPTION_SMALL);
+				String descriptionBig = resultSet.getString(ALIEN_DESCRIPTION_FULL);
+				String imagePath = resultSet.getString(ALIEN_IMAGE_URL);
 				alien = Optional.of(new Alien(alienId, name, descriptionSmall, descriptionBig, imagePath));
 			}
 		} catch (SQLException e) {
@@ -82,16 +82,16 @@ public class AlienDaoImpl implements AlienDao {
 	@Override
 	public Optional<Alien> findByName(String alienName) throws DaoException {
 		Optional<Alien> alien = Optional.empty();
-		try (Connection connection = ConnectionPool.getInstance().getFreeConnection();
+		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(FIND_BY_NAME)) {
 			statement.setString(1, alienName);
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
-				int alienId = resultSet.getInt(1);
-				String name = resultSet.getString(2);
-				String descriptionSmall = resultSet.getString(3);
-				String descriptionBig = resultSet.getString(4);
-				String imagePath = resultSet.getString(5);
+				int alienId = resultSet.getInt(ALIEN_ID);
+				String name = resultSet.getString(ALIEN_NAME);
+				String descriptionSmall = resultSet.getString(ALIEN_DESCRIPTION_SMALL);
+				String descriptionBig = resultSet.getString(ALIEN_DESCRIPTION_FULL);
+				String imagePath = resultSet.getString(ALIEN_IMAGE_URL);
 				alien = Optional.of(new Alien(alienId, name, descriptionSmall, descriptionBig, imagePath));
 			}
 		} catch (SQLException e) {

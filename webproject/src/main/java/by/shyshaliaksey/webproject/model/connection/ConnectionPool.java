@@ -1,6 +1,6 @@
 package by.shyshaliaksey.webproject.model.connection;
 
-
+import static by.shyshaliaksey.webproject.model.connection.DatabasePropertiesReader.CONNECTION_POOL_DEFAULT_SIZE;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -10,11 +10,9 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 
 public class ConnectionPool {
 
@@ -23,11 +21,11 @@ public class ConnectionPool {
 	private static final AtomicBoolean isConnectionPoolCreated = new AtomicBoolean(false);
 	private BlockingDeque<ConnectionProxy> freeConnections;
 	private BlockingDeque<ConnectionProxy> occupiedConnections;
-	
+
 	private ConnectionPool() {
 		occupiedConnections = new LinkedBlockingDeque<>();
 		freeConnections = new LinkedBlockingDeque<>();
-		for (int i = 0; i < ConnectionPoolPropertiesReader.CONNECTION_POOL_DEFAULT_SIZE; i++) {
+		for (int i = 0; i < CONNECTION_POOL_DEFAULT_SIZE; i++) {
 			try {
 				Connection connection = ConnectionFactory.createConnection();
 				ConnectionProxy connectionProxy = new ConnectionProxy(connection);
@@ -41,16 +39,15 @@ public class ConnectionPool {
 		if (freeConnections.isEmpty()) {
 			logger.log(Level.FATAL, "Can not create ConnectionPool: empty");
 			throw new RuntimeException("Can not create ConnectionPool:");
-		} else if (freeConnections.size() == ConnectionPoolPropertiesReader.CONNECTION_POOL_DEFAULT_SIZE) {
+		} else if (freeConnections.size() == CONNECTION_POOL_DEFAULT_SIZE) {
 			logger.log(Level.INFO, "ConnectionPool successfully created");
-		} else if (freeConnections.size() < ConnectionPoolPropertiesReader.CONNECTION_POOL_DEFAULT_SIZE) {
+		} else if (freeConnections.size() < CONNECTION_POOL_DEFAULT_SIZE) {
 			logger.log(Level.WARN, "ConnectionPool successfully created, default size: {}, current size: {}",
-					ConnectionPoolPropertiesReader.CONNECTION_POOL_DEFAULT_SIZE,
-					freeConnections.size());
+					CONNECTION_POOL_DEFAULT_SIZE, freeConnections.size());
 		}
-		
+
 	}
-	
+
 	public static ConnectionPool getInstance() {
 		while (instance == null) {
 			if (isConnectionPoolCreated.compareAndSet(false, true)) {
@@ -59,21 +56,23 @@ public class ConnectionPool {
 		}
 		return instance;
 	}
-	
-	// TODO what to do with interrupt? call getFreeConnection again from catch? use optional? or throw new InterruptedException?
-	public Connection getFreeConnection() {
-		Connection connection = null;
+
+	// TODO what to do with interrupt? call getFreeConnection again from catch? use
+	// optional? or throw new InterruptedException?
+	public ConnectionProxy getConnection() {
+		ConnectionProxy connection = null;
 		try {
 			connection = freeConnections.take();
-			occupiedConnections.put((ConnectionProxy) connection);
-			
+			occupiedConnections.put(connection);
+
 		} catch (InterruptedException e) {
+			// TODO need to create lock?
 			Thread.currentThread().interrupt();
 		}
 		return connection;
 	}
-	
-	public void releaseConnection(Connection connection) {
+
+	void releaseConnection(Connection connection) {
 		if (!(connection instanceof ConnectionProxy)) {
 			logger.log(Level.ERROR, "Unboxed connection is detected: {}", connection);
 			// TODO need to throw exception or just close
@@ -85,7 +84,8 @@ public class ConnectionPool {
 			Thread.currentThread().interrupt();
 		}
 	}
-	
+
+	// TODO close only freeConnections or do something with rollback
 	public void destroyConnectionPool() {
 		while (!freeConnections.isEmpty()) {
 			try {
@@ -111,18 +111,17 @@ public class ConnectionPool {
 		}
 		deregisterDrivers();
 	}
-	
+
 	private void deregisterDrivers() {
-        Enumeration<Driver> drivers = DriverManager.getDrivers();
-        while (drivers.hasMoreElements()) {
-            Driver driver = drivers.nextElement();
-            try {
-                DriverManager.deregisterDriver(driver);
-            } catch (SQLException e) {
-                logger.log(Level.ERROR, "Error occured while deregistering driver {}: {}", driver, e.getMessage());
-            }
-        }
-    }
-	
-	
+		Enumeration<Driver> drivers = DriverManager.getDrivers();
+		while (drivers.hasMoreElements()) {
+			Driver driver = drivers.nextElement();
+			try {
+				DriverManager.deregisterDriver(driver);
+			} catch (SQLException e) {
+				logger.log(Level.ERROR, "Error occured while deregistering driver {}: {}", driver, e.getMessage());
+			}
+		}
+	}
+
 }

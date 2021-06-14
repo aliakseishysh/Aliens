@@ -8,11 +8,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public abstract class Command {
-
-	public abstract void execute(HttpServletRequest request, HttpServletResponse response);
+public interface Command {
 	
-	public void redirect(HttpServletRequest request, HttpServletResponse response, String pathToForward) {
+	public abstract Router execute(HttpServletRequest request, HttpServletResponse response);
+	
+	public default void forward(HttpServletRequest request, HttpServletResponse response, String pathToForward) {
 		ServletContext servletContext = request.getServletContext();
 		RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher(pathToForward);
 		try {
