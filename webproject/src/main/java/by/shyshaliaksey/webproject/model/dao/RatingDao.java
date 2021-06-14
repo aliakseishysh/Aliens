@@ -8,5 +8,6 @@ public interface RatingDao {
 	double calculateAverageRating(int alienId) throws DaoException;
 	void updateRate(int alienId, int userId, int rateValue) throws DaoException;
 	boolean checkRateExistence(int alienId, int userId) throws DaoException;
+	int findUserRate(int alienId, int userId) throws DaoException;
 	
 }

@@ -4,14 +4,13 @@
 <html>
 <head>
 <title>Alien Profile</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
-<link href="<c:url value="/css/main.css"/>" rel="stylesheet">
-<link href="<c:url value="/css/raiting.css"/>" rel="stylesheet">
 <link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
-<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
-<script src="<c:url value='/js/raiting.js'/>"></script>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
+<link href="<c:url value="/css/raiting.css"/>" rel="stylesheet">
+<link href="<c:url value="/css/main.css"/>" rel="stylesheet">
+<script type="text/javascript" src="<c:url value='/js/raiting.js'/>"></script>
 </head>
 <body>
 	<main role="main" class="container">
@@ -28,10 +27,9 @@
 				</div>
 				<c:choose>
 					<c:when test="${currentUser.getRole().getValue() == 'user'}">
-						
 						<div class="justify-content-end">
 			    			<div class="row">
-			            			<div class="stars">
+			            			<div class="stars" id="ratingStars">
 			                		<form action="">
 			                			<label class="control-label" for="star">Rating:</label>
 										<div class="col-md-13">
@@ -75,7 +73,7 @@
 					</form>
 				</c:when>
 			</c:choose>
-			<p class="border-bottom mb-4 h3">User features</legend>
+			<p class="border-bottom mb-4 h3">User features</p>
 			<div class="media-body">
 				<p class="h4">${alien.getBigDescription()}</p>
 			</div>

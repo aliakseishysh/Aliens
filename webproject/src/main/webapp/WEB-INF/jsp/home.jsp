@@ -8,6 +8,7 @@
 <title>Home</title>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+
 <link href="<c:url value="/css/main.css"/>" rel="stylesheet">
 <body>
 <main role="main" class="container">

@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -12,6 +15,9 @@ import org.apache.logging.log4j.Logger;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
 import by.shyshaliaksey.webproject.model.dao.RatingDao;
+import by.shyshaliaksey.webproject.model.entity.AbstractUser;
+import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.UserFactory;
 
 public class RatingDaoImpl implements RatingDao{
 
@@ -21,6 +27,7 @@ public class RatingDaoImpl implements RatingDao{
 	private static final String UPDATE_RATE = "UPDATE ratings SET rate_value=? WHERE alien_id=? AND user_id=?;";
 	private static final String AVERAGE_RATING = "SELECT AVG(rate_value) AS averageRate FROM ratings WHERE alien_id=?";
 	private static final String CHECK_RATE_EXISTENCE = "SELECT COUNT(*) as rateCount FROM ratings WHERE alien_id=? AND user_id=?";
+	private static final String FIND_USER_RATE = "SELECT rate_value FROM ratings WHERE alien_id=? AND user_id=?";
 	
 	private RatingDaoImpl() {
 	}
@@ -90,6 +97,24 @@ public class RatingDaoImpl implements RatingDao{
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", UPDATE_RATE, e.getMessage());
 			throw new DaoException("Can not proceed request: " + ADD_RATE, e);
 		}
+	}
+	
+	@Override
+	public int findUserRate(int alienId, int userId) throws DaoException {
+		int userRate = -1;
+		try (Connection connection = ConnectionPool.getInstance().getFreeConnection();
+				PreparedStatement statement = connection.prepareStatement(FIND_USER_RATE)) {
+			statement.setInt(1, alienId);
+			statement.setInt(2, userId);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				userRate = resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_USER_RATE, e.getMessage());
+			throw new DaoException("Can not proceed request: " + FIND_USER_RATE, e);
+		}
+		return userRate;
 	}
 
 }
