@@ -18,7 +18,7 @@ class ConnectionFactory {
 			Class.forName(DATABASE_DRIVER);
 		} catch (ClassNotFoundException e) {
 			logger.log(Level.FATAL, "Can not register database driver {}: {}", DATABASE_DRIVER, e.getMessage());
-			throw new IllegalArgumentException("Can not register database driver " + DATABASE_DRIVER + ": ", e);
+			throw new ExceptionInInitializerError("Can not register database driver " + DATABASE_DRIVER);
 		}
 	}
 
