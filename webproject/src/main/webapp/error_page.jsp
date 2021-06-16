@@ -3,22 +3,19 @@
 	pageEncoding="ISO-8859-1"%>
 <html>
 <head>
-<title>Profile</title>
+<title>Login</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
 </head>
 <body>
 <main role="main" class="container">
 	<jsp:include page="${NAV_JSP}"/>
-	<c:set var="currentRole" scope="page" value="${currentUser.getRole()}"/>
-	<c:choose>
-		<c:when test="${currentRole == ROLE_ADMIN}">
-			<jsp:include page="${ADMIN_PROFILE_JSP}"/>
-		</c:when>
-		<c:when test="${currentRole == ROLE_USER}">
-			<jsp:include page="${USER_PROFILE_JSP}"/>
-		</c:when>
-	</c:choose>
+	<h3>Error Page</h3>
+	<div class="content-section">
+		<h4>Server error:</h4><br>
+		<c:out value="${sessionScope[sessionScope.ERROR_INFORMATION]}" />
+	</div>
 </main>
+	
 </body>
 </html>

@@ -1,4 +1,4 @@
-package by.shyshaliaksey.webproject.controller.command.impl.redirect;
+package by.shyshaliaksey.webproject.controller.command.impl.open;
 
 import java.util.Optional;
 
@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 
 import by.shyshaliaksey.webproject.controller.command.Command;
 import by.shyshaliaksey.webproject.controller.command.PagePath;
+import by.shyshaliaksey.webproject.controller.command.RequestAttribute;
+import by.shyshaliaksey.webproject.controller.command.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.DaoException;
@@ -22,13 +24,13 @@ import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class RedirectAlienProfileCommand implements Command {
+public class OpenAlienProfilePageCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
 	
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		int alienId = Integer.parseInt(request.getParameter("alien_id"));
+		int alienId = Integer.parseInt(request.getParameter(RequestParameter.ALIEN_ID.getValue()));
 		Router router;
 		try {
 			ServiceProvider serviceProvider = ServiceProvider.getInstance();
@@ -37,17 +39,17 @@ public class RedirectAlienProfileCommand implements Command {
 			Optional<Alien> alienOptional = alienService.findAlienById(alienId);
 			if (alienOptional.isPresent()) {
 				Alien alien = alienOptional.get();
-				request.setAttribute("alien", alien);
+				request.setAttribute(RequestAttribute.ALIEN.getValue(), alien);
 				double averageRating = ratingService.calculateAverageRate(alienId);
-				request.setAttribute("averageRating", averageRating);
-				router = new Router(PagePath.ALIEN_PROFILE_JSP, null, RouterType.FORWARD);
+				request.setAttribute(RequestAttribute.AVERAGE_RATING.getValue(), averageRating);
+				router = new Router(PagePath.ALIEN_PROFILE_JSP.getValue(), null, RouterType.FORWARD);
 			} else {
-				router = new Router(PagePath.ERROR_PAGE_JSP, null, RouterType.REDIRECT);
+				router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
 				logger.log(Level.INFO, "No alien with id: {}", alienId);
 			}
 			
 		} catch (ServiceException e) {
-			router = new Router(PagePath.ERROR_PAGE_JSP, null, RouterType.REDIRECT);
+			router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
 			logger.log(Level.ERROR, "Exception occured while alien searching with id {}: {}", alienId, e.getMessage());
 		}
 		return router;

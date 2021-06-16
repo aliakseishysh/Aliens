@@ -2,6 +2,7 @@ package by.shyshaliaksey.webproject.model.service;
 
 import by.shyshaliaksey.webproject.model.service.impl.AlienServiceImpl;
 import by.shyshaliaksey.webproject.model.service.impl.RatingServiceImpl;
+import by.shyshaliaksey.webproject.model.service.impl.SessionServiceImpl;
 import by.shyshaliaksey.webproject.model.service.impl.UserServiceImpl;
 
 public class ServiceProvider {
@@ -10,6 +11,7 @@ public class ServiceProvider {
 	private static final AlienService alienService = new AlienServiceImpl();
 	private static final RatingService ratingService = new RatingServiceImpl();
 	private static final UserService userService = new UserServiceImpl();
+	private static final SessionService sessionService = new SessionServiceImpl();
 	
 	private ServiceProvider() {
 	}
@@ -28,6 +30,10 @@ public class ServiceProvider {
 
 	public UserService getUserService() {
 		return userService;
+	}
+
+	public SessionService getSessionService() {
+		return sessionService;
 	}
 	
 }

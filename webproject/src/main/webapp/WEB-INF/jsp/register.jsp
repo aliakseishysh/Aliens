@@ -5,15 +5,15 @@
 <head>
 <title>Login</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
-<link href="<c:url value="/css/main.css"/>" rel="stylesheet">
+<link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
 </head>
 <body>
 <main role="main" class="container">
-	<%@include file="nav.jsp"%>
+	<jsp:include page="${NAV_JSP}"/>
 	<h3>Register Page</h3>
 	<div class="content-section">
 		<form method="POST"
-			action="<c:url value="/controller?command=REGISTER_USER"/>">
+			action="<c:url value="/${CONTROLLER}?${COMMAND}=${REGISTER_USER}"/>">
 			<fieldset class="form-group">
 				<legend class="border-bottom mb-4">Sign Up</legend>
 				<label class="control-label col-sm-2" for="email">Email:</label>
@@ -40,7 +40,7 @@
 		<div class="border-top pt-3">
 			<small class="text-muted"> 
 			Already Have An Account? 
-			<a class="ml-2" href="<c:url value="/controller?command=REDIRECT_LOGIN"/>">Sign In</a>
+			<a class="ml-2" href="<c:url value="/${CONTROLLER}?${COMMAND}=${OPEN_LOGIN_PAGE}"/>">Sign In</a>
 			</small>
 		</div>
 	</div>

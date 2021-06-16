@@ -1,4 +1,4 @@
-package by.shyshaliaksey.webproject.controller.command.impl.redirect;
+package by.shyshaliaksey.webproject.controller.command.impl.open;
 
 import java.util.List;
 
@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import by.shyshaliaksey.webproject.controller.command.Command;
 import by.shyshaliaksey.webproject.controller.command.PagePath;
+import by.shyshaliaksey.webproject.controller.command.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.DaoException;
@@ -20,7 +21,7 @@ import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class RedirectHomeCommand implements Command {
+public class OpenHomePageCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();	
 	
@@ -31,10 +32,10 @@ public class RedirectHomeCommand implements Command {
 		Router router;
 		try {
 			List<Alien> aliens = alienService.findAllAliens();
-			request.setAttribute("aliensList", aliens);
-			router = new Router(PagePath.HOME_JSP, null, RouterType.FORWARD);
+			request.setAttribute(RequestAttribute.ALIEN_LIST.getValue(), aliens);
+			router = new Router(PagePath.HOME_JSP.getValue(), null, RouterType.FORWARD);
 		} catch (ServiceException e) {
-			router = new Router(PagePath.ERROR_PAGE_JSP, null, RouterType.REDIRECT);
+			router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
 			logger.log(Level.ERROR, "Exception occured while redirecting to {}: {}",PagePath.HOME_JSP, e.getMessage());
 		}
 		return router;

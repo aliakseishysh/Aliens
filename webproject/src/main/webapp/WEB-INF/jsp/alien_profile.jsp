@@ -8,13 +8,13 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
 <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
-<link href="<c:url value="/css/raiting.css"/>" rel="stylesheet">
-<link href="<c:url value="/css/main.css"/>" rel="stylesheet">
-<script type="text/javascript" src="<c:url value='/js/raiting.js'/>"></script>
+<link href="<c:url value="${CSS_RAITING}"/>" rel="stylesheet">
+<link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
+<script type="text/javascript" src="<c:url value='${JS_RAITING}'/>"></script>
 </head>
 <body>
 	<main role="main" class="container">
-		<jsp:include page="nav.jsp"/>
+		<jsp:include page="${NAV_JSP}"/>
 		<h1>Alien Profile</h1>
 		<div class="content-section">
 			<div class="media">
@@ -33,28 +33,37 @@
 			                		<form action="">
 			                			<label class="control-label" for="star">Rating:</label>
 										<div class="col-md-13">
-											<input class="star star-5" id="star-5" type="radio" name="star" value="5" /> 
+											<input class="star star-5" id="star-5" type="radio" name="star" value="5" onclick="updateRating('${alien.getName()}', '${RATING_VALUE}', '${ALIEN_NAME}', '${CONTROLLER}', '${COMMAND}', '${UPDATE_RATING}', '5')"/> 
 											<label class="star star-5" for="star-5"></label> 
-											<input class="star star-4" id="star-4" type="radio" name="star" value="4"/> 
+											<input class="star star-4" id="star-4" type="radio" name="star" value="4" onclick="updateRating('${alien.getName()}', '${RATING_VALUE}', '${ALIEN_NAME}', '${CONTROLLER}', '${COMMAND}', '${UPDATE_RATING}', '4')"/> 
 											<label class="star star-4" for="star-4"></label> 
-											<input class="star star-3" id="star-3" type="radio" name="star" value="3"/> 
+											<input class="star star-3" id="star-3" type="radio" name="star" value="3" onclick="updateRating('${alien.getName()}', '${RATING_VALUE}', '${ALIEN_NAME}', '${CONTROLLER}', '${COMMAND}', '${UPDATE_RATING}', '3')"/> 
 											<label class="star star-3" for="star-3"></label> 
-											<input class="star star-2" id="star-2" type="radio" name="star" value="2"/> 
+											<input class="star star-2" id="star-2" type="radio" name="star" value="2" onclick="updateRating('${alien.getName()}', '${RATING_VALUE}', '${ALIEN_NAME}', '${CONTROLLER}', '${COMMAND}', '${UPDATE_RATING}', '2')"/> 
 											<label class="star star-2" for="star-2"></label> 
-											<input class="star star-1" id="star-1" type="radio" name="star" value="1"/> 
+											<input class="star star-1" id="star-1" type="radio" name="star" value="1" onclick="updateRating('${alien.getName()}', '${RATING_VALUE}', '${ALIEN_NAME}', '${CONTROLLER}', '${COMMAND}', '${UPDATE_RATING}', '1')"/> 
 											<label class="star star-1" for="star-1"></label>
 			    						</div>
 			                		</form>
+			                		<c:set var="alienName" scope="page" value="${alien.getName()}"/>
+			                		<script>
+										var alienName = "${pageScope.alienName}";
+										var ALIEN_NAME = "${sessionScope.ALIEN_NAME}";
+										var controller = "${sessionScope.CONTROLLER}";
+										var command = "${sessionScope.COMMAND}";
+										var findUserRate = "${sessionScope.FIND_USER_RATE}";
+										setRatingValue(alienName, ALIEN_NAME, controller, command, findUserRate);
+									</script>
 			           				</div>
 			    			</div>
 		    				<div class="row">
 		    					<label class="control-label" for="average-rating">Average Rating:&nbsp;</label>
 		    					<p class="" id="average-rating">"${averageRating}"</p>	
 			    			</div>
-						</div>	
+						</div>
+						
 					</c:when>
 				</c:choose>
-					
 			</div>
 			
 			<c:choose>

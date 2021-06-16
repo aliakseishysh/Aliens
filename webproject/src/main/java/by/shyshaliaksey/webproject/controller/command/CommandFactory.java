@@ -1,20 +1,19 @@
 package by.shyshaliaksey.webproject.controller.command;
 
-import by.shyshaliaksey.webproject.controller.command.impl.FindUserRateCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.LoginUserCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.LogoutUserCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.RegisterUserCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.UpdateRatingCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.UpdateUserImageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.UpdateUserInfoCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.UpdateUserPasswordCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.redirect.RedirectAboutCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.redirect.RedirectAlienProfileCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.redirect.RedirectHomeCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.redirect.RedirectLoginCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.redirect.RedirectRegisterCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.redirect.RedirectUserProfileCommand;
-import jakarta.servlet.http.HttpServletRequest;
+import by.shyshaliaksey.webproject.controller.command.impl.open.OpenAboutPageCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.open.OpenAlienProfilePageCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.open.OpenHomePageCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.open.OpenLoginPageCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.open.OpenRegisterPageCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.open.OpenUserProfilePageCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.rating.FindUserRateCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.rating.UpdateRatingCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.user.LoginUserCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.user.LogoutUserCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.user.RegisterUserCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserImageCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserInfoCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserPasswordCommand;
 
 public class CommandFactory {
 
@@ -22,14 +21,14 @@ public class CommandFactory {
 	}
 
 	public static Command defineCommand(String commandName) {
-		CommandValue commandValue = CommandValue.valueOf(commandName);
+		CommandValue commandValue = CommandValue.fromString(commandName);
 		Command command = switch (commandValue) {
-		case REDIRECT_HOME -> new RedirectHomeCommand();
-		case REDIRECT_USER_PROFILE -> new RedirectUserProfileCommand();
-		case REDIRECT_ALIEN_PROFILE -> new RedirectAlienProfileCommand();
-		case REDIRECT_LOGIN -> new RedirectLoginCommand();
-		case REDIRECT_ABOUT -> new RedirectAboutCommand();
-		case REDIRECT_REGISTER -> new RedirectRegisterCommand();
+		case OPEN_HOME_PAGE -> new OpenHomePageCommand();
+		case OPEN_USER_PROFILE_PAGE -> new OpenUserProfilePageCommand();
+		case OPEN_ALIEN_PROFILE_PAGE -> new OpenAlienProfilePageCommand();
+		case OPEN_LOGIN_PAGE -> new OpenLoginPageCommand();
+		case OPEN_ABOUT_PAGE -> new OpenAboutPageCommand();
+		case OPEN_REGISTER_PAGE -> new OpenRegisterPageCommand();
 		case REGISTER_USER -> new RegisterUserCommand();
 		case LOGIN_USER -> new LoginUserCommand();
 		case LOGOUT_USER -> new LogoutUserCommand();

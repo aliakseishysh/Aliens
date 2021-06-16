@@ -14,7 +14,7 @@
 		</div>
 	</div>
 	<form method="POST" 
-	action="<c:url value="/controller?command=UPDATE_USER_INFO"/>">
+	action="<c:url value="/controller?command=${UPDATE_USER_INFO}"/>">
 		<fieldset class="form-group">
 			<legend class="border-bottom mb-4">User Info Update</legend>
 			<label class="control-label col-sm-2" for="email">Email:</label>
@@ -23,7 +23,7 @@
    			</div>
    			<label class="control-label col-sm-2" for="login">Login:</label>
 			<div class="col-sm-10">
-   				<input type="text" class="form-control" id="login" name="eloginloginmail" placeholder="Enter login">
+   				<input type="text" class="form-control" id="login" name="login" placeholder="Enter login">
    			</div>
 		</fieldset>
 		<div class="form-group">
@@ -31,7 +31,7 @@
 		</div>
 	</form>
 	<form method="POST" 
-	action="<c:url value="/controller?command=UPDATE_USER_IMAGE"/>"
+	action="<c:url value="/controller?command=${UPDATE_USER_IMAGE}"/>"
 	enctype="multipart/form-data">
 		<fieldset class="form-group">
 			<legend class="border-bottom mb-4">Profile Image Update</legend>
@@ -45,7 +45,7 @@
 		</div>
 	</form>
 	<form method="POST" 
-	action="<c:url value="/controller?command=UPDATE_USER_PASSWORD"/>">
+	action="<c:url value="/controller?command=${UPDATE_USER_PASSWORD}"/>">
 		<fieldset class="form-group">
 			<legend class="border-bottom mb-4">Profile Password Update</legend>
    			<label class="control-label col-sm-2" for="password">Password:</label>

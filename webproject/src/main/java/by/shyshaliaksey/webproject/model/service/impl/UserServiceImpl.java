@@ -1,6 +1,6 @@
 package by.shyshaliaksey.webproject.model.service.impl;
 
-import static by.shyshaliaksey.webproject.controller.command.FilePath.DEFAULT_IMAGE;
+import static by.shyshaliaksey.webproject.controller.command.FilePath.IMAGE_DEFAULT;
 
 import java.util.Optional;
 
@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 			throws ServiceException {
 		boolean result;
 		try {
-			result = userDao.registerUser(email, login, password, DEFAULT_IMAGE, Role.USER);
+			result = userDao.registerUser(email, login, password, IMAGE_DEFAULT.getValue(), Role.USER);
 		} catch (DaoException e) {
 			throw new ServiceException("Error occured when finding user register: " + e.getMessage(), e);
 		}
