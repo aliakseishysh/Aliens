@@ -86,7 +86,7 @@ public class Controller extends HttpServlet implements Servlet {
 				break;
 			default:
 				logger.log(Level.ERROR, "Invalid RouterType value: {}", commandName);
-				response.sendRedirect(ERROR_PAGE_JSP.getValue());
+				response.sendRedirect(request.getContextPath() + ERROR_PAGE_JSP.getValue());
 			}
 		} catch (Exception e) {
 			logger.log(Level.ERROR, "Server error occured: {}", commandName);
