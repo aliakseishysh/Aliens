@@ -39,7 +39,9 @@ public class UserDaoImpl implements UserDao {
 	private static final String FIND_BY_EMAIL = String.join(SPACE, FIND_ALL, "WHERE users.email=?");
 	private static final String LOGIN_AND_PASSWORD_CHECK = "SELECT count(*) as usersCount FROM users WHERE email=? AND password_hash=?";
 	private static final String REGISTER = "INSERT INTO users (email, login_name, password_hash, image_url, role_id) VALUES (?, ?, ?, ?, ?)";
-
+	private static final String UPDATE_EMAIL = "UPDATE users SET email = ? WHERE user_id = ?";
+	private static final String UPDATE_LOGIN = "UPDATE users SET login_name = ? WHERE user_id = ?";
+	
 	public static UserDaoImpl getInstance() {
 		return instance;
 	}
@@ -165,6 +167,36 @@ public class UserDaoImpl implements UserDao {
 			throw new DaoException("Can not proceed request: " + LOGIN_AND_PASSWORD_CHECK, e);
 		}
 		return usersCount == 1;
+	}
+
+	@Override
+	public boolean updateUserEmail(String email, int userId) throws DaoException {
+		int result = 0;
+		try (Connection connection = ConnectionPool.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement(UPDATE_EMAIL)) {
+			statement.setString(1, email);
+			statement.setInt(2, userId);
+			result = statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", UPDATE_EMAIL, e.getMessage());
+			throw new DaoException("Can not proceed request: " + UPDATE_EMAIL, e);
+		}
+		return result == 1;
+	}
+
+	@Override
+	public boolean updateUserLogin(String login, int userId) throws DaoException {
+		int result = 0;
+		try (Connection connection = ConnectionPool.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement(UPDATE_LOGIN)) {
+			statement.setString(1, login);
+			statement.setInt(2, userId);
+			result = statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", UPDATE_LOGIN, e.getMessage());
+			throw new DaoException("Can not proceed request: " + UPDATE_LOGIN, e);
+		}
+		return result == 1;
 	}
 
 }

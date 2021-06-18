@@ -15,14 +15,6 @@ function setRatingValue(alienName, ALIEN_NAME, CONTROLLER, COMMAND, FIND_USER_RA
             // TODO show error
         }
     });
-    // var star1 = ratingInput[4];
-    // var star2 = ratingInput[3];
-    // var star3 = ratingInput[2];
-    // var star4 = ratingInput[1];
-    // var star5 = ratingInput[0];
-    // $.ajax({
-
-    // })
 };
 
 function updateRating(alienName, RATING_VALUE, ALIEN_NAME, CONTROLLER, COMMAND, UPDATE_RATING, ratingValue) {

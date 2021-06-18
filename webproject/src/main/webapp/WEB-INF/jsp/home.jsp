@@ -1,6 +1,11 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+    pageEncoding="ISO-8859-1"
+    import="by.shyshaliaksey.webproject.controller.command.PagePath" %>
+<c:set var="SESSION_VARIABLES" scope="page" value="${PagePath.SESSION_VARIABLES_JSP.getValue()}"/>
+<c:if test="${CONTROLLER == null}">
+	<jsp:include page="${SESSION_VARIABLES}"/>
+</c:if>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +24,7 @@
 			
 			<c:forEach var="entry" items="${aliensList}">
 				<c:set var="alien" value="${entry}" scope="request"/>
-				<jsp:include page="post.jsp"/>
+				<jsp:include page="${POST_JSP}"/>
 			</c:forEach>
 		</div>
 		<div class="col-md-4">

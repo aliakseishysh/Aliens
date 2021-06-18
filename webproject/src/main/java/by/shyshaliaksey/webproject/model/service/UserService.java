@@ -13,5 +13,7 @@ public interface UserService {
 	Optional<User> findUserByEmail(String email) throws ServiceException;
 	boolean registerUser(String email, String login, String passwordHash, String imagePath, Role role) throws ServiceException;
 	Optional<User> findByLogin(String login) throws ServiceException;
+	boolean changeEmail(String email, String newEmail, int userId) throws ServiceException;
+	boolean changeLogin(String login, String newLogin, int userId) throws ServiceException;
 	
 }

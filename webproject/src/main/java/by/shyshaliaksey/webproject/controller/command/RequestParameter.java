@@ -7,7 +7,10 @@ public enum RequestParameter {
 	ALIEN_NAME("alienName"),
 	RATING_VALUE("ratingValue"),
 	EMAIL("email"),
+	NEW_EMAIL("new_email"),
 	LOGIN("login"),
+	NEW_LOGIN("new_login"),
+	USER_ID("user-id"),
 	PASSWORD("password"),
 	PASSWORD_CONFIRM("password_confirm");
 

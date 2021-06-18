@@ -1,5 +1,6 @@
 package by.shyshaliaksey.webproject.controller.command;
 
+
 public class Router {
 
 	public enum RouterType {

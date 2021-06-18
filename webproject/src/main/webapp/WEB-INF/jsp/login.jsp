@@ -1,6 +1,11 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+    pageEncoding="ISO-8859-1"
+    import="by.shyshaliaksey.webproject.controller.command.PagePath" %>
+<c:set var="SESSION_VARIABLES" scope="page" value="${PagePath.SESSION_VARIABLES_JSP.getValue()}"/>
+<c:if test="${CONTROLLER == null}">
+	<jsp:include page="${SESSION_VARIABLES}"/>
+</c:if>
 <html>
 <head>
 <title>Login</title>
@@ -17,13 +22,13 @@
 			action="<c:url value="/${CONTROLLER}?${COMMAND}=${LOGIN_USER}"/>">
 			<fieldset class="form-group">
 				<legend class="border-bottom mb-4">Log In</legend>
-				<label class="control-label col-sm-2" for="email">Email:</label>
+				<label class="control-label col-sm-2" for="${EMAIL}">Email:</label>
 				<div class="col-sm-10">
-      				<input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+      				<input type="email" class="form-control" id="${EMAIL}" name="${EMAIL}" placeholder="Enter email">
     			</div>
-    			<label class="control-label col-sm-2" for="password">Password:</label>
+    			<label class="control-label col-sm-2" for="${PASSWORD}">Password:</label>
     			<div class="col-sm-10">
-      				<input type="password" class="form-control" id="password" name="password" placeholder="Enter password">
+      				<input type="password" class="form-control" id="${PASSWORD}" name="${PASSWORD}" placeholder="Enter password">
     			</div>
 			</fieldset>
 			<div class="form-group">

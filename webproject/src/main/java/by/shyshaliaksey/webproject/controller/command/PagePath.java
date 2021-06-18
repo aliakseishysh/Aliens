@@ -13,7 +13,12 @@ public enum PagePath {
 	USER_PROFILE_JSP("/WEB-INF/jsp/user_profile.jsp"),
 	ADMIN_PROFILE_JSP("/WEB-INF/jsp/admin_profile.jsp"),
 	ALIEN_PROFILE_JSP("/WEB-INF/jsp/alien_profile.jsp"),
-	ERROR_PAGE_JSP("/error_page.jsp");
+	SESSION_VARIABLES_JSP("/WEB-INF/jsp/session_variables.jsp"),
+	ERROR_PAGE_JSP("/error_page.jsp"),
+	UPDATE_EMAIL_FORM_JSP("/WEB-INF/jsp/forms/email_update.jsp"),
+	UPDATE_LOGIN_FORM_JSP("/WEB-INF/jsp/forms/login_update.jsp"),
+	UPDATE_IMAGE_FORM_JSP("/WEB-INF/jsp/forms/image_update.jsp"),
+	UPDATE_PASSWORD_FORM_JSP("/WEB-INF/jsp/forms/password_update.jsp");
 	
 	private String value;
 	

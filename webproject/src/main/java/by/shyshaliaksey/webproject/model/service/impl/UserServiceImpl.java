@@ -60,6 +60,34 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	@Override
+	public boolean changeEmail(String email, String newEmail, int userId) throws ServiceException {
+		boolean result = false;
+		try {
+			Optional<User> user = userDao.findByEmail(email);
+			if (user.isPresent() && user.get().getId() == userId) {
+				result = userDao.updateUserEmail(newEmail, userId);
+			}
+			return result;
+		} catch (DaoException e) {
+			throw new ServiceException("Error occured when finding user by email " + email + " :"+ e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public boolean changeLogin(String login, String newLogin, int userId) throws ServiceException {
+		boolean result = false;
+		try {
+			Optional<User> user = userDao.findByLogin(login);
+			if (user.isPresent()) {
+				result = userDao.updateUserLogin(newLogin, userId);
+			}
+			return result;
+		} catch (DaoException e) {
+			throw new ServiceException("Error occured when finding user by login " + login + " :"+ e.getMessage(), e);
+		}
+	}
+
 	
 
 }

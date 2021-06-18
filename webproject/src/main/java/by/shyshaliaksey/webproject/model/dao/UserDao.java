@@ -15,5 +15,7 @@ public interface UserDao {
 	Optional<User> findByEmail(String userEmail) throws DaoException;
 	boolean registerUser(String email, String login, String passwordHash, String imagePath, Role role) throws DaoException;
 	boolean loginUser(String email, String passwordHash) throws DaoException;
+	boolean updateUserEmail(String email, int userId) throws DaoException;
+	boolean updateUserLogin(String login, int userId) throws DaoException;
 	
 }
