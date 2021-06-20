@@ -27,7 +27,7 @@ public class LogoutUserCommand implements Command {
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
 		if (session != null) {
-			session.invalidate();
+			session.setAttribute(RequestAttribute.CURRENT_USER.getValue(), null);
 		}
 		List<Alien> aliens;
 		ServiceProvider serviceProvider = ServiceProvider.getInstance();
@@ -36,7 +36,7 @@ public class LogoutUserCommand implements Command {
 		try {
 			aliens = alienService.findAllAliens();
 			request.setAttribute(RequestAttribute.ALIEN_LIST.getValue(), aliens);
-			router = new Router(PagePath.INDEX_JSP.getValue(), null, RouterType.FORWARD);
+			router = new Router(PagePath.HOME_JSP.getValue(), null, RouterType.FORWARD);
 		} catch (ServiceException e) {
 			logger.log(Level.ERROR, "Exception occured while logout: {}", e.getMessage());
 			router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);

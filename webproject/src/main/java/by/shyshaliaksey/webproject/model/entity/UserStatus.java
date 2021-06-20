@@ -2,14 +2,14 @@ package by.shyshaliaksey.webproject.model.entity;
 
 import by.shyshaliaksey.webproject.controller.command.EnumValue;
 
-public enum Role implements EnumValue {
+public enum UserStatus implements EnumValue {
 	
-	ADMIN("ADMIN"),
-	USER("USER");
+	NORMAL("NORMAL"),
+	BANNED("BANNED");
 
 	private String value;
 	
-	private Role(String value) {
+	private UserStatus(String value) {
 		this.value = value;
 	}
 	

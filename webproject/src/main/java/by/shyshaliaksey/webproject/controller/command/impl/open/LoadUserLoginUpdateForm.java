@@ -12,7 +12,7 @@ public class LoadUserLoginUpdateForm  implements Command  {
 
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		Router router = new Router(PagePath.UPDATE_EMAIL_FORM_JSP.getValue(), null, RouterType.AJAX_RESPONSE);
+		Router router = new Router(PagePath.UPDATE_LOGIN_FORM_JSP.getValue(), null, RouterType.AJAX_RESPONSE);
 		return router;
 	}
 	

@@ -4,7 +4,6 @@ public class ColumnName {
 	
 	// table names
 	public static final String ALIENS = "aliens";
-	public static final String ROLES = "roles";
 	public static final String USERS = "users";
 	public static final String RATINGS = "ratings";
 	
@@ -15,17 +14,18 @@ public class ColumnName {
 	public static final String ALIEN_DESCRIPTION_FULL = "description_full";
 	public static final String ALIEN_IMAGE_URL = "image_url";
 	
-	// table: `roles`
-	public static final String ROLE_ID = "role_id";
-	public static final String ROLE_NAME = "_name";
-	
+//	// table: `roles`
+//	public static final String ROLE_ID = "role_id";
+//	public static final String ROLE_NAME = "_name";
+//	
 	// table: `users`
 	public static final String USER_ID = "user_id";
 	public static final String USER_EMAIL = "email";
 	public static final String USER_LOGIN_NAME = "login_name";
 	public static final String USER_PASSWORD_HASH = "password_hash";
 	public static final String USER_IMAGE_URL = "image_url";
-	public static final String USER_ROLE_ID = "role_id";
+	public static final String USER_ROLE_TYPE = "role_type";
+	public static final String USER_BANNED_TO_DATETIME = "banned_to_datetime";
 	
 	// table: `ratings`
 	public static final String RATE_ID = "rate_id";

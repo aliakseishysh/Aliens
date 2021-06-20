@@ -33,7 +33,7 @@ public class OpenUserProfilePageCommand implements Command {
 			if (currentUser.isPresent()) {
 				request.getSession().setAttribute(RequestAttribute.CURRENT_USER.getValue(), currentUser.get());
 				// request.getSession().setAttribute(RequestAttribute.LOGIN_NAME.getValue(), currentUser.get().getLogin());
-				router = new Router(PagePath.PROFILE_JSP.getValue(), null, RouterType.FORWARD);
+				router = new Router(PagePath.PROFILE_JSP.getValue(), null, RouterType.REDIRECT);
 			} else {
 				router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
 				logger.log(Level.INFO, "No user with such user login: {}", user.getLogin());

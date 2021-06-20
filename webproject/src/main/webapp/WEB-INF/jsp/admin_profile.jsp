@@ -1,11 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"
-    import="by.shyshaliaksey.webproject.controller.command.PagePath" %>
-<c:set var="SESSION_VARIABLES" scope="page" value="${PagePath.SESSION_VARIABLES_JSP.getValue()}"/>
-<c:if test="${CONTROLLER == null}">
-	<jsp:include page="${SESSION_VARIABLES}"/>
-</c:if>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
+<script type="text/javascript" src="<c:url value='${JS_USER_PROFILE}'/>"></script>
+<script type="text/javascript" src="<c:url value='${JS_ADMIN_PROFILE}'/>"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
 </head>
@@ -19,17 +17,11 @@
 			<p class="text-secondary">${ currentUser.getEmail()}</p>
 		</div>
 	</div>
-	<form method="POST" action="" enctype="multipart/form-data">
-		<fieldset class="form-group">
-			<legend class="border-bottom mb-4">Bans</legend>
-			<label class="control-label col-sm-2" for="email">Email:</label>
-			<div class="col-sm-10">
-   				<input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
-   			</div>
-		</fieldset>
-		<div class="form-group">
-			<button class="btn btn-outline-info" type="submit">Block</button>
-			<button class="btn btn-outline-info" type="submit">Unblock</button>
-		</div>
-	</form>
+	<jsp:include page="${BAN_UNBAN_USER_FORM_JSP}"/>
+	<jsp:include page="${UPDATE_EMAIL_FORM_JSP}"/>
+	<jsp:include page="${UPDATE_LOGIN_FORM_JSP}"/>
+	<jsp:include page="${UPDATE_IMAGE_FORM_JSP}"/>
+	<jsp:include page="${UPDATE_PASSWORD_FORM_JSP}"/>
+	
+	
 </div>

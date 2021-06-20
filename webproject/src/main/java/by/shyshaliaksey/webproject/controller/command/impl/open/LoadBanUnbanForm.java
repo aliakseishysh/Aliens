@@ -7,12 +7,12 @@ import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class LoadUserPasswordUpdateForm  implements Command  {
+public class LoadBanUnbanForm  implements Command  {
 
 
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		Router router = new Router(PagePath.UPDATE_PASSWORD_FORM_JSP.getValue(), null, RouterType.AJAX_RESPONSE);
+		Router router = new Router(PagePath.BAN_UNBAN_USER_FORM_JSP.getValue(), null, RouterType.AJAX_RESPONSE);
 		return router;
 	}
 	

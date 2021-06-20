@@ -1,6 +1,10 @@
 package by.shyshaliaksey.webproject.controller.command;
 
+import by.shyshaliaksey.webproject.controller.command.impl.admin.BanUserCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.admin.UnbanUserCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.open.LoadBanUnbanForm;
 import by.shyshaliaksey.webproject.controller.command.impl.open.LoadUserEmailUpdateForm;
+import by.shyshaliaksey.webproject.controller.command.impl.open.LoadUserImage;
 import by.shyshaliaksey.webproject.controller.command.impl.open.LoadUserImageUpdateForm;
 import by.shyshaliaksey.webproject.controller.command.impl.open.LoadUserLoginUpdateForm;
 import by.shyshaliaksey.webproject.controller.command.impl.open.LoadUserPasswordUpdateForm;
@@ -47,6 +51,10 @@ public class CommandFactory {
 		case LOAD_LOGIN_UPDATE_FORM -> new LoadUserLoginUpdateForm();
 		case LOAD_IMAGE_UPDATE_FORM -> new LoadUserImageUpdateForm();
 		case LOAD_PASSWORD_UPDATE_FORM -> new LoadUserPasswordUpdateForm();
+		case LOAD_USER_IMAGE -> new LoadUserImage();
+		case LOAD_BAN_UNBAN_FORM -> new LoadBanUnbanForm();
+		case BAN_USER -> new BanUserCommand();
+		case UNBAN_USER -> new UnbanUserCommand();
 		default -> throw new IllegalArgumentException("Value is not present in CommandValue: " + commandName);
 		};
 		return command;

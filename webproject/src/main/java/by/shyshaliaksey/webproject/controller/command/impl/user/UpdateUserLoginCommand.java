@@ -35,15 +35,12 @@ public class UpdateUserLoginCommand implements Command {
 		UserService userService = serviceProvider.getUserService();
 		Router router;
 		try {
-			Boolean emailResult = userService.changeLogin(login, newLogin, userId);
+			Boolean loginResult = userService.changeLogin(login, newLogin, userId);
 			Optional<User> user = userService.findByLogin(newLogin);
-			if (user.isPresent()) {
+			if (loginResult && user.isPresent()) {
 				request.getSession().setAttribute(RequestAttribute.CURRENT_USER.getValue(), user.get());
-				//request.getSession().setAttribute(RequestAttribute.LOGIN_NAME.getValue(), newLogin);
-				router = new Router(PagePath.PROFILE_JSP.getValue(), null, RouterType.FORWARD);
-			} else {
-				router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
 			}
+			router = new Router(null, loginResult.toString(), RouterType.AJAX_RESPONSE);
 		} catch (ServiceException e) {
 			logger.log(Level.ERROR, "Exception occured while email updating: {}", e.getMessage());
 			router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);

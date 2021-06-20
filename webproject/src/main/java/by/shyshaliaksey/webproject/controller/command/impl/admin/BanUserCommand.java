@@ -1,4 +1,5 @@
-package by.shyshaliaksey.webproject.controller.command.impl.user;
+package by.shyshaliaksey.webproject.controller.command.impl.admin;
+
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -10,31 +11,30 @@ import by.shyshaliaksey.webproject.controller.command.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.ServiceException;
+import by.shyshaliaksey.webproject.model.service.AdminService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
-import by.shyshaliaksey.webproject.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class UpdateUserPasswordCommand implements Command {
+public class BanUserCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
 	
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		String password = request.getParameter(RequestParameter.PASSWORD.getValue());
-		String passwordConfirm = request.getParameter(RequestParameter.PASSWORD_CONFIRM.getValue());
-		int userId = Integer.parseInt(request.getParameter(RequestParameter.USER_ID.getValue()));
-		ServiceProvider serviceProvider = ServiceProvider.getInstance();
-		UserService userService = serviceProvider.getUserService();
 		Router router;
 		try {
-			Boolean passwordResult = userService.changePassword(password, passwordConfirm, userId);
-			router = new Router(null, passwordResult.toString(), RouterType.AJAX_RESPONSE);
+			String userLogin = request.getParameter(RequestParameter.LOGIN.getValue());
+			int daysToBan = Integer.parseInt(request.getParameter(RequestParameter.DAYS_TO_BAN.getValue()));
+			ServiceProvider serviceProvider = ServiceProvider.getInstance();
+			AdminService adminService = serviceProvider.getAdminService();
+			boolean result = adminService.banUser(userLogin, daysToBan);
+			router = new Router(null, String.valueOf(result), RouterType.AJAX_RESPONSE);
 		} catch (ServiceException e) {
-			logger.log(Level.ERROR, "Exception occured while email updating: {}", e.getMessage());
+			logger.log(Level.ERROR, "Exception occured while user banning: {} {} {}", e.getMessage(), e.getStackTrace(), e);
 			router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
 		}
-		return router;
+		return router;	
 	}
 
 }

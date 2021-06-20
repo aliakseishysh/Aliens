@@ -8,4 +8,15 @@
 		<error-code>404</error-code>
 		<location>/WEB-INF/error_pages/error_page.jsp</location>
 	</error-page>
+	<welcome-file-list>
+		<welcome-file>indexJspController</welcome-file>
+	</welcome-file-list>
+	<context-param>
+		<param-name>web-app-root-folder</param-name>
+		<param-value>C:/Data/Java/Workspace/WebProject/webproject/src/main/webapp</param-value>
+	</context-param>
+	<context-param>
+		<param-name>web-site-name</param-name>
+		<param-value>localhost:8080</param-value>
+	</context-param>
 </web-app>

@@ -1,6 +1,6 @@
 package by.shyshaliaksey.webproject.controller.command;
 
-public enum RequestParameter {
+public enum RequestParameter implements EnumValue  {
 
 	COMMAND("command"),
 	ALIEN_ID("alien-id"),
@@ -12,7 +12,10 @@ public enum RequestParameter {
 	NEW_LOGIN("new_login"),
 	USER_ID("user-id"),
 	PASSWORD("password"),
-	PASSWORD_CONFIRM("password_confirm");
+	PASSWORD_CONFIRM("password_confirm"),
+	IMAGE("image"),
+	NEW_IMAGE("new_image"),
+	DAYS_TO_BAN("days_to_ban");
 
 	private String value;
 	
@@ -20,6 +23,7 @@ public enum RequestParameter {
 		this.value = value;
 	}
 	
+	@Override
 	public String getValue() {
 		return value;
 	}

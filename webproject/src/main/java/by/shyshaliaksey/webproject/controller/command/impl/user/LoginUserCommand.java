@@ -40,8 +40,10 @@ public class LoginUserCommand implements Command {
 				Optional<User> userOptional = userService.findUserByEmail(email);
 				if (userOptional.isPresent()) {
 					User user = userOptional.get();
-					// request.getSession(true).setAttribute(RequestAttribute.LOGIN_NAME.getValue(), user.getLogin());
 					request.getSession().setAttribute(RequestAttribute.CURRENT_USER.getValue(), user);
+					request.getSession(true).setAttribute(RequestAttribute.LOGIN_NAME.getValue(), user.getLogin());
+					request.getSession().setAttribute(RequestAttribute.CURRENT_USER_ROLE.getValue(), user.getRole().getValue());
+					
 					List<Alien> aliens = alienService.findAllAliens();
 					request.getSession().setAttribute(RequestAttribute.ALIEN_LIST.getValue(), aliens);
 					router = new Router(PagePath.HOME_JSP.getValue(), null, RouterType.FORWARD);

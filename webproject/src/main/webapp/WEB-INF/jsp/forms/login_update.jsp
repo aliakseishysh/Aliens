@@ -19,8 +19,8 @@
 						`${NEW_LOGIN}`,
 						`${USER_ID}`,
 						`${LOAD_LOGIN_UPDATE_FORM}`,
-						`${sessionScope[CURRENT_USER].getId()}`,
-						`${sessionScope[CURRENT_USER].getLogin()}`)">
+						`${currentUser.getId()}`,
+						`${currentUser.getLogin()}`)">
 				Update
 			</button>
 		</div>

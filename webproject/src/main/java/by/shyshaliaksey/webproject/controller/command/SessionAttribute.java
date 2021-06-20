@@ -1,6 +1,6 @@
 package by.shyshaliaksey.webproject.controller.command;
 
-public enum SessionAttribute {
+public enum SessionAttribute implements EnumValue {
 
 	CONTROLLER("controller"),
 	ERROR_INFO("error_info"),
@@ -12,6 +12,7 @@ public enum SessionAttribute {
 		this.value = value;
 	}
 	
+	@Override
 	public String getValue() {
 		return value;
 	}

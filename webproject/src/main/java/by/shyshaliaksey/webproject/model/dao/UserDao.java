@@ -17,5 +17,9 @@ public interface UserDao {
 	boolean loginUser(String email, String passwordHash) throws DaoException;
 	boolean updateUserEmail(String email, int userId) throws DaoException;
 	boolean updateUserLogin(String login, int userId) throws DaoException;
+	boolean updateUserPassword(String hashedPassword, int userId) throws DaoException;
+	boolean updateProfileImage(String newFileName, int userId) throws DaoException;
+	boolean banUser(String userLogin, String banDate) throws DaoException;
+	boolean unbanUser(String userLogin, String currentDate) throws DaoException;
 	
 }

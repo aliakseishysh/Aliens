@@ -1,8 +1,10 @@
 package by.shyshaliaksey.webproject.model.service;
 
+import by.shyshaliaksey.webproject.model.service.impl.AdminServiceImpl;
 import by.shyshaliaksey.webproject.model.service.impl.AlienServiceImpl;
 import by.shyshaliaksey.webproject.model.service.impl.RatingServiceImpl;
 import by.shyshaliaksey.webproject.model.service.impl.SessionServiceImpl;
+import by.shyshaliaksey.webproject.model.service.impl.TimeServiceImpl;
 import by.shyshaliaksey.webproject.model.service.impl.UserServiceImpl;
 
 public class ServiceProvider {
@@ -12,6 +14,8 @@ public class ServiceProvider {
 	private static final RatingService ratingService = new RatingServiceImpl();
 	private static final UserService userService = new UserServiceImpl();
 	private static final SessionService sessionService = new SessionServiceImpl();
+	private static final AdminService adminService = new AdminServiceImpl();
+	private static final TimeService timeService = new TimeServiceImpl();
 	
 	private ServiceProvider() {
 	}
@@ -36,4 +40,11 @@ public class ServiceProvider {
 		return sessionService;
 	}
 	
+	public AdminService getAdminService() {
+		return adminService;
+	}
+	
+	public TimeService getTimeService() {
+		return timeService;
+	}
 }

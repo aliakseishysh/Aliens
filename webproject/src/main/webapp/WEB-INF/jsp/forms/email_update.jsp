@@ -19,8 +19,8 @@
 						`${NEW_EMAIL}`,
 						`${USER_ID}`,
 						`${LOAD_EMAIL_UPDATE_FORM}`,
-						`${sessionScope[CURRENT_USER].getId()}`,
-						`${sessionScope[CURRENT_USER].getEmail()}`)">
+						`${currentUser.getId()}`,
+						`${currentUser.getEmail()}`)">
 				Update
 			</button>
 		</div>

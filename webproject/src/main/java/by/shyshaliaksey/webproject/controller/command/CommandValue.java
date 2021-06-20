@@ -1,6 +1,6 @@
 package by.shyshaliaksey.webproject.controller.command;
 
-public enum CommandValue {
+public enum CommandValue implements EnumValue {
 
 	OPEN_HOME_PAGE("home"),
 	OPEN_ABOUT_PAGE("about"),
@@ -10,7 +10,9 @@ public enum CommandValue {
 	LOAD_EMAIL_UPDATE_FORM("email-update-form"),
 	LOAD_LOGIN_UPDATE_FORM("login-update-form"),
 	LOAD_IMAGE_UPDATE_FORM("image-update-form"),
+	LOAD_USER_IMAGE("load-user-image"),
 	LOAD_PASSWORD_UPDATE_FORM("password-update-form"),
+	LOAD_BAN_UNBAN_FORM("ban-unban-form"),
 	OPEN_ALIEN_PROFILE_PAGE("alien-profile"),
 	REGISTER_USER("register-user"),
 	LOGIN_USER("login-user"),
@@ -21,7 +23,9 @@ public enum CommandValue {
 	UPDATE_USER_IMAGE("update-user-image"),
 	UPDATE_USER_PASSWORD("update-password"),
 	FIND_USER_RATE("update-user-rate"),
-	FORGOT_PASSWORD("forgot-password");
+	FORGOT_PASSWORD("forgot-password"),
+	BAN_USER("ban-user"),
+	UNBAN_USER("unban-user");
 
 	private String value;
 	
@@ -29,6 +33,7 @@ public enum CommandValue {
 		this.value = value;
 	}
 	
+	@Override
 	public String getValue() {
 		return value;
 	}

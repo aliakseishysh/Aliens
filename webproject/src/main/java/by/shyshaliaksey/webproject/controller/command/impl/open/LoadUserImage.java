@@ -7,12 +7,12 @@ import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class LoadUserPasswordUpdateForm  implements Command  {
+public class LoadUserImage  implements Command  {
 
 
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		Router router = new Router(PagePath.UPDATE_PASSWORD_FORM_JSP.getValue(), null, RouterType.AJAX_RESPONSE);
+		Router router = new Router(PagePath.USER_IMAGE_JSP.getValue(), null, RouterType.AJAX_RESPONSE);
 		return router;
 	}
 	

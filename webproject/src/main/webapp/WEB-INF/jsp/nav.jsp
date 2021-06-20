@@ -1,11 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"
-    import="by.shyshaliaksey.webproject.controller.command.PagePath" %>
-<c:set var="SESSION_VARIABLES" scope="page" value="${PagePath.SESSION_VARIABLES_JSP.getValue()}"/>
-<c:if test="${CONTROLLER == null}">
-	<jsp:include page="${SESSION_VARIABLES}"/>
-</c:if>
+    pageEncoding="ISO-8859-1"%>
 <header class="site-header">
 	<nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
 		<div class="container">
@@ -22,11 +17,11 @@
 				</div>
 				<div class="navbar-nav">
 					<c:choose>
-						<c:when test="${sessionScope[CURRENT_USER] == null}">
+						<c:when test="${currentUser == null}">
 							<a class="nav-item nav-link" href='<c:url value="/${CONTROLLER}?${COMMAND}=${OPEN_LOGIN_PAGE}"/>'>Login</a>
 							<a class="nav-item nav-link" href='<c:url value="/${CONTROLLER}?${COMMAND}=${OPEN_REGISTER_PAGE}"/>'>Register</a>
 						</c:when>
-						<c:when test="${sessionScope[CURRENT_USER] != null}">
+						<c:when test="${currentUser != null}">
 							<a class="nav-item nav-link" href='<c:url value="/${CONTROLLER}?${COMMAND}=${OPEN_USER_PROFILE_PAGE}"/>'>Profile</a>
 							<a class="nav-item nav-link" href='<c:url value="/${CONTROLLER}?${COMMAND}=${LOGOUT_USER}"/>'>Logout</a>
 						</c:when>

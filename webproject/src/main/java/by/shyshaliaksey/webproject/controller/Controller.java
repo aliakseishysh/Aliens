@@ -5,16 +5,16 @@ import static by.shyshaliaksey.webproject.controller.command.PagePath.INDEX_JSP;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.jsp.JspWriter;
 
+import java.io.File;
 import java.io.IOException;
 
-import org.apache.jasper.servlet.JspServlet;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,14 +22,19 @@ import org.apache.logging.log4j.Logger;
 import by.shyshaliaksey.webproject.controller.command.Command;
 import by.shyshaliaksey.webproject.controller.command.CommandFactory;
 import by.shyshaliaksey.webproject.controller.command.CommandValue;
+import by.shyshaliaksey.webproject.controller.command.EnumValue;
 import by.shyshaliaksey.webproject.controller.command.FilePath;
+import by.shyshaliaksey.webproject.controller.command.FolderPath;
+import by.shyshaliaksey.webproject.controller.command.InitParameter;
 import by.shyshaliaksey.webproject.controller.command.PagePath;
 import by.shyshaliaksey.webproject.controller.command.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.command.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.SessionAttribute;
 import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
+import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.UserStatus;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.SessionService;
@@ -38,22 +43,26 @@ import by.shyshaliaksey.webproject.model.service.SessionService;
 /**
  * Servlet implementation class Controller
  */
-@WebServlet(name="Controller", urlPatterns={"/controller"})
+
+@MultipartConfig
+@WebServlet(name="Controller", urlPatterns={"/jsp/controller", "/controller"}, loadOnStartup=0)
 public class Controller extends HttpServlet implements Servlet {
        
 	private static final Logger logger = LogManager.getRootLogger();
 	
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     public Controller() {
         super();
         // TODO Auto-generated constructor stub
     }
+    
+    @Override
+    public void init() throws ServletException {
+    	// super.init();
+        ConnectionPool.getInstance();
+        ServiceProvider.getInstance();
+        DaoProvider.getInstance();
+    }
 
-	/**
-	 * @see Servlet#destroy()
-	 */
 	@Override
 	public void destroy() {
 		ConnectionPool.getInstance().destroyConnectionPool();
@@ -70,30 +79,25 @@ public class Controller extends HttpServlet implements Servlet {
 	}
 	
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		ServiceProvider serviceProvider = ServiceProvider.getInstance();
-		SessionService sessionService = serviceProvider.getSessionService();
-		//setSessionVariables(request.getSession());
-		if (!sessionService.checkSessionInitialized(request)) {
-			request.getSession().invalidate();
-			response.sendRedirect(request.getContextPath() + INDEX_JSP.getValue());
-			return;
-		}
+		setSessionVariables(request.getSession());
 		String commandName = request.getParameter(RequestParameter.COMMAND.getValue());
 		Command command;
 		try {
 			command = CommandFactory.defineCommand(commandName);
 			Router router = command.execute(request, response);
+			
 			switch (router.getRouterType()) {
 			case FORWARD:
-				RequestDispatcher requestDispatcher = request.getRequestDispatcher(router.getPagePath());
-				requestDispatcher.forward(request, response);
+					request.getRequestDispatcher(router.getPagePath())
+						   .forward(request, response);
 				break;
 			case REDIRECT:
 				response.sendRedirect(request.getContextPath() + router.getPagePath());
 				break;
 			case AJAX_RESPONSE:
 				if (router.getResponseParameter() == null) {
-					request.getRequestDispatcher(router.getPagePath()).forward(request, response);
+					request.getRequestDispatcher(router.getPagePath())
+					   	   .forward(request, response);
 				} else {
 					response.getWriter().write(router.getResponseParameter());					
 				}
@@ -103,12 +107,13 @@ public class Controller extends HttpServlet implements Servlet {
 				response.sendRedirect(request.getContextPath() + ERROR_PAGE_JSP.getValue());
 			}
 		} catch (Exception e) {
-			logger.log(Level.ERROR, "Server error occured: {}", commandName);
+			logger.log(Level.ERROR, "Server Error: Cause: {} Message: {}", e.getCause(), e.getMessage());
 			request.getSession().setAttribute(SessionAttribute.ERROR_INFO.getValue(), e);
 			response.sendRedirect(request.getContextPath() + ERROR_PAGE_JSP.getValue());
 		}
 		
 	}
+	
 	
 	private void setSessionVariables(HttpSession session) {
 //		String n = CommandValue.class.getName();
@@ -119,21 +124,28 @@ public class Controller extends HttpServlet implements Servlet {
 //		session.setAttribute(RequestParameter.class.getName(), RequestParameter.values());
 //		session.setAttribute(SessionAttribute.class.getName(), SessionAttribute.values());
 //		session.setAttribute(Role.class.getName(), Role.values());
+		
+//		String webSiteName = session.getServletContext().getInitParameter(InitParameter.WEB_SITE_NAME.getValue());
+//		session.setAttribute(InitParameter.WEB_SITE_NAME.name(), webSiteName);
+		
 		setEnumSessionVariables(session, CommandValue.values());
 		setEnumSessionVariables(session, FilePath.values());
 		setEnumSessionVariables(session, PagePath.values());
-		setEnumSessionVariables(session, RequestAttribute.values());
+//		setEnumSessionVariables(session, RequestAttribute.values());
 		setEnumSessionVariables(session, RequestParameter.values());
 		setEnumSessionVariables(session, SessionAttribute.values());
 		setEnumSessionVariables(session, Role.values());
+		setEnumSessionVariables(session, UserStatus.values());
 	}
 	// ${sessionScope[CommandValue][]}
 	
 	private <T extends Enum<?>> void setEnumSessionVariables(HttpSession session, T[] enumValues) {
 		for(T enumValue: enumValues) {
 			String enumName = enumValue.name();
-			session.setAttribute(enumName, enumValue);
+			EnumValue enumValueInterface = (EnumValue) enumValue;
+			session.setAttribute(enumName, enumValueInterface.getValue());
 		}
 	}
+
 
 }
