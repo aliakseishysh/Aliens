@@ -20,6 +20,7 @@ import by.shyshaliaksey.webproject.controller.command.impl.load.LoadUserPassword
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenAboutPageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenAlienProfilePageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenBannedPageCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.open.OpenForgotPasswordPageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenHomePageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenLoginPageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenRegisterPageCommand;
@@ -51,6 +52,7 @@ public class CommandFactory {
 		case OPEN_LOGIN_PAGE -> new OpenLoginPageCommand();
 		case OPEN_ABOUT_PAGE -> new OpenAboutPageCommand();
 		case OPEN_REGISTER_PAGE -> new OpenRegisterPageCommand();
+		case OPEN_FORGOT_PASSWORD_PAGE -> new OpenForgotPasswordPageCommand();
 		case OPEN_SERVER_ERROR_PAGE -> new OpenServerErrorPageCommand();
 		case OPEN_BANNED_PAGE -> new OpenBannedPageCommand();
 		case REGISTER_USER -> new RegisterUserCommand();
@@ -78,8 +80,6 @@ public class CommandFactory {
 		case ADD_NEW_ALIEN -> new AddNewAlienCommand();
 		case ADD_NEW_COMMENT -> new AddNewCommentCommand();
 		case DELETE_COMMENT -> new DeleteCommentCommand();
-		case NEXT_PAGE -> new NextPageCommand();
-		case PREVIOUS_PAGE -> new PreviousPageCommand();
 		default -> throw new IllegalArgumentException("Value is not present in CommandFactory: " + commandName);
 		};
 		return command;

@@ -10,6 +10,7 @@ public enum PagePath implements EnumValue  {
 	PAGE_HOME_JSP("/WEB-INF/jsp/page_home.jsp"),
 	PAGE_LOGIN_JSP("/WEB-INF/jsp/page_login.jsp"),
 	PAGE_REGISTER_JSP("/WEB-INF/jsp/page_register.jsp"),
+	PAGE_FORGOT_PASSWORD_JSP("/WEB-INF/jsp/page_forgot_password.jsp"),
 	// Templates
 	TEMPLATE_ADMIN_PROFILE_JSP("/WEB-INF/jsp/templates/template_admin_profile.jsp"),
 	TEMPLATE_NAV_JSP("/WEB-INF/jsp/templates/template_nav.jsp"),
@@ -34,7 +35,8 @@ public enum PagePath implements EnumValue  {
 	FORM_UPDATE_PASSWORD_JSP("/WEB-INF/jsp/templates/forms/form_password_update.jsp"),
 	FORM_PROMOTE_DEMOTE_JSP("/WEB-INF/jsp/templates/forms/form_promote_demote.jsp"),
 	FORM_REGISTER("/WEB-INF/jsp/templates/forms/form_register.jsp"),
-	FORM_NEW_COMMENT("/WEB-INF/jsp/templates/forms/form_new_comment.jsp");
+	FORM_NEW_COMMENT("/WEB-INF/jsp/templates/forms/form_new_comment.jsp"),
+	FORM_RESTORE_PASSWORD_REQUEST_LINK("/WEB-INF/jsp/templates/forms/form_restore_password_request_link.jsp");
 	
 	private String value;
 	

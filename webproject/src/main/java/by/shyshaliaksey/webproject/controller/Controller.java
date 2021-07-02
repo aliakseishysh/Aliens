@@ -26,7 +26,6 @@ import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.entity.Role;
-import by.shyshaliaksey.webproject.model.entity.UserStatus;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.SessionService;
@@ -112,39 +111,5 @@ public class Controller extends HttpServlet implements Servlet {
 		}
 		
 	}
-	
-	
-	private void setSessionVariables(HttpSession session) {
-//		String n = CommandValue.class.getName();
-//		session.setAttribute(n, CommandValue.values());
-//		session.setAttribute(FilePath.class.getName(), FilePath.values());
-//		session.setAttribute(PagePath.class.getName(), PagePath.values());
-//		session.setAttribute(RequestAttribute.class.getName(), RequestAttribute.values());
-//		session.setAttribute(RequestParameter.class.getName(), RequestParameter.values());
-//		session.setAttribute(SessionAttribute.class.getName(), SessionAttribute.values());
-//		session.setAttribute(Role.class.getName(), Role.values());
-		
-//		String webSiteName = session.getServletContext().getInitParameter(InitParameter.WEB_SITE_NAME.getValue());
-//		session.setAttribute(InitParameter.WEB_SITE_NAME.name(), webSiteName);
-		
-		setEnumSessionVariables(session, CommandValue.values());
-		setEnumSessionVariables(session, FilePath.values());
-		setEnumSessionVariables(session, PagePath.values());
-//		setEnumSessionVariables(session, RequestAttribute.values());
-		setEnumSessionVariables(session, RequestParameter.values());
-		setEnumSessionVariables(session, SessionAttribute.values());
-		setEnumSessionVariables(session, Role.values());
-		setEnumSessionVariables(session, UserStatus.values());
-	}
-	// ${sessionScope[CommandValue][]}
-	
-	private <T extends Enum<?>> void setEnumSessionVariables(HttpSession session, T[] enumValues) {
-		for(T enumValue: enumValues) {
-			String enumName = enumValue.name();
-			EnumValue enumValueInterface = (EnumValue) enumValue;
-			session.setAttribute(enumName, enumValueInterface.getValue());
-		}
-	}
-
 
 }

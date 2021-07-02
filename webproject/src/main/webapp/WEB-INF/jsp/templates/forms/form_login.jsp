@@ -28,7 +28,7 @@
 			<a class="ml-2" href="#" onclick="restorePassword(
 								'${CONTROLLER}',
 								'${COMMAND}',
-								'${FORGOT_PASSWORD}')">Forgot Password?
+								'${OPEN_FORGOT_PASSWORD_PAGE}')">Forgot Password?
 			</a>
 		</small>
 	</div>

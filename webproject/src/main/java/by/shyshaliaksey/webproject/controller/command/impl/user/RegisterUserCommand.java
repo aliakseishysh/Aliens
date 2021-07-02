@@ -36,7 +36,7 @@ public class RegisterUserCommand implements Command {
 		UserService userService = serviceProvider.getUserService();
 		Router router;
 		try {
-			boolean registerResult = userService.registerUser(email, login, password, IMAGE_DEFAULT.getValue(), Role.USER);
+			boolean registerResult = userService.registerUser(email, login, password, passwordRepeat, IMAGE_DEFAULT.getValue(), Role.USER);
 			if (registerResult) {
 				router = new Router(null, Boolean.TRUE.toString(), RouterType.AJAX_RESPONSE);
 			} else {

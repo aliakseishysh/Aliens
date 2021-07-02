@@ -5,11 +5,20 @@ import static by.shyshaliaksey.webproject.controller.FilePath.IMAGE_DEFAULT;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.Optional;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -19,12 +28,13 @@ import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.dao.UserDao;
+import by.shyshaliaksey.webproject.model.entity.LoginData;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
-import by.shyshaliaksey.webproject.model.entity.UserStatus;
 import by.shyshaliaksey.webproject.model.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import jakarta.xml.bind.DatatypeConverter;
 
 public class UserServiceImpl implements UserService {
 
@@ -33,8 +43,18 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public boolean userLogIn(String email, String password) throws ServiceException {
+		boolean result = false;
 		try {
-			boolean result = userDao.loginUser(email, password);
+			Optional<LoginData> loginData = userDao.findUserLoginData(email);
+			if (loginData.isPresent()) {
+				String passwordHash = loginData.get().getHashedPasswordHex();
+				String saltHex = loginData.get().getSaltHex();
+				byte[] salt = DatatypeConverter.parseHexBinary(saltHex);
+				String enteredPassword = DatatypeConverter.printHexBinary(hashPassword(password, salt));
+				if (enteredPassword.equals(passwordHash)) {
+					result = true;
+				}
+			}
 			return result;
 		} catch (DaoException e) {
 			throw new ServiceException("Can not login with this credentials", e);
@@ -53,11 +73,17 @@ public class UserServiceImpl implements UserService {
 
 	// TODO do something with dao register
 	@Override
-	public boolean registerUser(String email, String login, String password, String imagePath, Role role)
+	public boolean registerUser(String email, String login, String password, String passwordRepeat, String imagePath, Role role)
 			throws ServiceException {
-		boolean result;
+		boolean result = false;
 		try {
-			result = userDao.registerUser(email, login, password, IMAGE_DEFAULT.getValue(), Role.USER);
+			if (password.equals(passwordRepeat)) {
+				byte[] salt = createSalt();
+				byte[] hashedPassword = hashPassword(password, salt);
+				String saltHex = DatatypeConverter.printHexBinary(salt);
+				String hashedPasswordHex = DatatypeConverter.printHexBinary(hashedPassword);
+				result = userDao.registerUser(email, login, hashedPasswordHex, saltHex, IMAGE_DEFAULT.getValue(), Role.USER);
+			}
 		} catch (DaoException e) {
 			throw new ServiceException("Error occured when finding user register: " + e.getMessage(), e);
 		}
@@ -159,7 +185,7 @@ public class UserServiceImpl implements UserService {
 	public boolean isUserBanned(HttpSession session) {
 		boolean result = false;
 		User user = (User) session.getAttribute(RequestAttribute.CURRENT_USER.getValue());
-		if (user != null && user.getUserStatus() == UserStatus.BANNED) {
+		if (user != null && user.getUserStatus() == User.UserStatus.BANNED) {
 			result = true;
 		}
 		return result;
@@ -189,6 +215,25 @@ public class UserServiceImpl implements UserService {
 		} catch (DaoException e) {
 			throw new ServiceException("Error occured while deleting comment " + commentId + " :"+ e.getMessage(), e);
 		}
+	}
+	
+	public byte[] hashPassword(String password, byte[] salt) throws ServiceException {
+		KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 32*8);
+		final String algorithmName = "PBKDF2WithHmacSHA1";
+		try {
+			SecretKeyFactory factory = SecretKeyFactory.getInstance(algorithmName);
+			byte[] hash = factory.generateSecret(spec).getEncoded();
+			return hash;
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+			throw new ServiceException("Error occured while instantiating SecretKeyFactory with algorithm " + algorithmName + " :"+ e.getMessage(), e);
+		}
+	}
+	
+	public byte[] createSalt() {
+		SecureRandom secureRandom = new SecureRandom();
+		byte[] salt = new byte[16];
+		secureRandom.nextBytes(salt);
+		return salt;
 	}
 
 }

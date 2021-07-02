@@ -15,7 +15,8 @@ CREATE TABLE users (
     user_id INT AUTO_INCREMENT NOT NULL,
     email VARCHAR(255) UNIQUE,
     login_name VARCHAR(255) UNIQUE,
-    password_hash VARCHAR(255),
+    password_hash VARCHAR(64),
+    salt VARCHAR(32),
     image_url VARCHAR(255),
     role_type ENUM('ADMIN', 'USER'),
     _status ENUM('NORMAL', 'BANNED'),
@@ -104,9 +105,21 @@ INSERT INTO aliens (_name, description_small, description_full, image_url) value
         '/images/alien/doomguy.png'
     );
 
-INSERT INTO users (email, login_name, password_hash, image_url, role_type, _status) values ('admin@gmail.com', 'admin', 'admin', '/images/profile/image1.png', 'ADMIN', 'NORMAL');
-INSERT INTO users (email, login_name, password_hash, image_url, role_type, _status) values ('user@gmail.com', 'user', 'user', '/images/profile/image2.png', 'USER', 'NORMAL');
-INSERT INTO users (email, login_name, password_hash, image_url, role_type, _status) values ('user2@gmail.com', 'user2', 'user2', '/images/profile/image2.png', 'USER', 'NORMAL');
+INSERT INTO users (email, login_name, password_hash, salt, image_url, role_type, _status) values 
+    ('admin@gmail.com', 'admin', 
+    'A306D6868E3278FE292D68DB6C0094C807E3740BFD65790E78A6F8AB8D6C5A81', 
+    'BCB199973DF5D469C5F7BF85A8E7B1D9', 
+    '/images/profile/image1.png', 'ADMIN', 'NORMAL');
+INSERT INTO users (email, login_name, password_hash, salt, image_url, role_type, _status) values 
+    ('user@gmail.com', 'user', 
+    '06FF9839BB393F7F33956A63109838BA38ECD65402C57A3DCC47CCDFCB1D0149', 
+    '15EC1E7E078AE352E74E8716F526CA04', 
+    '/images/profile/image2.png', 'USER', 'NORMAL');
+INSERT INTO users (email, login_name, password_hash, salt, image_url, role_type, _status) values 
+    ('user2@gmail.com', 'user2', 
+    '9D551E262A06D29F9742DE4B10A5F722B350E9EDAE10CB55246619166EF0F160', 
+    'B890E012C1DD8F1B32CB4384ADD85F37', 
+    '/images/profile/image2.png', 'USER', 'NORMAL');
 
 INSERT INTO ratings (alien_id, user_id, rate_value) values (1, 1, 5);
 INSERT INTO ratings (alien_id, user_id, rate_value) values (2, 1, 5);

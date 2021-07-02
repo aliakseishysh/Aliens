@@ -8,10 +8,12 @@ public enum FilePath implements EnumValue  {
 	JS_RAITING("/js/raiting.js"),
 	JS_HOME("/js/home.js"),
 	JS_LOGIN("/js/login.js"),
+	JS_NAV("/js/nav.js"),
 	JS_REGISTER("/js/register.js"),
 	JS_USER_PROFILE("/js/user_profile.js"),
 	JS_ADMIN_PROFILE("/js/admin_profile.js"),
-	JS_ALIEN_PROFILE("/js/alien_profile.js");
+	JS_ALIEN_PROFILE("/js/alien_profile.js"),
+	JS_RESTORE_PASSWORD_REQUEST_LINK("/js/restore_password_request_link.js");
 	
 	private String value;
 	

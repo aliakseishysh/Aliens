@@ -23,6 +23,7 @@ public class ColumnName {
 	public static final String USER_EMAIL = "email";
 	public static final String USER_LOGIN_NAME = "login_name";
 	public static final String USER_PASSWORD_HASH = "password_hash";
+	public static final String USER_SALT = "salt";
 	public static final String USER_IMAGE_URL = "image_url";
 	public static final String USER_ROLE_TYPE = "role_type";
 	public static final String USER_STATUS = "_status";

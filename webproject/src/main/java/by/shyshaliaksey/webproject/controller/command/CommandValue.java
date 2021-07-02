@@ -12,6 +12,7 @@ public enum CommandValue implements EnumValue {
 	OPEN_SERVER_ERROR_PAGE("server-error-page"),
 	OPEN_BANNED_PAGE("banned-page"),
 	OPEN_ALIEN_PROFILE_PAGE("alien-profile"),
+	OPEN_FORGOT_PASSWORD_PAGE("forgot-password"),
 	LOAD_EMAIL_UPDATE_FORM("email-update-form"),
 	LOAD_LOGIN_UPDATE_FORM("login-update-form"),
 	LOAD_IMAGE_UPDATE_FORM("image-update-form"),
@@ -30,7 +31,6 @@ public enum CommandValue implements EnumValue {
 	UPDATE_USER_IMAGE("update-user-image"),
 	UPDATE_USER_PASSWORD("update-password"),
 	FIND_USER_RATE("update-user-rate"),
-	FORGOT_PASSWORD("forgot-password"),
 	BAN_USER("ban-user"),
 	UNBAN_USER("unban-user"),
 	PROMOTE_USER("pronote-user"),
@@ -38,9 +38,7 @@ public enum CommandValue implements EnumValue {
 	UPDATE_ALIEN("update-alien"),
 	ADD_NEW_ALIEN("add-new-alien"),
 	ADD_NEW_COMMENT("add-new-comment"),
-	DELETE_COMMENT("delete-comment"),
-	NEXT_PAGE("next-page"),
-	PREVIOUS_PAGE("previous-page");
+	DELETE_COMMENT("delete-comment");
 
 	private String value;
 	

@@ -23,8 +23,9 @@ function loginUser(CONTROLLER, COMMAND, LOGIN_USER, OPEN_HOME_PAGE, EMAIL, PASSW
     });
 };
 
-function restorePassword(CONTROLLER, COMMAND, FORGOT_PASSWORD) {
-
+function restorePassword(CONTROLLER, COMMAND, PAGE_FORGOT_PASSWORD_JSP) {
+    var url = CONTROLLER + "?" + COMMAND + "=" + PAGE_FORGOT_PASSWORD_JSP;
+    location.assign(url);
 }
 
 function openRegisterPage(CONTROLLER, COMMAND, OPEN_REGISTER_PAGE) {

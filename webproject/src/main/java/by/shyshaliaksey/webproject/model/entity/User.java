@@ -22,6 +22,10 @@ public class User {
 		this.bannedToDate = bannedToDate;
 	}
 	
+	public enum UserStatus {
+		NORMAL, BANNED
+	}
+	
 	public int getId() {
 		return id;
 	}

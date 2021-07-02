@@ -29,7 +29,6 @@ import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
 import by.shyshaliaksey.webproject.model.dao.AlienDao;
 import by.shyshaliaksey.webproject.model.entity.Alien;
 import by.shyshaliaksey.webproject.model.entity.Comment;
-import by.shyshaliaksey.webproject.model.entity.UserStatus;
 
 public class AlienDaoImpl implements AlienDao {
 

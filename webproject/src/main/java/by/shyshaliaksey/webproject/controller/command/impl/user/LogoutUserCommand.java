@@ -26,29 +26,12 @@ public class LogoutUserCommand implements Command {
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();
+		Router router;
 		if (session != null) {
 			session.setAttribute(RequestAttribute.CURRENT_USER.getValue(), null);
-		}
-		List<Alien> aliens;
-		ServiceProvider serviceProvider = ServiceProvider.getInstance();
-		AlienService alienService = serviceProvider.getAlienService();
-		Router router;
-		try {
-			String pageString = (String) request.getSession().getAttribute(RequestAttribute.CURRENT_HOME_PAGE.getValue());
-			int pageNumber = 1;
-			if (pageString != null) {
-				pageNumber = Integer.parseInt(pageString);
-				request.getSession().setAttribute(RequestAttribute.CURRENT_HOME_PAGE.getValue(), pageNumber);
-			} else {
-				request.getSession().setAttribute(RequestAttribute.CURRENT_HOME_PAGE.getValue(), pageNumber);
-			}
-			
-			aliens = alienService.findAllAliens(pageNumber);
-			request.setAttribute(RequestAttribute.ALIEN_LIST.getValue(), aliens);
-			router = new Router(PagePath.PAGE_HOME_JSP.getValue(), null, RouterType.FORWARD);
-		} catch (ServiceException e) {
-			logger.log(Level.ERROR, "Exception occured while logout: {}", e.getMessage());
-			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
+			router = new Router(null, Boolean.TRUE.toString(), RouterType.AJAX_RESPONSE);
+		} else {
+			router = new Router(null, Boolean.FALSE.toString(), RouterType.AJAX_RESPONSE);
 		}
 		return router;
 	}

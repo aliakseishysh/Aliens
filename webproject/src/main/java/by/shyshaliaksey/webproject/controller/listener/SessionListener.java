@@ -8,7 +8,6 @@ import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.SessionAttribute;
 import by.shyshaliaksey.webproject.controller.command.CommandValue;
 import by.shyshaliaksey.webproject.model.entity.Role;
-import by.shyshaliaksey.webproject.model.entity.UserStatus;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
@@ -20,8 +19,8 @@ public class SessionListener implements HttpSessionListener {
 		// TODO Auto-generated method stub
 		HttpSessionListener.super.sessionCreated(se);
 		setSessionVariables(se.getSession());
-		se.getSession().setAttribute(RequestAttribute.CURRENT_HOME_PAGE.getValue(), 1);
-		se.getSession().setAttribute(RequestAttribute.CURRENT_COMMENT_PAGE.getValue(), 1);
+		// se.getSession().setAttribute(RequestAttribute.CURRENT_HOME_PAGE.getValue(), 1);
+		// se.getSession().setAttribute(RequestAttribute.CURRENT_COMMENT_PAGE.getValue(), 1);
 	}
 
 	@Override
@@ -52,7 +51,6 @@ public class SessionListener implements HttpSessionListener {
 		setEnumSessionVariables(session, RequestParameter.values());
 		setEnumSessionVariables(session, SessionAttribute.values());
 		setEnumSessionVariables(session, Role.values());
-		setEnumSessionVariables(session, UserStatus.values());
 	}
 	// ${sessionScope[CommandValue][]}
 	
