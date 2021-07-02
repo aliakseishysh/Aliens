@@ -1,6 +1,6 @@
 package by.shyshaliaksey.webproject.model.service.impl;
 
-import static by.shyshaliaksey.webproject.controller.command.FilePath.IMAGE_DEFAULT;
+import static by.shyshaliaksey.webproject.controller.FilePath.IMAGE_DEFAULT;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,16 +11,19 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 
-import org.apache.tomcat.jakartaee.commons.compress.utils.FileNameUtils;
+import org.apache.commons.io.FilenameUtils;
 
-import by.shyshaliaksey.webproject.controller.command.FolderPath;
+import by.shyshaliaksey.webproject.controller.FolderPath;
+import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.dao.UserDao;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
+import by.shyshaliaksey.webproject.model.entity.UserStatus;
 import by.shyshaliaksey.webproject.model.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
 public class UserServiceImpl implements UserService {
@@ -119,7 +122,8 @@ public class UserServiceImpl implements UserService {
 		boolean result = false;
 		try (InputStream inputStream1 = part.getInputStream(); InputStream inputStream2 = part.getInputStream();){
 			String submittedFileName = part.getSubmittedFileName();
-			String fileExtension = FileNameUtils.getExtension(submittedFileName);
+			// TODO error will occured if file_name with wrong type, need validation
+			String fileExtension = FilenameUtils.getExtension(submittedFileName);
 			String newFileName = "user_profile_image_" +  userId + "." + fileExtension;
 			String realpath = rootFolder + FolderPath.PROFILE_IMAGE_FOLDER.getValue() + newFileName;
 			Path imageRealPath = Paths.get(realpath);
@@ -141,13 +145,49 @@ public class UserServiceImpl implements UserService {
 		try {
 			Files.deleteIfExists(imagePath);
 			imagePath = Files.createFile(imagePath);
-			long bytes = java.nio.file.Files.copy(
+			long bytes = Files.copy(
 					  inputStream, 
 					  imagePath, 
 				      StandardCopyOption.REPLACE_EXISTING);
 			return bytes;
 		} catch (IOException e) {
 			throw new ServiceException("Error occured when creating file by path: " + imagePath + " :"+ e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public boolean isUserBanned(HttpSession session) {
+		boolean result = false;
+		User user = (User) session.getAttribute(RequestAttribute.CURRENT_USER.getValue());
+		if (user != null && user.getUserStatus() == UserStatus.BANNED) {
+			result = true;
+		}
+		return result;
+	}
+
+	@Override
+	public boolean addNewComment(int userId, int alienId, String newComment) throws ServiceException {
+		boolean result = false;
+		try {
+			// Optional<User> user = userDao.findByEmail(email);
+//			if (user.isPresent() && user.get().getId() == userId) {
+//				result = userDao.updateUserEmail(newEmail, userId);
+//			}
+			result = userDao.addNewComment(userId, alienId, newComment);
+			return result;
+		} catch (DaoException e) {
+			throw new ServiceException("Error occured while adding comment for user " + userId + " :"+ e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public boolean deleteComment(int commentId) throws ServiceException {
+		boolean result = false;
+		try {
+			result = userDao.deleteComment(commentId);
+			return result;
+		} catch (DaoException e) {
+			throw new ServiceException("Error occured while deleting comment " + commentId + " :"+ e.getMessage(), e);
 		}
 	}
 

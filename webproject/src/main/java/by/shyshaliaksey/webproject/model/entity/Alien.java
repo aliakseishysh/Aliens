@@ -15,6 +15,14 @@ public class Alien {
 		this.bigDescription = bigDescription;
 		this.imageUrl = imageUrl;
 	}
+	
+	public Alien(String name, String smallDescription, String bigDescription, String imageUrl) {
+		this.name = name;
+		this.smallDescription = smallDescription;
+		this.bigDescription = bigDescription;
+		this.imageUrl = imageUrl;
+	}
+	
 	public int getId() {
 		return id;
 	}

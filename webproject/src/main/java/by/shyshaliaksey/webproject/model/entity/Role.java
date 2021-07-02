@@ -1,6 +1,6 @@
 package by.shyshaliaksey.webproject.model.entity;
 
-import by.shyshaliaksey.webproject.controller.command.EnumValue;
+import by.shyshaliaksey.webproject.controller.EnumValue;
 
 public enum Role implements EnumValue {
 	

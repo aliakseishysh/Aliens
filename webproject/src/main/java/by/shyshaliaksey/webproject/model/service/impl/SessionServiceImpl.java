@@ -1,6 +1,6 @@
 package by.shyshaliaksey.webproject.model.service.impl;
 
-import by.shyshaliaksey.webproject.controller.command.SessionAttribute;
+import by.shyshaliaksey.webproject.controller.SessionAttribute;
 import by.shyshaliaksey.webproject.model.service.SessionService;
 import jakarta.servlet.http.HttpServletRequest;
 

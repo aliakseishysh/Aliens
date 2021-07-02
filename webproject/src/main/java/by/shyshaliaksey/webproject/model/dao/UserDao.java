@@ -21,5 +21,9 @@ public interface UserDao {
 	boolean updateProfileImage(String newFileName, int userId) throws DaoException;
 	boolean banUser(String userLogin, String banDate) throws DaoException;
 	boolean unbanUser(String userLogin, String currentDate) throws DaoException;
+	boolean promoteUser(String userLogin) throws DaoException;
+	boolean demoteAdmin(String adminLogin) throws DaoException;
+	boolean addNewComment(int userId, int alienId, String newComment) throws DaoException;
+	boolean deleteComment(int commentId) throws DaoException;
 	
 }

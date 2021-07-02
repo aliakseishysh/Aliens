@@ -5,9 +5,9 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import by.shyshaliaksey.webproject.controller.PagePath;
+import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Command;
-import by.shyshaliaksey.webproject.controller.command.PagePath;
-import by.shyshaliaksey.webproject.controller.command.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.ServiceException;
@@ -32,7 +32,7 @@ public class BanUserCommand implements Command {
 			router = new Router(null, String.valueOf(result), RouterType.AJAX_RESPONSE);
 		} catch (ServiceException e) {
 			logger.log(Level.ERROR, "Exception occured while user banning: {} {} {}", e.getMessage(), e.getStackTrace(), e);
-			router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
+			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
 		}
 		return router;	
 	}

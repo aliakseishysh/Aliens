@@ -25,7 +25,8 @@ public class ColumnName {
 	public static final String USER_PASSWORD_HASH = "password_hash";
 	public static final String USER_IMAGE_URL = "image_url";
 	public static final String USER_ROLE_TYPE = "role_type";
-	public static final String USER_BANNED_TO_DATETIME = "banned_to_datetime";
+	public static final String USER_STATUS = "_status";
+	public static final String USER_BANNED_TO_DATE = "banned_to_datetime";
 	
 	// table: `ratings`
 	public static final String RATE_ID = "rate_id";
@@ -33,10 +34,18 @@ public class ColumnName {
 	public static final String RATE_USER_ID = "user_id";
 	public static final String RATE_VALUE = "rate_value";
 	
+	// table: `comments`
+	public static final String COMMENT_ID ="comment_id";
+	public static final String COMMENT_ALIEN_ID ="alien_id";
+	public static final String COMMENT_USER_ID ="user_id";
+	public static final String COMMENT ="comment";
+	
 	// operations
 	public static final String USERS_COUNT = "usersCount";
 	public static final String AVERAGE_RATE = "averageRate";
 	public static final String RATES_COUNT = "ratesCount";
+	public static final String ALIEN_COUNT = "alienCount";
+	public static final String ALIEN_COMMENTS_COUNT = "alienCommentsCount";
 	
 	private ColumnName() {
 	}

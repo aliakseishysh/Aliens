@@ -13,16 +13,13 @@ import java.util.Optional;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.tomcat.util.http.fileupload.FileItemFactory;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 
+import by.shyshaliaksey.webproject.controller.FolderPath;
+import by.shyshaliaksey.webproject.controller.InitParameter;
+import by.shyshaliaksey.webproject.controller.PagePath;
+import by.shyshaliaksey.webproject.controller.RequestAttribute;
+import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Command;
-import by.shyshaliaksey.webproject.controller.command.FolderPath;
-import by.shyshaliaksey.webproject.controller.command.InitParameter;
-import by.shyshaliaksey.webproject.controller.command.PagePath;
-import by.shyshaliaksey.webproject.controller.command.RequestAttribute;
-import by.shyshaliaksey.webproject.controller.command.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.ServiceException;
@@ -54,13 +51,13 @@ public class UpdateUserImageCommand implements Command {
 			router = new Router(null, String.valueOf(result), RouterType.AJAX_RESPONSE);
 		} catch (IOException e) {
 			logger.log(Level.ERROR, "IOException occured while image updating: {} {}", e.getMessage(), e.getStackTrace(), e);
-			router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
+			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
 		} catch (ServletException e) {
 			logger.log(Level.ERROR, "ServletException occured while image updating: {} {}", e.getMessage(), e.getStackTrace(), e);
-			router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
+			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
 		} catch (ServiceException e) {
 			logger.log(Level.ERROR, "Exception occured while image updating: {} {} {}", e.getMessage(), e.getStackTrace(), e);
-			router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
+			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
 		}
 		return router;
 		

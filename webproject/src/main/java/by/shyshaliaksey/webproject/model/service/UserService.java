@@ -3,9 +3,12 @@ package by.shyshaliaksey.webproject.model.service;
 
 import java.util.Optional;
 
+import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
+import by.shyshaliaksey.webproject.model.entity.UserStatus;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
 public interface UserService {
@@ -18,4 +21,8 @@ public interface UserService {
 	boolean changeLogin(String login, String newLogin, int userId) throws ServiceException;
 	boolean changePassword(String password, String passwordConfirm, int userId) throws ServiceException;
 	boolean updateImage(String serverDeploymentPath, String rootFolder, Part part, int userId) throws ServiceException;
+	boolean isUserBanned(HttpSession session);
+	boolean addNewComment(int userId, int alienId, String newComment) throws ServiceException;
+	boolean deleteComment(int commentId) throws ServiceException;
+	
 }

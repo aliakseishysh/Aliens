@@ -6,9 +6,9 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import by.shyshaliaksey.webproject.controller.PagePath;
+import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.command.Command;
-import by.shyshaliaksey.webproject.controller.command.PagePath;
-import by.shyshaliaksey.webproject.controller.command.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.ServiceException;
@@ -34,12 +34,21 @@ public class LogoutUserCommand implements Command {
 		AlienService alienService = serviceProvider.getAlienService();
 		Router router;
 		try {
-			aliens = alienService.findAllAliens();
+			String pageString = (String) request.getSession().getAttribute(RequestAttribute.CURRENT_HOME_PAGE.getValue());
+			int pageNumber = 1;
+			if (pageString != null) {
+				pageNumber = Integer.parseInt(pageString);
+				request.getSession().setAttribute(RequestAttribute.CURRENT_HOME_PAGE.getValue(), pageNumber);
+			} else {
+				request.getSession().setAttribute(RequestAttribute.CURRENT_HOME_PAGE.getValue(), pageNumber);
+			}
+			
+			aliens = alienService.findAllAliens(pageNumber);
 			request.setAttribute(RequestAttribute.ALIEN_LIST.getValue(), aliens);
-			router = new Router(PagePath.HOME_JSP.getValue(), null, RouterType.FORWARD);
+			router = new Router(PagePath.PAGE_HOME_JSP.getValue(), null, RouterType.FORWARD);
 		} catch (ServiceException e) {
 			logger.log(Level.ERROR, "Exception occured while logout: {}", e.getMessage());
-			router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
+			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
 		}
 		return router;
 	}

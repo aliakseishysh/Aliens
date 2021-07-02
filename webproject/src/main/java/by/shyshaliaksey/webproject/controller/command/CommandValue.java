@@ -1,5 +1,7 @@
 package by.shyshaliaksey.webproject.controller.command;
 
+import by.shyshaliaksey.webproject.controller.EnumValue;
+
 public enum CommandValue implements EnumValue {
 
 	OPEN_HOME_PAGE("home"),
@@ -7,13 +9,18 @@ public enum CommandValue implements EnumValue {
 	OPEN_LOGIN_PAGE("login"),
 	OPEN_REGISTER_PAGE("register"),
 	OPEN_USER_PROFILE_PAGE("user-profile"),
+	OPEN_SERVER_ERROR_PAGE("server-error-page"),
+	OPEN_BANNED_PAGE("banned-page"),
+	OPEN_ALIEN_PROFILE_PAGE("alien-profile"),
 	LOAD_EMAIL_UPDATE_FORM("email-update-form"),
 	LOAD_LOGIN_UPDATE_FORM("login-update-form"),
 	LOAD_IMAGE_UPDATE_FORM("image-update-form"),
-	LOAD_USER_IMAGE("load-user-image"),
 	LOAD_PASSWORD_UPDATE_FORM("password-update-form"),
+	LOAD_ALIEN_UPDATE_FORM("alien-update-form"),
+	LOAD_ALIEN_CREATE_FORM("alien-create-form"),
 	LOAD_BAN_UNBAN_FORM("ban-unban-form"),
-	OPEN_ALIEN_PROFILE_PAGE("alien-profile"),
+	LOAD_PROMOTE_DEMOTE_FORM("promote-denote-form"),
+	LOAD_USER_IMAGE("load-user-image"),
 	REGISTER_USER("register-user"),
 	LOGIN_USER("login-user"),
 	LOGOUT_USER("logout-user"),
@@ -25,7 +32,15 @@ public enum CommandValue implements EnumValue {
 	FIND_USER_RATE("update-user-rate"),
 	FORGOT_PASSWORD("forgot-password"),
 	BAN_USER("ban-user"),
-	UNBAN_USER("unban-user");
+	UNBAN_USER("unban-user"),
+	PROMOTE_USER("pronote-user"),
+	DEMOTE_ADMIN("denote-admin"),
+	UPDATE_ALIEN("update-alien"),
+	ADD_NEW_ALIEN("add-new-alien"),
+	ADD_NEW_COMMENT("add-new-comment"),
+	DELETE_COMMENT("delete-comment"),
+	NEXT_PAGE("next-page"),
+	PREVIOUS_PAGE("previous-page");
 
 	private String value;
 	

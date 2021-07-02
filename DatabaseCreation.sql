@@ -34,6 +34,16 @@ CREATE TABLE ratings (
     
 );
 
+CREATE TABLE comments (
+    comment_id INT AUTO_INCREMENT NOT NULL,
+    alien_id INT,
+    user_id INT,
+    comment VARCHAR(3000),
+    comment_status ENUM('NORMAL','DELETED'),
+    PRIMARY KEY (comment_id),
+    FOREIGN KEY (alien_id) REFERENCES aliens(alien_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
 
 
 INSERT INTO aliens (_name, description_small, description_full, image_url) values 
@@ -74,6 +84,26 @@ INSERT INTO aliens (_name, description_small, description_full, image_url) value
         '/images/alien/doomguy.png'
     );
 
+INSERT INTO aliens (_name, description_small, description_full, image_url) values 
+    (
+        'DOOMGUY2',
+        'RUN',
+        'RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! 
+        RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! 
+        RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR!!!',
+        '/images/alien/doomguy.png'
+    );
+
+INSERT INTO aliens (_name, description_small, description_full, image_url) values 
+    (
+        'DOOMGUY3',
+        'RUN',
+        'RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! 
+        RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! 
+        RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR!!!',
+        '/images/alien/doomguy.png'
+    );
+
 INSERT INTO users (email, login_name, password_hash, image_url, role_type, _status) values ('admin@gmail.com', 'admin', 'admin', '/images/profile/image1.png', 'ADMIN', 'NORMAL');
 INSERT INTO users (email, login_name, password_hash, image_url, role_type, _status) values ('user@gmail.com', 'user', 'user', '/images/profile/image2.png', 'USER', 'NORMAL');
 INSERT INTO users (email, login_name, password_hash, image_url, role_type, _status) values ('user2@gmail.com', 'user2', 'user2', '/images/profile/image2.png', 'USER', 'NORMAL');
@@ -83,6 +113,10 @@ INSERT INTO ratings (alien_id, user_id, rate_value) values (2, 1, 5);
 INSERT INTO ratings (alien_id, user_id, rate_value) values (3, 1, 5);
 INSERT INTO ratings (alien_id, user_id, rate_value) values (4, 1, 5);
 INSERT INTO ratings (alien_id, user_id, rate_value) values (5, 1, 5);
+
+INSERT INTO comments (alien_id, user_id, comment, comment_status) values (1, 3, 'First comment', 'NORMAL');
+INSERT INTO comments (alien_id, user_id, comment, comment_status) values (1, 3, 'Second comment', 'NORMAL');
+INSERT INTO comments (alien_id, user_id, comment, comment_status) values (1, 3, 'Third comment - should be deleted', 'DELETED');
 
 
 

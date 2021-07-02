@@ -1,8 +1,5 @@
 package by.shyshaliaksey.webproject.controller;
 
-import static by.shyshaliaksey.webproject.controller.command.PagePath.ERROR_PAGE_JSP;
-import static by.shyshaliaksey.webproject.controller.command.PagePath.INDEX_JSP;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -11,8 +8,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSessionEvent;
+import jakarta.servlet.http.HttpSessionListener;
 
-import java.io.File;
+import static by.shyshaliaksey.webproject.controller.PagePath.ERROR_PAGE_404_JSP;
+
 import java.io.IOException;
 
 import org.apache.logging.log4j.Level;
@@ -22,15 +22,7 @@ import org.apache.logging.log4j.Logger;
 import by.shyshaliaksey.webproject.controller.command.Command;
 import by.shyshaliaksey.webproject.controller.command.CommandFactory;
 import by.shyshaliaksey.webproject.controller.command.CommandValue;
-import by.shyshaliaksey.webproject.controller.command.EnumValue;
-import by.shyshaliaksey.webproject.controller.command.FilePath;
-import by.shyshaliaksey.webproject.controller.command.FolderPath;
-import by.shyshaliaksey.webproject.controller.command.InitParameter;
-import by.shyshaliaksey.webproject.controller.command.PagePath;
-import by.shyshaliaksey.webproject.controller.command.RequestAttribute;
-import by.shyshaliaksey.webproject.controller.command.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Router;
-import by.shyshaliaksey.webproject.controller.command.SessionAttribute;
 import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.entity.Role;
@@ -38,6 +30,7 @@ import by.shyshaliaksey.webproject.model.entity.UserStatus;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.SessionService;
+import by.shyshaliaksey.webproject.model.service.UserService;
 
 
 /**
@@ -79,11 +72,17 @@ public class Controller extends HttpServlet implements Servlet {
 	}
 	
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		setSessionVariables(request.getSession());
+		
 		String commandName = request.getParameter(RequestParameter.COMMAND.getValue());
-		Command command;
+		UserService userService = ServiceProvider.getInstance().getUserService();
+		if (commandName == null) {
+			commandName = CommandValue.OPEN_SERVER_ERROR_PAGE.getValue();
+		}
+		else if (userService.isUserBanned(request.getSession()) && !commandName.equals(CommandValue.LOGOUT_USER.getValue())) {
+			commandName = CommandValue.OPEN_BANNED_PAGE.getValue();
+		}
 		try {
-			command = CommandFactory.defineCommand(commandName);
+			Command command = CommandFactory.defineCommand(commandName);
 			Router router = command.execute(request, response);
 			
 			switch (router.getRouterType()) {
@@ -104,12 +103,12 @@ public class Controller extends HttpServlet implements Servlet {
 				break;
 			default:
 				logger.log(Level.ERROR, "Invalid RouterType value: {}", commandName);
-				response.sendRedirect(request.getContextPath() + ERROR_PAGE_JSP.getValue());
+				response.sendRedirect(request.getContextPath() + ERROR_PAGE_404_JSP.getValue());
 			}
 		} catch (Exception e) {
 			logger.log(Level.ERROR, "Server Error: Cause: {} Message: {}", e.getCause(), e.getMessage());
-			request.getSession().setAttribute(SessionAttribute.ERROR_INFO.getValue(), e);
-			response.sendRedirect(request.getContextPath() + ERROR_PAGE_JSP.getValue());
+			// request.getSession().setAttribute(SessionAttribute.ERROR_INFO.getValue(), e);
+			response.sendRedirect(request.getContextPath() + ERROR_PAGE_404_JSP.getValue());
 		}
 		
 	}

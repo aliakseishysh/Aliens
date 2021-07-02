@@ -1,14 +1,15 @@
 package by.shyshaliaksey.webproject.controller.command.impl.user;
 
 
+import static by.shyshaliaksey.webproject.controller.FilePath.IMAGE_DEFAULT;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static by.shyshaliaksey.webproject.controller.command.FilePath.IMAGE_DEFAULT;
+import by.shyshaliaksey.webproject.controller.PagePath;
+import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Command;
-import by.shyshaliaksey.webproject.controller.command.PagePath;
-import by.shyshaliaksey.webproject.controller.command.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.DaoException;
@@ -37,13 +38,13 @@ public class RegisterUserCommand implements Command {
 		try {
 			boolean registerResult = userService.registerUser(email, login, password, IMAGE_DEFAULT.getValue(), Role.USER);
 			if (registerResult) {
-				router = new Router(PagePath.LOGIN_JSP.getValue(), null, RouterType.FORWARD);
+				router = new Router(null, Boolean.TRUE.toString(), RouterType.AJAX_RESPONSE);
 			} else {
-				router = new Router(PagePath.REGISTER_JSP.getValue(), null, RouterType.FORWARD);
+				router = new Router(null, Boolean.FALSE.toString(), RouterType.AJAX_RESPONSE);
 			}
 		} catch (ServiceException e) {
 			logger.log(Level.ERROR, "Exception occured while register: {}", e.getMessage());
-			router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
+			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
 		}
 		return router;
 	}

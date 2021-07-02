@@ -1,15 +1,16 @@
 package by.shyshaliaksey.webproject.controller.command.impl.open;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import by.shyshaliaksey.webproject.controller.PagePath;
+import by.shyshaliaksey.webproject.controller.RequestAttribute;
+import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Command;
-import by.shyshaliaksey.webproject.controller.command.PagePath;
-import by.shyshaliaksey.webproject.controller.command.RequestAttribute;
-import by.shyshaliaksey.webproject.controller.command.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.DaoException;
@@ -18,6 +19,8 @@ import by.shyshaliaksey.webproject.model.dao.AlienDao;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.dao.RatingDao;
 import by.shyshaliaksey.webproject.model.entity.Alien;
+import by.shyshaliaksey.webproject.model.entity.AlienPage;
+import by.shyshaliaksey.webproject.model.entity.Comment;
 import by.shyshaliaksey.webproject.model.service.AlienService;
 import by.shyshaliaksey.webproject.model.service.RatingService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
@@ -42,14 +45,27 @@ public class OpenAlienProfilePageCommand implements Command {
 				request.setAttribute(RequestAttribute.ALIEN.getValue(), alien);
 				double averageRating = ratingService.calculateAverageRate(alienId);
 				request.setAttribute(RequestAttribute.AVERAGE_RATING.getValue(), averageRating);
-				router = new Router(PagePath.ALIEN_PROFILE_JSP.getValue(), null, RouterType.FORWARD);
+				// paginating here
+				int page = 1;
+				Object pageObject = request.getParameter(RequestParameter.PAGE.getValue());
+				if (pageObject != null) {
+					page = Integer.parseInt(pageObject.toString());
+				}
+				final int commentsPerPage = AlienPage.COMMENTS_PER_PAGE;
+				double commentsCount = alienService.findAlienCommentsCount(alienId);
+				int pagesCount = (int) Math.ceil(commentsCount / commentsPerPage);
+				request.setAttribute(RequestAttribute.PAGES_COUNT.getValue(), pagesCount);
+				request.setAttribute(RequestAttribute.CURRENT_COMMENT_PAGE.getValue(), page);
+				List<Comment> comments = alienService.findAllCommentsInPage(alienId, page);
+				request.setAttribute(RequestAttribute.ALIEN_COMMENTS.getValue(), comments);
+				router = new Router(PagePath.PAGE_ALIEN_PROFILE_JSP.getValue(), null, RouterType.FORWARD);
 			} else {
-				router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
+				router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
 				logger.log(Level.INFO, "No alien with id: {}", alienId);
 			}
 			
 		} catch (ServiceException e) {
-			router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
+			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
 			logger.log(Level.ERROR, "Exception occured while alien searching with id {}: {}", alienId, e.getMessage());
 		}
 		return router;
