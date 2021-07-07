@@ -6,6 +6,7 @@ import by.shyshaliaksey.webproject.model.service.impl.RatingServiceImpl;
 import by.shyshaliaksey.webproject.model.service.impl.SessionServiceImpl;
 import by.shyshaliaksey.webproject.model.service.impl.TimeServiceImpl;
 import by.shyshaliaksey.webproject.model.service.impl.UserServiceImpl;
+import by.shyshaliaksey.webproject.model.service.impl.ValidationServiceImpl;
 
 public class ServiceProvider {
 
@@ -16,6 +17,7 @@ public class ServiceProvider {
 	private static final SessionService sessionService = new SessionServiceImpl();
 	private static final AdminService adminService = new AdminServiceImpl();
 	private static final TimeService timeService = new TimeServiceImpl();
+	private static final ValidationService validationService = new ValidationServiceImpl();
 	
 	private ServiceProvider() {
 	}
@@ -46,5 +48,9 @@ public class ServiceProvider {
 	
 	public TimeService getTimeService() {
 		return timeService;
+	}
+	
+	public ValidationService getValidationService() {
+		return validationService;
 	}
 }

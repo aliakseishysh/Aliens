@@ -1,29 +1,23 @@
 <div class="content-section">
-	<form id="image-update-form" enctype="multipart/form-data">
+	<form id="form-update-image" enctype="multipart/form-data"  class="needs-validation" novalidate>
 		<fieldset class="form-group">
 			<legend class="border-bottom mb-4">Image Update</legend>
-   			<label class="control-label col-sm-2" for="image-update-form-image">Image:</label>
+   			<label class="control-label col-sm-2" for="form-update-image-image">Image:</label>
    			<div class ="col-sm-10">
 	   			<div class="custom-file">
-	  				<input type="file" class="custom-file-input form-control-file" id="image-update-form-image">
-	  				<label class="custom-file-label" for="image-update-form-image">Select image</label>
+	  				<input type="file" class="custom-file-input form-control-file" id="form-update-image-image" required>
+					<div id="form-update-image-image-invalid-feedback" class="invalid-feedback">
+	       				${UPDATE_IMAGE_STANDARD_IMAGE_FEEDBACK}
+	   				</div>
+	  				<label id="form-update-image-image-label" class="custom-file-label text-muted" for="form-update-image-image">Select image</label>
 				</div>
    			</div>
 		</fieldset>
 		<div class="form-group col-sm-10">
+			<p id="form-update-image-parameter-current-user-id" hidden>${currentUser.id}</p>
+			<!-- TODO change this with something else (error ) -->
 			<button class="btn btn-outline-info" 
-					type="button" 
-					onclick="updateUserImage(
-						`${PROJECT_NAME}`,
-						`${CONTROLLER}`,
-						`${COMMAND}`,
-						`${UPDATE_USER_IMAGE}`,
-						`${NEW_IMAGE}`,
-						`${USER_ID}`,
-						`${LOAD_IMAGE_UPDATE_FORM}`,
-						`${LOAD_USER_IMAGE}`,
-						`${WEB_SITE_NAME}`,
-						`${currentUser.id}`)">
+					type="submit">
 				Update
 			</button>
 		</div>

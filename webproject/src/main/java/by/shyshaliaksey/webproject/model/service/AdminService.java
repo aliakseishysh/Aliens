@@ -2,16 +2,14 @@ package by.shyshaliaksey.webproject.model.service;
 
 
 import by.shyshaliaksey.webproject.exception.ServiceException;
-import jakarta.servlet.http.Part;
+import by.shyshaliaksey.webproject.model.entity.feedback.BanUnbanUserResultInfo;
+import by.shyshaliaksey.webproject.model.entity.feedback.PromoteDemoteUserResultInfo;
 
 public interface AdminService {
 
-	boolean banUser(String userLogin, int daysToBan) throws ServiceException;
-
-	boolean unbanUser(String userLogin) throws ServiceException;
-
-	boolean promoteUser(String userLogin, String currentUserLogin) throws ServiceException;
-
-	boolean demoteAdmin(String adminLogin, String currentAdminLogin) throws ServiceException;
+	BanUnbanUserResultInfo banUser(String userLogin, String daysToBan) throws ServiceException;
+	BanUnbanUserResultInfo unbanUser(String userLogin) throws ServiceException;
+	PromoteDemoteUserResultInfo promoteUser(String userLogin, String currentUserLogin) throws ServiceException;
+	PromoteDemoteUserResultInfo demoteAdmin(String adminLogin, String currentAdminLogin) throws ServiceException;
 
 }

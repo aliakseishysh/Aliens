@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 
 import by.shyshaliaksey.webproject.controller.FolderPath;
 import by.shyshaliaksey.webproject.controller.InitParameter;
@@ -24,6 +25,9 @@ import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.User;
+import by.shyshaliaksey.webproject.model.entity.feedback.ErrorFeedback;
+import by.shyshaliaksey.webproject.model.entity.feedback.ImageUpdateResultInfo;
+import by.shyshaliaksey.webproject.model.entity.feedback.LoginUpdateResultInfo;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.UserService;
 import jakarta.servlet.ServletException;
@@ -40,15 +44,25 @@ public class UpdateUserImageCommand implements Command {
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router;
 		try {
-			// String realPath = request.getServletContext().getRealPath(FolderPath.PROFILE_IMAGE_FOLDER.getValue());
 			Part part = request.getPart(RequestParameter.NEW_IMAGE.getValue());
 			int userId = Integer.parseInt(request.getParameter(RequestParameter.USER_ID.getValue()));
 			ServiceProvider serviceProvider = ServiceProvider.getInstance();
 			UserService userService = serviceProvider.getUserService();
 			String rootFolder = request.getServletContext().getInitParameter(InitParameter.WEB_APP_ROOT_FOLDER_PARAMETER.getValue());
 			String serverDeploymentPath = request.getServletContext().getRealPath(FolderPath.PROFILE_IMAGE_FOLDER.getValue());
-			boolean result = userService.updateImage(serverDeploymentPath, rootFolder, part, userId);
-			router = new Router(null, String.valueOf(result), RouterType.AJAX_RESPONSE);
+			
+			ImageUpdateResultInfo imageUpdateResult = userService.updateImage(serverDeploymentPath, rootFolder, part, userId);
+			String jsonResponse = new JSONObject()
+					.put(ErrorFeedback.UPDATE_IMAGE_RESULT_INFO_IMAGE_STATUS.getValue(), imageUpdateResult.isImageCorrect())
+					.put(ErrorFeedback.UPDATE_IMAGE_RESULT_INFO_IMAGE_FEEDBACK.getValue(), imageUpdateResult.getImageErrorInfo())
+					.toString();
+			if (imageUpdateResult.isImageCorrect()) {
+				response.setStatus(200);
+				router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
+			} else {
+				response.setStatus(400);
+				router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
+			}
 		} catch (IOException e) {
 			logger.log(Level.ERROR, "IOException occured while image updating: {} {}", e.getMessage(), e.getStackTrace(), e);
 			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
@@ -59,28 +73,7 @@ public class UpdateUserImageCommand implements Command {
 			logger.log(Level.ERROR, "Exception occured while image updating: {} {} {}", e.getMessage(), e.getStackTrace(), e);
 			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
 		}
-		return router;
-		
-		//		// String currentUser = request.getParameter(RequestAttribute.CURRENT_USER.getValue());
-//		String login = request.getParameter(RequestParameter.LOGIN.getValue());
-//		String newLogin = request.getParameter(RequestParameter.NEW_LOGIN.getValue());
-//		int userId = Integer.parseInt(request.getParameter(RequestParameter.USER_ID.getValue()));
-//		ServiceProvider serviceProvider = ServiceProvider.getInstance();
-//		UserService userService = serviceProvider.getUserService();
-//		Router router;
-//		try {
-//			Boolean loginResult = userService.changeLogin(login, newLogin, userId);
-//			Optional<User> user = userService.findByLogin(newLogin);
-//			if (loginResult && user.isPresent()) {
-//				request.getSession().setAttribute(RequestAttribute.CURRENT_USER.getValue(), user.get());
-//			}
-//			router = new Router(null, loginResult.toString(), RouterType.AJAX_RESPONSE);
-//		} catch (ServiceException e) {
-//			logger.log(Level.ERROR, "Exception occured while email updating: {}", e.getMessage());
-//			router = new Router(PagePath.ERROR_PAGE_JSP.getValue(), null, RouterType.REDIRECT);
-//		}
-//		return router;
-//				
+		return router;		
 	}
 
 }

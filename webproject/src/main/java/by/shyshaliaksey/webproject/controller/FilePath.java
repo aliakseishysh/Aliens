@@ -5,6 +5,8 @@ public enum FilePath implements EnumValue  {
 	IMAGE_DEFAULT("/images/standard.png"),
 	CSS_MAIN("/css/main.css"),
 	CSS_RAITING("/css/raiting.css"),
+	CSS_USER_PROFILE("/css/user_profile.css"),
+	CSS_COMMENT("/css/comment.css"),
 	JS_RAITING("/js/raiting.js"),
 	JS_HOME("/js/home.js"),
 	JS_LOGIN("/js/login.js"),

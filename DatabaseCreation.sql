@@ -106,19 +106,19 @@ INSERT INTO aliens (_name, description_small, description_full, image_url) value
     );
 
 INSERT INTO users (email, login_name, password_hash, salt, image_url, role_type, _status) values 
-    ('admin@gmail.com', 'admin', 
-    'A306D6868E3278FE292D68DB6C0094C807E3740BFD65790E78A6F8AB8D6C5A81', 
-    'BCB199973DF5D469C5F7BF85A8E7B1D9', 
+    ('adminadmin@gmail.com', 'adminadmin', 
+    '4B550B61BEFF0E6FDB2180D2BADF33C17302393E774E8F002C35374999763851', 
+    '7DF1AFE4D9A87B5C478AC62F7AE9F0DD', 
     '/images/profile/image1.png', 'ADMIN', 'NORMAL');
 INSERT INTO users (email, login_name, password_hash, salt, image_url, role_type, _status) values 
-    ('user@gmail.com', 'user', 
-    '06FF9839BB393F7F33956A63109838BA38ECD65402C57A3DCC47CCDFCB1D0149', 
-    '15EC1E7E078AE352E74E8716F526CA04', 
+    ('useruser@gmail.com', 'useruser', 
+    '9D082D077A7BD762FF8F44D49629A692E4B5E49C547A7876777BE3F307DE47D7', 
+    'B91831BF494C8EFD1B61D61CF2AEBB6B', 
     '/images/profile/image2.png', 'USER', 'NORMAL');
 INSERT INTO users (email, login_name, password_hash, salt, image_url, role_type, _status) values 
-    ('user2@gmail.com', 'user2', 
-    '9D551E262A06D29F9742DE4B10A5F722B350E9EDAE10CB55246619166EF0F160', 
-    'B890E012C1DD8F1B32CB4384ADD85F37', 
+    ('useruser2@gmail.com', 'useruser2', 
+    'B44146E14699B80F806D03A55FDA9E5C866B6A9BB5BDA59CBFA9428BE7C55C1E', 
+    '6DDBB7844D456355DA46ED15BE604CA7', 
     '/images/profile/image2.png', 'USER', 'NORMAL');
 
 INSERT INTO ratings (alien_id, user_id, rate_value) values (1, 1, 5);

@@ -6,6 +6,7 @@ import static by.shyshaliaksey.webproject.controller.FilePath.IMAGE_DEFAULT;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 
 import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
@@ -17,6 +18,8 @@ import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.dao.UserDao;
 import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.feedback.ErrorFeedback;
+import by.shyshaliaksey.webproject.model.entity.feedback.RegisterResultInfo;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,11 +39,25 @@ public class RegisterUserCommand implements Command {
 		UserService userService = serviceProvider.getUserService();
 		Router router;
 		try {
-			boolean registerResult = userService.registerUser(email, login, password, passwordRepeat, IMAGE_DEFAULT.getValue(), Role.USER);
-			if (registerResult) {
-				router = new Router(null, Boolean.TRUE.toString(), RouterType.AJAX_RESPONSE);
+			RegisterResultInfo registerResult = userService.registerUser(email, login, password, passwordRepeat, IMAGE_DEFAULT.getValue(), Role.USER);
+			String jsonResponse = new JSONObject()
+					.put(ErrorFeedback.REGISTER_RESULT_INFO_EMAIL_STATUS.getValue(), registerResult.isEmailCorrect())
+					.put(ErrorFeedback.REGISTER_RESULT_INFO_LOGIN_STATUS.getValue(), registerResult.isLoginCorrect())
+					.put(ErrorFeedback.REGISTER_RESULT_INFO_PASSWORD_STATUS.getValue(), registerResult.isPasswordCorrect())
+					.put(ErrorFeedback.REGISTER_RESULT_INFO_PASSWORD_CONFIRM_STATUS.getValue(), registerResult.isPasswordConfirmationCorrect())
+					.put(ErrorFeedback.REGISTER_RESULT_INFO_EMAIL_FEEDBACK.getValue(), registerResult.getEmailErrorInfo())
+					.put(ErrorFeedback.REGISTER_RESULT_INFO_LOGIN_FEEDBACK.getValue(), registerResult.getLoginErrorInfo())
+					.put(ErrorFeedback.REGISTER_RESULT_INFO_PASSWORD_FEEDBACK.getValue(), registerResult.getPasswordErrorInfo())
+					.put(ErrorFeedback.REGISTER_RESULT_INFO_PASSWORD_CONFIRM_FEEDBACK	.getValue(), registerResult.getPasswordConfirmationErrorInfo())
+					.toString();
+			
+			if (registerResult.isEmailCorrect() && registerResult.isLoginCorrect() 
+					&& registerResult.isPasswordCorrect() && registerResult.isPasswordConfirmationCorrect()) {
+				response.setStatus(200);
+				router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
 			} else {
-				router = new Router(null, Boolean.FALSE.toString(), RouterType.AJAX_RESPONSE);
+				response.setStatus(400);
+				router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
 			}
 		} catch (ServiceException e) {
 			logger.log(Level.ERROR, "Exception occured while register: {}", e.getMessage());

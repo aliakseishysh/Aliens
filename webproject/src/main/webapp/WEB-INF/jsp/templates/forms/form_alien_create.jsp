@@ -26,16 +26,7 @@
 			<div class="form-group">
 				<button class="btn btn-outline-info" 
 						type="button" 
-						onclick="addNewAlien(
-							`${PROJECT_NAME}`,
-							`${CONTROLLER}`,
-							`${COMMAND}`,
-							`${ADD_NEW_ALIEN}`,
-							`${ALIEN_NAME}`,
-							`${ALIEN_SMALL_DESCRIPTION}`,
-							`${ALIEN_FULL_DESCRIPTION}`,
-							`${ALIEN_NEW_IMAGE}`,
-							`${LOAD_ALIEN_CREATE_FORM}`)">
+						onclick="addNewAlien()">
 					Update
 				</button>
 			</div>

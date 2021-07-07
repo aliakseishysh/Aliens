@@ -45,6 +45,7 @@ public class UserDaoImpl implements UserDao {
 	private static final String FIND_BY_LOGIN = String.join(SPACE, FIND_ALL, "WHERE users.login_name=?");
 	private static final String FIND_BY_EMAIL = String.join(SPACE, FIND_ALL, "WHERE users.email=?");
 	private static final String FIND_USER_LOGIN_DATA = "SELECT password_hash, salt FROM users WHERE email=?";
+	private static final String FIND_USER_LOGIN_DATA_BY_ID = "SELECT password_hash, salt FROM users WHERE user_id=?";
 	private static final String LOGIN_AND_PASSWORD_CHECK = "SELECT count(*) as usersCount FROM users WHERE email=? AND password_hash=?";
 	private static final String REGISTER = "INSERT INTO users (email, login_name, password_hash, salt, image_url, role_type, _status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String UPDATE_EMAIL = "UPDATE users SET email = ? WHERE user_id = ?";
@@ -167,6 +168,23 @@ public class UserDaoImpl implements UserDao {
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_USER_LOGIN_DATA, e.getMessage());
 			throw new DaoException("Can not proceed request: " + FIND_USER_LOGIN_DATA, e);
+		}
+		return loginData;
+	}
+	
+	@Override
+	public Optional<LoginData> findUserLoginData(int userId) throws DaoException {
+		Optional<LoginData> loginData = Optional.empty();
+		try (Connection connection = ConnectionPool.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement(FIND_USER_LOGIN_DATA_BY_ID)) {
+			statement.setInt(1, userId);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				loginData = Optional.of(new LoginData(resultSet.getString(USER_PASSWORD_HASH), resultSet.getString(USER_SALT)));
+			}
+		} catch (SQLException e) {
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_USER_LOGIN_DATA_BY_ID, e.getMessage());
+			throw new DaoException("Can not proceed request: " + FIND_USER_LOGIN_DATA_BY_ID, e);
 		}
 		return loginData;
 	}

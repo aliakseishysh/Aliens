@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 
 import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
@@ -16,6 +17,8 @@ import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.User;
+import by.shyshaliaksey.webproject.model.entity.feedback.EmailUpdateResultInfo;
+import by.shyshaliaksey.webproject.model.entity.feedback.ErrorFeedback;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,12 +37,21 @@ public class UpdateUserEmailCommand implements Command {
 		UserService userService = serviceProvider.getUserService();
 		Router router;
 		try {
-			Boolean emailResult = userService.changeEmail(email, newEmail, userId);
-			Optional<User> user = userService.findUserByEmail(newEmail);
-			if (emailResult && user.isPresent()) {
-				request.getSession().setAttribute(RequestAttribute.CURRENT_USER.getValue(), user.get());
+			EmailUpdateResultInfo emailResult = userService.changeEmail(email, newEmail, userId);
+			String jsonResponse = new JSONObject()
+					.put(ErrorFeedback.UPDATE_EMAIL_RESULT_INFO_STATUS.getValue(), emailResult.isEmailCorrect())
+					.put(ErrorFeedback.UPDATE_EMAIL_RESULT_INFO_EMAIL_FEEDBACK.getValue(), emailResult.getEmailErrorInfo())
+					.toString();
+			if (emailResult.isEmailCorrect()) {
+				User currentUser = (User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue());
+				currentUser.setEmail(newEmail);
+				request.getSession().setAttribute(RequestAttribute.CURRENT_USER.getValue(), currentUser);
+				response.setStatus(200);
+				router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
+			} else {
+				response.setStatus(400);
+				router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
 			}
-			router = new Router(null, emailResult.toString(), RouterType.AJAX_RESPONSE);
 		} catch (ServiceException e) {
 			logger.log(Level.ERROR, "Exception occured while email updating: {}", e.getMessage());
 			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);

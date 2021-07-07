@@ -1,29 +1,32 @@
 <div class="content-section">
-	<form id="password-update-form">
+	<form id="form-update-password" class="needs-validation" novalidate>
 		<fieldset class="form-group">
 			<legend class="border-bottom mb-4">Password Update</legend>
-   			<label class="control-label col-sm-2" for="password-update-form-password">Password:</label>
+   			<label class="control-label col-sm-2" for="form-update-password-password">Password:</label>
    			<div class="col-sm-10">
-    			<input type="password" class="form-control" id="password-update-form-password" name="password-update-form-password" placeholder="Enter password">
+    			<input type="password" class="form-control" id="form-update-password-password" 
+    				   name="form-update-password-password" placeholder="Enter password"
+    				   pattern="${VALID_PASSWORD}"
+    				   required>
+			   <div id="form-update-password-password-invalid-feedback" class="invalid-feedback">
+        			${UPDATE_PASSWORD_STANDARD_PASSWORD_FEEDBACK}
+      			</div>
    			</div>
-   			<label class="control-label col-sm-2" for="password-update-form-password-confirm">Password confirm:</label>
+   			<label class="control-label col-sm-2" for="form-update-password-password-confirmation">Password confirm:</label>
    			<div class="col-sm-10">
-     			<input type="password" class="form-control" id="password-update-form-password-confirm" name="password-update-form-password-confirm" placeholder="Enter password">
+     			<input type="password" class="form-control" id="form-update-password-password-confirmation" 
+     				   name="form-update-password-password-confirmation" placeholder="Enter password"
+     				   pattern="${VALID_PASSWORD}"
+    				   required>
+		   		<div id="form-update-password-password-confirmation-invalid-feedback" class="invalid-feedback">
+        			${UPDATE_PASSWORD_STANDARD_PASSWORD_CONFIRMATION_FEEDBACK}
+      			</div>
    			</div>
 		</fieldset>
 		<div class="form-group col-sm-10">
+			<p id="form-update-password-parameter-current-user-id" hidden>${currentUser.id}</p>
 			<button class="btn btn-outline-info" 
-					type="button" 
-					onclick="updateUserPassword(
-						`${PROJECT_NAME}`,
-						`${CONTROLLER}`,
-						`${COMMAND}`,
-						`${UPDATE_USER_PASSWORD}`,
-						`${PASSWORD}`,
-						`${PASSWORD_CONFIRM}`,
-						`${USER_ID}`,
-						`${LOAD_PASSWORD_UPDATE_FORM}`,
-						`${currentUser.id}`)">
+					type="submit">
 				Update
 			</button>
 		</div>

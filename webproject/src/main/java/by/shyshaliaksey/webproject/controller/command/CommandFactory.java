@@ -30,8 +30,6 @@ import by.shyshaliaksey.webproject.controller.command.impl.rating.FindUserRateCo
 import by.shyshaliaksey.webproject.controller.command.impl.rating.UpdateRatingCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.LoginUserCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.LogoutUserCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.user.NextPageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.user.PreviousPageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.RegisterUserCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserEmailCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserImageCommand;

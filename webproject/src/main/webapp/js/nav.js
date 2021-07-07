@@ -1,4 +1,4 @@
-function logoutUser(CONTROLLER, COMMAND, LOGOUT_USER, OPEN_HOME_PAGE) {
+function logoutUser() {
     var url = CONTROLLER + "?" + COMMAND + "=" + LOGOUT_USER;
     $.ajax({
         url: url,

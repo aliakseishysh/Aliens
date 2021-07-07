@@ -1,4 +1,4 @@
-function restorePassword(CONTROLLER, COMMAND, RESTORE_PASSWORD, EMAIL) {
+function restorePassword() {
     // var enteredEmail = document.getElementById("email-update-form-email").value;
     // var data = {};
     // data[EMAIL] = currentEmail;

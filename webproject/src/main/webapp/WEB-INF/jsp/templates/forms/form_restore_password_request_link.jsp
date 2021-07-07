@@ -10,12 +10,7 @@
 	</fieldset>
 	<div class="form-group col-sm-10">
 		<button class="btn btn-outline-info" type="button"
-				onclick="restorePassword(
-						'${CONTROLLER}',
-						'${COMMAND}',
-						'${RESTORE_PASSWORD}',
-						'${EMAIL}'
-					)">
+				onclick="restorePassword()">
 			Restore
 		</button>
 	</div>

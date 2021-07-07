@@ -1,26 +1,23 @@
 <div class="content-section">
-	<form id="email-update-form">
+	<form id="form-update-email" class="needs-validation" novalidate>
 		<fieldset class="form-group">
 			<legend class="border-bottom mb-4">Email Update</legend>
-			<label class="control-label col-sm-2" for="email-update-form-email">Email:</label>
+			<label class="control-label col-sm-2" for="form-update-email-email">Email:</label>
 			<div class="col-sm-10">
-  				<input type="email" class="form-control" id="email-update-form-email" name="email-update-form-email" placeholder="Enter email">
+  				<input type="email" class="form-control" id="form-update-email-email" name="form-update-email-email"
+  					   placeholder="Enter email" 
+  					   pattern="${VALID_EMAIL}"
+  					   required>
+  				<div id="form-update-email-email-invalid-feedback" class="invalid-feedback">
+        			${STANDARD_EMAIL_FEEDBACK}
+      			</div>		   
   			</div>
 		</fieldset>
 		<div class="form-group col-sm-10">
+			<p id="form-update-email-parameter-current-user-id" hidden>${currentUser.id}</p>
+			<p id="form-update-email-parameter-current-user-email" hidden>${currentUser.email}</p>
 			<button class="btn btn-outline-info" 
-					type="button" 
-					onclick="updateUserEmail(
-					 	`${PROJECT_NAME}`,
-						`${CONTROLLER}`,
-						`${COMMAND}`,
-						`${UPDATE_USER_EMAIL}`,
-						`${EMAIL}`,
-						`${NEW_EMAIL}`,
-						`${USER_ID}`,
-						`${LOAD_EMAIL_UPDATE_FORM}`,
-						`${currentUser.id}`,
-						`${currentUser.email}`)">
+					type="submit">
 				Update
 			</button>
 		</div>

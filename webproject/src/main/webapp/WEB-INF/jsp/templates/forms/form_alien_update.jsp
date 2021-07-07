@@ -26,18 +26,7 @@
 			<div class="form-group">
 				<button class="btn btn-outline-info" 
 						type="button" 
-						onclick="updateAlien(
-							`${PROJECT_NAME}`,
-							`${CONTROLLER}`,
-							`${COMMAND}`,
-							`${UPDATE_ALIEN}`,
-							`${ALIEN_ID}`,
-							`${ALIEN_NAME}`,
-							`${ALIEN_SMALL_DESCRIPTION}`,
-							`${ALIEN_FULL_DESCRIPTION}`,
-							`${ALIEN_NEW_IMAGE}`,
-							`${LOAD_ALIEN_UPDATE_FORM}`,
-							`${alien.id}`)">
+						onclick="updateAlien(`${alien.id}`)">
 					Update
 				</button>
 			</div>

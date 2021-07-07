@@ -6,6 +6,7 @@
 <title>Profile</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
+<link href="<c:url value="${CSS_USER_PROFILE}"/>" rel="stylesheet">
 </head>
 <body>
 <main role="main" class="container">

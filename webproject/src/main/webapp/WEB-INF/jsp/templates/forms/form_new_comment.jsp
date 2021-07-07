@@ -11,16 +11,7 @@
 			<div class="form-group">
 				<button class="btn btn-outline-info" 
 						type="button" 
-						onclick="addNewComment(
-							`${PROJECT_NAME}`,
-							`${CONTROLLER}`,
-							`${COMMAND}`,
-							`${ADD_NEW_COMMENT}`,
-							`${NEW_COMMENT}`,
-							`${ALIEN_ID}`,
-							`${USER_ID}`,
-							`${alien.id}`,
-							`${currentUser.id}`)">
+						onclick="addNewComment()">
 					Add
 				</button>
 			</div>

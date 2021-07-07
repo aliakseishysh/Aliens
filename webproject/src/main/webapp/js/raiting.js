@@ -1,4 +1,4 @@
-function setRatingValue(alienName, ALIEN_NAME, CONTROLLER, COMMAND, FIND_USER_RATE) {
+function setRatingValue() {
     var ratingInput = $("input[type='radio']");
     var data = {};
     data[ALIEN_NAME] = alienName;
@@ -17,7 +17,7 @@ function setRatingValue(alienName, ALIEN_NAME, CONTROLLER, COMMAND, FIND_USER_RA
     });
 };
 
-function updateRating(alienName, RATING_VALUE, ALIEN_NAME, CONTROLLER, COMMAND, UPDATE_RATING, ratingValue) {
+function updateRating(ratingValue) {
     var data = {};
     data[RATING_VALUE] = ratingValue;
     data[ALIEN_NAME] = alienName;
@@ -33,11 +33,11 @@ function updateRating(alienName, RATING_VALUE, ALIEN_NAME, CONTROLLER, COMMAND, 
     });
 };
 
-// document.addEventListener("DOMContentLoaded",() => {
-//     if(document.getElementById("ratingStars") != null) {
-//       setRatingValue();
-//     }
-//   });
+document.addEventListener("DOMContentLoaded",() => {
+    if(document.getElementById("ratingStars") != null) {
+      setRatingValue();
+    }
+});
 
 
 // $(document).ready(function() {

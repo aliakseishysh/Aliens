@@ -11,6 +11,26 @@
 
 <link href="<c:url value="${CSS_RAITING}"/>" rel="stylesheet">
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
+
+<script>
+	var PROJECT_NAME = `${PROJECT_NAME}`;
+	var CONTROLLER = `${CONTROLLER}`;
+	var COMMAND = `${COMMAND}`;
+	var UPDATE_ALIEN = `${UPDATE_ALIEN}`;
+	var ALIEN_NAME = `${ALIEN_NAME}`;
+	var ALIEN_SMALL_DESCRIPTION = `${ALIEN_SMALL_DESCRIPTION}`;
+	var ALIEN_FULL_DESCRIPTION = `${ALIEN_FULL_DESCRIPTION}`;
+	var ALIEN_NEW_IMAGE = `${ALIEN_NEW_IMAGE}`;
+	var LOAD_ALIEN_UPDATE_FORM = `${LOAD_ALIEN_UPDATE_FORM}`;
+	var RESTORE_PASSWORD = `${RESTORE_PASSWORD}`;
+	var ADD_NEW_COMMENT = `${ADD_NEW_COMMENT}`;
+	var NEW_COMMENT = `${NEW_COMMENT}`;
+	var DELETE_COMMENT = `${DELETE_COMMENT}`;
+	var USER_ID = `${USER_ID}`;
+	var ALIEN_ID = `${ALIEN_ID}`;
+</script>
+
+
 <script type="text/javascript" src="<c:url value='${JS_RAITING}'/>"></script>
 <script type="text/javascript" src="<c:url value='${JS_ALIEN_PROFILE}'/>"></script>
 
