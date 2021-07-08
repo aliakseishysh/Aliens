@@ -4,6 +4,7 @@ import by.shyshaliaksey.webproject.controller.EnumValue;
 
 public enum ErrorFeedback implements EnumValue  {
 
+	INTERNAL_SERVER_ERROR("Internal server error has occured"),
 	LOGIN_RESULT_INFO_EMAIL_STATUS("email_status"),
 	LOGIN_RESULT_INFO_PASSWORD_STATUS("password_status"),
 	LOGIN_RESULT_INFO_EMAIL_FEEDBACK("email_info_message"),
@@ -75,7 +76,26 @@ public enum ErrorFeedback implements EnumValue  {
 	PROMOTE_DEMOTE_USER_RESULT_INFO_FEEDBACK_INVALID_LOGIN_PROMOTE_YOURSELF("You can't promote yourself"),
 	PROMOTE_DEMOTE_USER_RESULT_INFO_FEEDBACK_INVALID_LOGIN_DEMOTE_YOURSELF("You can't demote yourself"),
 	PROMOTE_DEMOTE_USER_RESULT_INFO_FEEDBACK_INVALID_LOGIN_CAN_NOT_FIND_USER_FOR_PROMOTING("Can't find suitable user for promoting"),
-	PROMOTE_DEMOTE_USER_RESULT_INFO_FEEDBACK_INVALID_LOGIN_CAN_NOT_FIND_ADMIN_FOR_DEMOTING("Can't find suitable admin for demoting");
+	PROMOTE_DEMOTE_USER_RESULT_INFO_FEEDBACK_INVALID_LOGIN_CAN_NOT_FIND_ADMIN_FOR_DEMOTING("Can't find suitable admin for demoting"),
+	ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_NAME_FEEDBACK("Please enter a valid alien name"),
+	ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK("Please enter a valid alien small description"),
+	ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK("Please enter a valid alien full description"),
+	ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_IMAGE_FEEDBACK("Please select a valid alien image"),
+	ADD_NEW_UPDATE_ALIEN_ALIEN_NAME_STATUS("add_new_alien_alien_name_status"),
+	ADD_NEW_UPDATE_ALIEN_ALIEN_SMALL_DESCRIPTION_STATUS("add_new_alien_alien_name_small_description_status"),
+	ADD_NEW_UPDATE_ALIEN_ALIEN_FULL_DESCRIPTION_STATUS("add_new_alien_alien_full_description_status"),
+	ADD_NEW_UPDATE_ALIEN_ALIEN_IMAGE_STATUS("add_new_alien_alien_image_status"),
+	ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_NAME_FEEDBACK("add_new_alien_result_info_name_feedback"),
+	ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_SMALL_DESCRIPTION_FEEDBACK("add_new_alien_result_info_small_description_feedback"),
+	ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_FULL_DESCRIPTION_FEEDBACK("add_new_alien_result_info_full_description_feedback"),
+	ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_IMAGE_FEEDBACK("add_new_alien_result_info_image_feedback"),
+	ADD_NEW_UPDATE_UPDATE_ALIEN_RESULT_INFO_FEEDBACK_INVALID_ALIEN_NAME("Please check alien name for validity"),
+	ADD_NEW_UPDATE_ALIEN_RESULT_INFO_FEEDBACK_INVALID_ALIEN_NAME_ALREADY_EXISTS("Alien with this name already exists"),
+	ADD_NEW_UPDATE_ALIEN_RESULT_INFO_FEEDBACK_INVALID_ALIEN_NAME_NOT_EXISTS("Alien with this name not exists"),
+	ADD_NEW_UPDATE_ALIEN_RESULT_INFO_FEEDBACK_INVALID_ALIEN_SMALL_DESCRIPTION("Please check alien small description for validity"),
+	ADD_NEW_UPDATE_ALIEN_RESULT_INFO_FEEDBACK_INVALID_ALIEN_FULL_DESCRIPTION("Please check alien full description for validity"),
+	ADD_NEW_UPDATE_ALIEN_RESULT_INFO_FEEDBACK_INVALID_ALIEN_IMAGE("Please check alien image for validity");
+	
 	
 	 
 	

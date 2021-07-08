@@ -68,55 +68,7 @@ public class AlienServiceImpl implements AlienService {
 		}
 	}
 
-	@Override
-	public boolean addNewAlien(String alienName, String alienSmallDescription, String alienFullDescription,
-			Part alienImage, String rootFolder, String serverDeploymentPath) throws ServiceException {
-		boolean result = false;
-		try {
-			Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
-			if (!alienInDatabase.isPresent()) {
-				// TODO equals null or something else?
-				if (alienImage == null) {
-					result = alienDao.addNewAlien(alienName, alienSmallDescription, alienFullDescription,
-							FilePath.IMAGE_DEFAULT.getValue());
-				} else {
-					Optional<String> urlResult = uploadImage(alienName, alienImage, rootFolder, serverDeploymentPath);
-					if (urlResult.isPresent()) {
-						result = alienDao.addNewAlien(alienName, alienSmallDescription, alienFullDescription,
-								urlResult.get());
-					}
-				}
-			}
-		} catch (DaoException e) {
-			throw new ServiceException("Error occured when adding new alien " + alienName + " :" + e.getMessage(), e);
-		}
-		return result;
-	}
 	
-	@Override
-	public boolean updateAlien(int alienId, String alienName, String alienSmallDescription, String alienFullDescription,
-			Part alienImage, String rootFolder, String serverDeploymentPath) throws ServiceException {
-		boolean result = false;
-		try {
-			Optional<Alien> alienInDatabase = alienDao.findById(alienId);
-			if (alienInDatabase.isPresent()) {
-				// TODO equals null or something else?
-				if (alienImage == null) {
-					result = alienDao.updateAlien(alienId, alienName, alienSmallDescription, alienFullDescription,
-							FilePath.IMAGE_DEFAULT.getValue());
-				} else {
-					Optional<String> urlResult = uploadImage(alienName, alienImage, rootFolder, serverDeploymentPath);
-					if (urlResult.isPresent()) {
-						result = alienDao.updateAlien(alienId, alienName, alienSmallDescription, alienFullDescription,
-								urlResult.get());
-					}
-				}
-			}
-		} catch (DaoException e) {
-			throw new ServiceException("Error occured when updating alien " + alienName + " :" + e.getMessage(), e);
-		}
-		return result;
-	}
 	
 	@Override
 	public List<Comment> findAllComments(int alienId) throws ServiceException {
@@ -160,47 +112,7 @@ public class AlienServiceImpl implements AlienService {
 		}
 	}
 
-	// return new image path
-	private Optional<String> uploadImage(String alienName, Part part, String rootFolder, String serverDeploymentPath)
-			throws ServiceException {
-		Optional<String> result = Optional.empty();
-		try (InputStream inputStream1 = part.getInputStream(); InputStream inputStream2 = part.getInputStream();) {
-			String submittedFileName = part.getSubmittedFileName();
-			// TODO error will occured if file_name with wrong type, need validation
-			String fileExtension = FilenameUtils.getExtension(submittedFileName);
-			String newFileName = "alien_image_" + alienName + "." + fileExtension;
-			String realpath = rootFolder + FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
-			Path imageRealPath = Paths.get(realpath);
-			Path imageServerDeploymentPath = Paths.get(serverDeploymentPath + newFileName);
-			long bytes1 = createFile(inputStream1, imageRealPath);
-			long bytes2 = createFile(inputStream2, imageServerDeploymentPath);
-			if (bytes1 > 0 && bytes2 > 0) {
-				String url = FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
-				result = Optional.of(url);
-			}
-		} catch (IOException e) {
-			throw new ServiceException(
-					"Error occured when uploading image to server for: " + alienName + " :" + e.getMessage(), e);
-		}
-		return result;
-	}
-
-	// TODO create util package or UtilService and place this method there (from
-	// UserService too)
-	private long createFile(InputStream inputStream, Path imagePath) throws ServiceException {
-		try {
-			Files.deleteIfExists(imagePath);
-			imagePath = Files.createFile(imagePath);
-			long bytes = Files.copy(inputStream, imagePath, StandardCopyOption.REPLACE_EXISTING);
-			return bytes;
-		} catch (IOException e) {
-			throw new ServiceException("Error occured when creating file by path: " + imagePath + " :" + e.getMessage(),
-					e);
-		}
-	}
-
-
-
+	
 	
 
 }

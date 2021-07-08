@@ -10,5 +10,8 @@ public interface ValidationService {
 	boolean validateImageExtension(String imageExtension) throws ServiceException;
 	boolean validateImageSize(long imageSize) throws ServiceException;
 	boolean validateDaysToBan(int daysToBan) throws ServiceException;
+	boolean validateAlienName(String alienName) throws ServiceException;
+	boolean validateAlienSmallDescription(String alienSmallDescription) throws ServiceException;
+	boolean validateAlienFullDescription(String alienFullDescription) throws ServiceException;
 	
 }

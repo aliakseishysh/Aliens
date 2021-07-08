@@ -44,4 +44,22 @@ public class ValidationServiceImpl implements ValidationService {
 		return result;
 	}
 
+	@Override
+	public boolean validateAlienName(String alienName) throws ServiceException {
+		boolean result = Pattern.matches(FormPattern.VALID_ALIEN_NAME.getValue(), alienName);
+		return result;
+	}
+
+	@Override
+	public boolean validateAlienSmallDescription(String alienSmallDescription) throws ServiceException {
+		boolean result = Pattern.matches(FormPattern.VALID_ALIEN_SMALL_DESCRIPTION.getValue(), alienSmallDescription);
+		return result;
+	}
+
+	@Override
+	public boolean validateAlienFullDescription(String alienFullDescription) throws ServiceException {
+		boolean result = Pattern.matches(FormPattern.VALID_ALIEN_FULL_DESCRIPTION.getValue(), alienFullDescription);
+		return result;
+	}
+
 }

@@ -9,6 +9,10 @@ public enum FormPattern implements EnumValue  {
 	VALID_PASSWORD("(?=^.{8,30}$)^[a-zA-Z0-9]+$"),
 	VALID_IMAGE_EXTENSION("^(jpg|jpeg|png)$"),
 	VALID_DIGIT("^[1-9][0-9]*$"),
+	VALID_ALIEN_NAME("(?=^.{3,30}$)^[a-zA-Z0-9_ ]+$"),
+	VALID_ALIEN_SMALL_DESCRIPTION("(?=^.{6,100}$)^[\\s\\d\\w!?#%*()-_\\|\\/,\\.…:;\']+$"), // p don't work in js
+	
+	VALID_ALIEN_FULL_DESCRIPTION("(?=^.{100,3000}$)^[\\s\\d\\w!?#%*()-_\\|/,\\.…:;\']+$"),
 	VALID_IMAGE_SIZE("1000000"); // TODO really? this needed to set maximum image size and send it to client side to js script
 	
 	private String value;

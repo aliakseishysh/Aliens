@@ -148,16 +148,25 @@ function demoteAdmin() {
 };
 
 function addNewAlien() {
-    var alienName = document.getElementById("alien-create-form-name").value;
-    var alienSmallDescription = document.getElementById("alien-create-form-description-small").value;
-    var alienFullDescription = document.getElementById("alien-create-form-description-full").value;
-    var files = document.getElementById("alien-create-form-image").files;
-    var formData = new FormData();
-    formData.append(ALIEN_NAME, alienName);
-    formData.append(ALIEN_SMALL_DESCRIPTION, alienSmallDescription);
-    formData.append(ALIEN_FULL_DESCRIPTION, alienFullDescription);
-    formData.append(ALIEN_NEW_IMAGE, files[0]);
-    var url = CONTROLLER + "?" + COMMAND + "=" + ADD_NEW_ALIEN;
+
+    let formAlienCreate = document.getElementById("form-alien-create");
+    let name = document.getElementById("form-alien-create-name");
+    let descriptionSmall = document.getElementById("form-alien-create-description-small");
+    let descriptionFull = document.getElementById("form-alien-create-description-full");
+    let image = document.getElementById("form-alien-create-image");
+    
+    let nameInvalidFeedback = document.getElementById("form-alien-create-name-invalid-feedback");
+    let descriptionSmallInvalidFeedback = document.getElementById("form-alien-create-description-small-invalid-feedback");
+    let descriptionFullInvalidFeedback = document.getElementById("form-alien-create-description-full-invalid-feedback");
+    let imageInvalidFeedback = document.getElementById("form-alien-create-image-invalid-feedback");
+    let imageLabel = document.getElementById("form-alien-create-image-label");
+
+    let formData = new FormData();
+    formData.append(ALIEN_NAME, name.value);
+    formData.append(ALIEN_SMALL_DESCRIPTION, descriptionSmall.value);
+    formData.append(ALIEN_FULL_DESCRIPTION, descriptionFull.value);
+    formData.append(ALIEN_NEW_IMAGE, image.files[0]);
+    let url = CONTROLLER + "?" + COMMAND + "=" + ADD_NEW_ALIEN;
     $.ajax({
         url: url,
         type: "POST",
@@ -165,20 +174,56 @@ function addNewAlien() {
         cache: false,
         contentType: false,
         processData: false,
-        success: function (updateResult) {
-            if (updateResult == "true") {
-                //$("#alien-create-form").load("/" + PROJECT_NAME + "/" + CONTROLLER + "?" + COMMAND + "=" + LOAD_ALIEN_CREATE_FORM + " #alien-create-form");
-                //set invisible to visible validation green
-                document.getElementById("alien-create-form-name").value = "";
-                document.getElementById("alien-create-form-description-small").value = "";
-                document.getElementById("alien-create-form-description-full").value = "";
-                document.getElementById("alien-create-form-image").value = "";
-            } else if (updateResult == "false") {
-                // set invisible to visible validation red
-            }
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            name.classList.add("is-valid")
+            name.classList.remove("is-invalid")
+            descriptionSmall.classList.add("is-valid")
+            descriptionSmall.classList.remove("is-invalid")
+            descriptionFull.classList.add("is-valid")
+            descriptionFull.classList.remove("is-invalid")
+            image.classList.add("is-valid")
+            image.classList.remove("is-invalid")
+            formAlienCreate.classList.add("was-validated")
+            // document.getElementById("form-update-login-parameter-current-user-login").innerHTML = enteredLogin;
+            // document.getElementById("form-update-LOGIN").classList.remove('was-validated');
+            // document.getElementById("form-update-LOGIN-LOGIN").classList.remove("is-invalid");
         },
-        error: function () {
-            // TODO show error
+        error: function (jqXHR, textStatus, errorThrown) {
+            document.getElementById("form-update-image").classList.remove("was-validated");
+            if (jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_ALIEN_NAME_STATUS] == false) {
+                name.classList.add("is-invalid");
+                name.classList.remove("is-valid");
+            } else {
+                name.classList.remove("is-invalid");
+                name.classList.add("is-valid");
+                nameInvalidFeedback.innerHTML = jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_NAME_FEEDBACK];
+            }
+            if (jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_ALIEN_SMALL_DESCRIPTION_STATUS] == false) {
+                descriptionSmall.classList.add("is-invalid");
+                descriptionSmall.classList.remove("is-valid");
+            } else {
+                descriptionSmall.classList.remove("is-invalid");
+                descriptionSmall.classList.add("is-valid");
+                descriptionSmallInvalidFeedback.innerHTML = jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_SMALL_DESCRIPTION_FEEDBACK];
+            }
+            if (jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_ALIEN_FULL_DESCRIPTION_STATUS] == false) {
+                descriptionFull.classList.add("is-invalid");
+                descriptionFull.classList.remove("is-valid");
+            } else {
+                descriptionFull.classList.remove("is-invalid");
+                descriptionFull.classList.add("is-valid");
+                descriptionFullInvalidFeedback.innerHTML = jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_FULL_DESCRIPTION_FEEDBACK];
+            }
+            if (jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_ALIEN_IMAGE_STATUS] == false) {
+                image.classList.add("is-invalid");
+                image.classList.remove("is-valid");
+            } else {
+                image.classList.remove("is-invalid");
+                image.classList.add("is-valid");
+                imageInvalidFeedback.innerHTML = jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_IMAGE_FEEDBACK];
+            }
+            formAlienCreate.classList.add("was-validated");
         }
     });
 };
@@ -284,4 +329,114 @@ $(document).ready(function () {
         loginField.classList.remove("is-invalid");
         loginField.classList.remove("is-valid");
     })
+});
+
+$(document).ready(function () {
+    let formAlienCreate = document.getElementById("form-alien-create");
+    let name = document.getElementById("form-alien-create-name");
+    let descriptionSmall = document.getElementById("form-alien-create-description-small");
+    let descriptionFull = document.getElementById("form-alien-create-description-full");
+    let image = document.getElementById("form-alien-create-image");
+    
+    let nameInvalidFeedback = document.getElementById("form-alien-create-name-invalid-feedback");
+    let descriptionSmallInvalidFeedback = document.getElementById("form-alien-create-description-small-invalid-feedback");
+    let descriptionFullInvalidFeedback = document.getElementById("form-alien-create-description-full-invalid-feedback");
+    let imageInvalidFeedback = document.getElementById("form-alien-create-image-invalid-feedback");
+    let imageLabel = document.getElementById("form-alien-create-image-label");
+
+    formAlienCreate.addEventListener('submit', function(event) {
+        imageLabel.innerHTML = "Select image"; // TODO change to variable
+
+        name.classList.remove("is-invalid");
+        name.classList.remove("is-valid");
+        descriptionSmall.classList.remove("is-invalid");
+        descriptionSmall.classList.remove("is-valid");
+        descriptionFull.classList.remove("is-invalid");
+        descriptionFull.classList.remove("is-valid");
+        image.classList.remove("is-invalid");
+        image.classList.remove("is-valid");
+
+        formAlienCreate.classList.remove("was-validated");
+
+        let files = image.files;
+        let nameCheckResult = false;
+        let descriptionSmallCheckResult = false;
+        let descriptionFullCheckResult = false;
+        let imageCheckResult = false;
+        let validExtensions = ["image/jpg", "image/jpeg", "image/png"];
+
+        if (name.value != "" && name.value.match(name.getAttribute("pattern"))) {
+            nameCheckResult = true
+            name.classList.add("is-valid")
+        }
+        if (descriptionSmall.value != "" && descriptionSmall.value.match(descriptionSmall.getAttribute("pattern"))) {
+            descriptionSmallCheckResult = true
+            descriptionSmall.classList.add("is-valid")
+        }
+        if (descriptionFull.value != "" && descriptionFull.value.replaceAll('\n', '\\n').match(descriptionFull.getAttribute("pattern"))) {
+            descriptionFullCheckResult = true
+            descriptionFull.classList.add("is-valid")
+        }
+        if (files.length == 1) {
+            let file = files[0];
+            
+            if (file.size <= 1000000) { // bytes
+                for (let i = 0; i < validExtensions.length; i++) {
+                    if (validExtensions[i] == file.type) {
+                        imageCheckResult = true
+                        image.classList.add("is-valid")
+                        break
+                    }
+                }    
+            }
+        }
+
+        if (!nameCheckResult || !descriptionSmallCheckResult || !descriptionFullCheckResult || !imageCheckResult) {
+            if (!nameCheckResult) {
+                nameInvalidFeedback.innerHTML = ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_NAME_FEEDBACK;
+                name.classList.add("is-invalid");
+            }
+            if (!descriptionSmallCheckResult) {
+                descriptionSmallInvalidFeedback.innerHTML = ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK;
+                descriptionSmall.classList.add("is-invalid");
+            }
+            if (!descriptionFullCheckResult) {
+                descriptionFullInvalidFeedback.innerHTML = ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK;
+                descriptionFull.classList.add("is-invalid");
+            }
+            if (!imageCheckResult) {
+                imageInvalidFeedback.innerHTML = ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_IMAGE_FEEDBACK;
+                image.classList.add("is-invalid");
+            }
+        // formAlienCreate.classList.add('was-validated');
+           // document.getElementById("form-alien-create-image").setCustomValidity(UPDATE_IMAGE_RESULT_INFO_FEEDBACK_INVALID_IMAGE);
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            event.preventDefault();
+            document.getElementById("form-alien-create-image-label").innerHTML = files[0].name;
+            adminPage.addNewAlien();
+        }
+      }, false);
+      name.addEventListener('input', function(event) {
+        formAlienCreate.classList.remove('was-validated');
+        name.classList.remove("is-invalid");
+        name.classList.remove("is-valid");
+      })
+      descriptionSmall.addEventListener('input', function(event) {
+        formAlienCreate.classList.remove('was-validated');
+        descriptionSmall.classList.remove("is-invalid");
+        descriptionSmall.classList.remove("is-valid");
+      })
+      descriptionFull.addEventListener('input', function(event) {
+        formAlienCreate.classList.remove('was-validated');
+        descriptionFull.classList.remove("is-invalid");
+        descriptionFull.classList.remove("is-valid");
+      })
+      image.addEventListener('input', function(event) {
+        imageLabel.innerHTML = image.files[0].name;
+        formAlienCreate.classList.remove('was-validated');
+        image.classList.remove("is-invalid");
+        image.classList.remove("is-valid");
+      })
 });

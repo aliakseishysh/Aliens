@@ -1,4 +1,4 @@
-package by.shyshaliaksey.webproject.controller.command.impl.alien;
+package by.shyshaliaksey.webproject.controller.command.impl.user;
 
 import java.util.Optional;
 

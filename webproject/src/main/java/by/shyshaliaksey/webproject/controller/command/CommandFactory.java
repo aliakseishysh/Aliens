@@ -6,8 +6,6 @@ import by.shyshaliaksey.webproject.controller.command.impl.admin.DemoteAdminComm
 import by.shyshaliaksey.webproject.controller.command.impl.admin.PromoteUserCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.admin.UnbanUserCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.admin.UpdateAlienCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.alien.AddNewCommentCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.alien.DeleteCommentCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.load.LoadAlienCreateForm;
 import by.shyshaliaksey.webproject.controller.command.impl.load.LoadAlienUpdateForm;
 import by.shyshaliaksey.webproject.controller.command.impl.load.LoadBanUnbanForm;
@@ -28,6 +26,8 @@ import by.shyshaliaksey.webproject.controller.command.impl.open.OpenServerErrorP
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenUserProfilePageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.rating.FindUserRateCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.rating.UpdateRatingCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.user.AddNewCommentCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.user.DeleteCommentCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.LoginUserCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.LogoutUserCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.RegisterUserCommand;
