@@ -1,11 +1,11 @@
 <div class="content-section">
 	<form id="form-update-login" class="needs-validation" novalidate>
 		<fieldset class="form-group">
-			<legend class="border-bottom mb-4">Login Update</legend>
-			<label class="control-label col-sm-2" for="form-update-login-login">Login:</label>
+			<legend class="border-bottom mb-4">${TEXT[FORM_LOGIN_UPDATE_LEGEND]}</legend>
+			<label class="control-label col-sm-2" for="form-update-login-login">${TEXT[FORM_LOGIN_UPDATE_LOGIN]}</label>
 			<div class="col-sm-10">
   				<input type="text" class="form-control" id="form-update-login-login" name="form-update-login-login" 
-  					   placeholder="Enter login"
+  					   placeholder="${TEXT[FORM_LOGIN_UPDATE_LOGIN_PLACEHOLDER]}"
   					   pattern="${VALID_LOGIN}"
   					   required>
   				<div id="form-update-login-login-invalid-feedback" class="invalid-feedback">
@@ -18,7 +18,7 @@
 			<p id="form-update-login-parameter-current-user-login" hidden>${currentUser.login}</p>
 			<button class="btn btn-outline-info" 
 					type="submit">
-				Update
+				${TEXT[FORM_LOGIN_UPDATE_SUBMIT]}
 			</button>
 		</div>
 	</form>

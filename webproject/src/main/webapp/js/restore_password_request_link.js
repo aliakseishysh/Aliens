@@ -23,3 +23,7 @@ function restorePassword() {
     //     }
     // });
 };
+
+const forgotPasswordPage = {
+    restorePassword: restorePassword
+}

@@ -13,6 +13,7 @@ public enum FormPattern implements EnumValue  {
 	VALID_ALIEN_SMALL_DESCRIPTION("(?=^.{6,100}$)^[\\s\\d\\w!?#%*()-_\\|\\/,\\.…:;\']+$"), // p don't work in js
 	
 	VALID_ALIEN_FULL_DESCRIPTION("(?=^.{100,3000}$)^[\\s\\d\\w!?#%*()-_\\|/,\\.…:;\']+$"),
+	VALID_COMMENT("(?=^.{3,300}$)^[\\s\\d\\w!?#%*()-_\\|/,\\.…:;\']+$"),
 	VALID_IMAGE_SIZE("1000000"); // TODO really? this needed to set maximum image size and send it to client side to js script
 	
 	private String value;

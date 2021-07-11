@@ -31,6 +31,7 @@ import by.shyshaliaksey.webproject.model.dao.UserDao;
 import by.shyshaliaksey.webproject.model.entity.LoginData;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
+import by.shyshaliaksey.webproject.model.entity.feedback.AddNewCommentResultInfo;
 import by.shyshaliaksey.webproject.model.entity.feedback.EmailUpdateResultInfo;
 import by.shyshaliaksey.webproject.model.entity.feedback.ErrorFeedback;
 import by.shyshaliaksey.webproject.model.entity.feedback.ImageUpdateResultInfo;
@@ -38,7 +39,9 @@ import by.shyshaliaksey.webproject.model.entity.feedback.LoginResultInfo;
 import by.shyshaliaksey.webproject.model.entity.feedback.LoginUpdateResultInfo;
 import by.shyshaliaksey.webproject.model.entity.feedback.PasswordUpdateResultInfo;
 import by.shyshaliaksey.webproject.model.entity.feedback.RegisterResultInfo;
+import by.shyshaliaksey.webproject.model.entity.feedback.RequestRestorePasswordTokenResultInfo;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
+import by.shyshaliaksey.webproject.model.service.TimeService;
 import by.shyshaliaksey.webproject.model.service.UserService;
 import by.shyshaliaksey.webproject.model.service.ValidationService;
 import jakarta.servlet.http.HttpSession;
@@ -390,14 +393,27 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean addNewComment(int userId, int alienId, String newComment) throws ServiceException {
-		boolean result = false;
+	public AddNewCommentResultInfo addNewComment(int userId, int alienId, String newComment) throws ServiceException {
+		AddNewCommentResultInfo result = new AddNewCommentResultInfo();
 		try {
-			// Optional<User> user = userDao.findByEmail(email);
-//			if (user.isPresent() && user.get().getId() == userId) {
-//				result = userDao.updateUserEmail(newEmail, userId);
-//			}
-			result = userDao.addNewComment(userId, alienId, newComment);
+			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
+			if(validationService.validateComment(newComment)) {
+				result.setCommentCorrect(true);
+			} else {
+				result.setCommentCorrect(false);
+				result.setCommentErrorInfo(ErrorFeedback.ADD_NEW_COMMENT_RESULT_INFO_FEEDBACK_INVALID_COMMENT.getValue());
+				result.setStatusCode(400);
+			}
+			if(result.isCommentCorrect()) {
+				boolean addResult = userDao.addNewComment(userId, alienId, newComment);
+				if(addResult) {
+					result.setStatusCode(200);
+				} else {
+					result.setCommentCorrect(false);
+					result.setCommentErrorInfo(ErrorFeedback.ADD_NEW_COMMENT_STANDARD_COMMENT_FEEDBACK.getValue());
+					result.setStatusCode(500);
+				}
+			}
 			return result;
 		} catch (DaoException e) {
 			throw new ServiceException("Error occured while adding comment for user " + userId + " :" + e.getMessage(),
@@ -415,9 +431,64 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException("Error occured while deleting comment " + commentId + " :" + e.getMessage(), e);
 		}
 	}
+	
+	@Override
+	public RequestRestorePasswordTokenResultInfo requestRestorePasswordToken(String email) throws ServiceException {
+		// проверить email
+		// если ок, то создать новый токен
+			// если ок, то отправить email
+		// если не ок, то засетить инфу
+//		try {
+//			RequestRestorePasswordTokenResultInfo result = new RequestRestorePasswordTokenResultInfo();
+//			ValidationService validationSerivce = ServiceProvider.getInstance().getValidationService();
+//			if(validationSerivce.validateEmail(email)) {
+//				result.setEmailCorrect(true);
+//			} else {
+//				result.setEmailCorrect(false);
+//				result.setEmailErrorInfo(ErrorFeedback.REQUEST_RESTORE_PASSWORD_TOKEN_RESULT_INFO_FEEDBACK_INVALID_EMAIL.getValue());
+//			}
+//			
+//			if (result.isEmailCorrect()) {
+//				Optional<User> userOptional = userDao.findByEmail(email);
+//				if(userOptional.isPresent()) {
+//					// generate token
+//					final String randomString = "jfi2j204uff4u4fhkhHJ@#NM<Boff904uf";
+//					String token = DatatypeConverter.printHexBinary(hashPassword(randomString, email.getBytes()));
+//					
+//					TimeService timeService = ServiceProvider.getInstance().getTimeService();
+//					final int tokenExpirationTime = 5;
+//					String expirationDate = timeService.prepareTokenExpirationDate(tokenExpirationTime);
+//					
+//					boolean addTokenResult = userDao.addNewToken(email, token, expirationDate);
+//					if (addTokenResult) {
+//						boolean sendMessageResult = sendMessage(email, token);
+//						if(sendMessageResult) {
+//							result.setEmailCorrect(true);
+//						} else {
+//							result.setEmailCorrect(false);
+//							result.setEmailErrorInfo(ErrorFeedback.REQUEST_RESTORE_PASSWORD_TOKEN_RESULT_INFO_FEEDBACK_SERVER_MESSAGE_ERROR.getValue());
+//						}
+//					} else {
+//						result.setEmailCorrect(false);
+//						result.setEmailErrorInfo(ErrorFeedback.REQUEST_RESTORE_PASSWORD_TOKEN_RESULT_INFO_FEEDBACK_SERVER_TOKEN_ERROR.getValue());
+//					}
+//				} else {
+//					result.setEmailCorrect(false);
+//					result.setEmailErrorInfo(ErrorFeedback.NO_USER_WITH_EMAIL.getValue());
+//				}
+//			}
+//			return result;
+//		} catch (DaoException e) {
+//			throw new ServiceException("Error occured while requesting token for " + email + " :" + e.getMessage(), e);
+//		}
+		throw new UnsupportedOperationException(); // TODO todo if you'll have time
+	}
 
 	private byte[] hashPassword(String password, byte[] salt) throws ServiceException {
-		KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 32 * 8);
+		// do not change this final variables
+		final int iterations = 65536;
+		final int size = 32 * 8;
+		KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, size);
 		final String algorithmName = "PBKDF2WithHmacSHA1";
 		try {
 			SecretKeyFactory factory = SecretKeyFactory.getInstance(algorithmName);
@@ -435,5 +506,7 @@ public class UserServiceImpl implements UserService {
 		secureRandom.nextBytes(salt);
 		return salt;
 	}
+
+
 
 }

@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
-import by.shyshaliaksey.webproject.controller.SessionAttribute;
+import by.shyshaliaksey.webproject.controller.ApplicationAttribute;
 import by.shyshaliaksey.webproject.controller.command.Command;
 import by.shyshaliaksey.webproject.controller.command.CommandValue;
 import by.shyshaliaksey.webproject.controller.command.Router;
@@ -51,7 +51,7 @@ public class OpenHomePageCommand implements Command {
 			request.setAttribute(RequestAttribute.ALIEN_LIST.getValue(), aliens);
 			router = new Router(PagePath.PAGE_HOME_JSP.getValue(), null, RouterType.FORWARD);
 		} catch (ServiceException e) {
-			router = new Router("/" + SessionAttribute.CONTROLLER.getValue() + "?" + RequestParameter.COMMAND.getValue()
+			router = new Router("/" + ApplicationAttribute.CONTROLLER.getValue() + "?" + RequestParameter.COMMAND.getValue()
 					+ "=" + PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
 			logger.log(Level.ERROR, "Exception occured while redirecting to {}: {}", PagePath.PAGE_HOME_JSP, e.getMessage());
 		}

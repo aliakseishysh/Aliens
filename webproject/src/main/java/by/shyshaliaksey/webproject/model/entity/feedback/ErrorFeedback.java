@@ -5,6 +5,7 @@ import by.shyshaliaksey.webproject.controller.EnumValue;
 public enum ErrorFeedback implements EnumValue  {
 
 	INTERNAL_SERVER_ERROR("Internal server error has occured"),
+	LOGOUT_STATUS("logout_status"),
 	LOGIN_RESULT_INFO_EMAIL_STATUS("email_status"),
 	LOGIN_RESULT_INFO_PASSWORD_STATUS("password_status"),
 	LOGIN_RESULT_INFO_EMAIL_FEEDBACK("email_info_message"),
@@ -94,10 +95,17 @@ public enum ErrorFeedback implements EnumValue  {
 	ADD_NEW_UPDATE_ALIEN_RESULT_INFO_FEEDBACK_INVALID_ALIEN_NAME_NOT_EXISTS("Alien with this name not exists"),
 	ADD_NEW_UPDATE_ALIEN_RESULT_INFO_FEEDBACK_INVALID_ALIEN_SMALL_DESCRIPTION("Please check alien small description for validity"),
 	ADD_NEW_UPDATE_ALIEN_RESULT_INFO_FEEDBACK_INVALID_ALIEN_FULL_DESCRIPTION("Please check alien full description for validity"),
-	ADD_NEW_UPDATE_ALIEN_RESULT_INFO_FEEDBACK_INVALID_ALIEN_IMAGE("Please check alien image for validity");
-	
-	
-	 
+	ADD_NEW_UPDATE_ALIEN_RESULT_INFO_FEEDBACK_INVALID_ALIEN_IMAGE("Please check alien image for validity"),
+	ADD_NEW_COMMENT_STANDARD_COMMENT_FEEDBACK("Please enter a valid comment"),
+	ADD_NEW_COMMENT_COMMENT_STATUS("add_new_comment_comment_status"),
+	ADD_NEW_COMMENT_RESULT_INFO_COMMENT_FEEDBACK("add_new_comment_result_info_comment_feedback"),
+	ADD_NEW_COMMENT_RESULT_INFO_FEEDBACK_INVALID_COMMENT("Please check comment for validity"),
+	REQUEST_RESTORE_PASSWORD_TOKEN_STANDARD_EMAIL_FEEDBACK("Please enter a valid email"),
+	REQUEST_RESTORE_PASSWORD_TOKEN_EMAIL_STATUS("request_restore_password_token_email_status"),
+	REQUEST_RESTORE_PASSWORD_TOKEN_RESULT_INFO_EMAIL_FEEDBACK("request_restore_password_token_result_info_email_feedback"),
+	REQUEST_RESTORE_PASSWORD_TOKEN_RESULT_INFO_FEEDBACK_INVALID_EMAIL("Please check email for validity"),
+	REQUEST_RESTORE_PASSWORD_TOKEN_RESULT_INFO_FEEDBACK_SERVER_MESSAGE_ERROR("Can't send message on this email"),
+	REQUEST_RESTORE_PASSWORD_TOKEN_RESULT_INFO_FEEDBACK_SERVER_TOKEN_ERROR("Can't add token do database");
 	
 	private String value;
 	

@@ -3,7 +3,7 @@ package by.shyshaliaksey.webproject.controller;
 public enum PagePath implements EnumValue  {
 	
 	// Pages
-	PAGE_BANNED_JSP("/jsp/page_banned.jsp"),
+	PAGE_BANNED_JSP("/WEB-INF/jsp/page_banned.jsp"),
 	PAGE_PROFILE_JSP("/WEB-INF/jsp/page_profile.jsp"),
 	PAGE_ABOUT_JSP("/WEB-INF/jsp/page_about.jsp"),
 	PAGE_ALIEN_PROFILE_JSP("/WEB-INF/jsp/page_alien_profile.jsp"),

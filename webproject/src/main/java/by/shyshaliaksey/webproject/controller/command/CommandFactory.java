@@ -15,6 +15,8 @@ import by.shyshaliaksey.webproject.controller.command.impl.load.LoadUserImage;
 import by.shyshaliaksey.webproject.controller.command.impl.load.LoadUserImageUpdateForm;
 import by.shyshaliaksey.webproject.controller.command.impl.load.LoadUserLoginUpdateForm;
 import by.shyshaliaksey.webproject.controller.command.impl.load.LoadUserPasswordUpdateForm;
+import by.shyshaliaksey.webproject.controller.command.impl.locale.ChangeLocaleCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.open.Open404ErrorPageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenAboutPageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenAlienProfilePageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenBannedPageCommand;
@@ -31,6 +33,7 @@ import by.shyshaliaksey.webproject.controller.command.impl.user.DeleteCommentCom
 import by.shyshaliaksey.webproject.controller.command.impl.user.LoginUserCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.LogoutUserCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.RegisterUserCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.user.RequestRestorePasswordTokenCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserEmailCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserImageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserLoginCommand;
@@ -78,6 +81,9 @@ public class CommandFactory {
 		case ADD_NEW_ALIEN -> new AddNewAlienCommand();
 		case ADD_NEW_COMMENT -> new AddNewCommentCommand();
 		case DELETE_COMMENT -> new DeleteCommentCommand();
+		case CHANGE_LOCALE -> new ChangeLocaleCommand();
+		case OPEN_404_ERROR_PAGE -> new Open404ErrorPageCommand();
+		// case REQUEST_RESTORE_PASSWORD_TOKEN -> new RequestRestorePasswordTokenCommand(); TODO if have time
 		default -> throw new IllegalArgumentException("Value is not present in CommandFactory: " + commandName);
 		};
 		return command;

@@ -10,6 +10,8 @@ public enum CommandValue implements EnumValue {
 	OPEN_REGISTER_PAGE("register"),
 	OPEN_USER_PROFILE_PAGE("user-profile"),
 	OPEN_SERVER_ERROR_PAGE("server-error-page"),
+	CHANGE_LOCALE("change-locale"),
+	OPEN_404_ERROR_PAGE("404-error-page"),
 	OPEN_BANNED_PAGE("banned-page"),
 	OPEN_ALIEN_PROFILE_PAGE("alien-profile"),
 	OPEN_FORGOT_PASSWORD_PAGE("forgot-password"),
@@ -39,6 +41,7 @@ public enum CommandValue implements EnumValue {
 	ADD_NEW_ALIEN("add-new-alien"),
 	ADD_NEW_COMMENT("add-new-comment"),
 	DELETE_COMMENT("delete-comment");
+	// REQUEST_RESTORE_PASSWORD_TOKEN("request-restore-password-token"); TODO if have time
 
 	private String value;
 	
@@ -52,12 +55,13 @@ public enum CommandValue implements EnumValue {
 	}
 	
 	public static CommandValue fromString(String commandName) {
+		CommandValue result = OPEN_404_ERROR_PAGE;
         for (CommandValue commandValue : CommandValue.values()) {
             if (commandValue.getValue().equals(commandName)) {
-                return commandValue;
+                result = commandValue;
             }
         }
-        return null;
+        return result;
     }
 	
 }

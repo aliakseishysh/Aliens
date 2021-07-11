@@ -4,23 +4,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Home</title>
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
-<script
-	src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-<script src='https://pagination.js.org/dist/2.1.5/pagination.min.js'></script>
+<meta charset="UTF-8">
+<title>${TEXT[PAGE_HOME_TITLE]}</title>
+<!-- 
+<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
+ -->
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 <script type="text/javascript" src="<c:url value='${JS_HOME}'/>"></script>
 
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
 <body>
 	<main role="main" class="container">
 		<jsp:include page="${TEMPLATE_NAV_JSP}" />
-		<h1>Home Page</h1>
-
+		<h1>${TEXT[PAGE_HOME_H1]}</h1>
 
 		<div class="row">
 			<div class="col-md-8">
@@ -34,14 +31,11 @@
 			</div>
 			<div class="col-md-4">
 				<div class="content-section">
-					<h3>Alienbar</h3>
-					<p class='text-muted'>Some features
+					<h3>${TEXT[PAGE_HOME_ALIENBAR]}</h3>
+					<p class='text-muted'>${TEXT[PAGE_HOME_CONTACT_ADMIN]}
 					<ul class="list-group">
-						<li class="list-group-item list-group-item-light">Announcements</li>
-						<li class="list-group-item list-group-item-light">News</li>
-						<li class="list-group-item list-group-item-light">Contact
-							admin</li>
-						<li class="list-group-item list-group-item-light">etc</li>
+						<li class="list-group-item list-group-item-light">${TEXT[PAGE_HOME_ADMIN_EMAIL]}</li>
+						<li class="list-group-item list-group-item-light">${TEXT[PAGE_HOME_YEAR]}</li>
 					</ul>
 					</p>
 				</div>

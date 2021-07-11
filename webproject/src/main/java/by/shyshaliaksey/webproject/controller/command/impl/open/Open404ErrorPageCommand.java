@@ -7,11 +7,11 @@ import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-public class OpenBannedPageCommand implements Command {
+public class Open404ErrorPageCommand implements Command {
 
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		Router router = new Router(PagePath.PAGE_BANNED_JSP.getValue(), null, RouterType.FORWARD);
+		Router router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.FORWARD);
 		return router;
 	}
 

@@ -4,7 +4,7 @@
 <article class="media content-section">
 
 	<img class="rounded-circle article-img"
-		src="<c:url value="${alien.imageUrl}"/>" alt="no image">
+		src="<c:url value="${alien.imageUrl}"/>" alt="${TEXT[TEMPLATE_POST_IMAGE_ALT]}">
 	<div class="media-body">
 		<div class="article-metadata">
 			<a class="mr-2" href="<c:url value="/${CONTROLLER}?${COMMAND}=${OPEN_ALIEN_PROFILE_PAGE}&${ALIEN_ID}=${alien.id}"/>">${alien.name}</a> 

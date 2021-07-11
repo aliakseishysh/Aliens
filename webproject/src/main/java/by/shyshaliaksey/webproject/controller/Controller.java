@@ -37,28 +37,14 @@ import by.shyshaliaksey.webproject.model.service.UserService;
  */
 
 @MultipartConfig
-@WebServlet(name="Controller", urlPatterns={"/jsp/controller", "/controller"}, loadOnStartup=0)
+@WebServlet(name="Controller", urlPatterns={"/controller"})
 public class Controller extends HttpServlet implements Servlet {
        
 	private static final Logger logger = LogManager.getRootLogger();
 	
     public Controller() {
         super();
-        // TODO Auto-generated constructor stub
     }
-    
-    @Override
-    public void init() throws ServletException {
-    	// super.init();
-        ConnectionPool.getInstance();
-        ServiceProvider.getInstance();
-        DaoProvider.getInstance();
-    }
-
-	@Override
-	public void destroy() {
-		ConnectionPool.getInstance().destroyConnectionPool();
-	}
 	
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -71,15 +57,7 @@ public class Controller extends HttpServlet implements Servlet {
 	}
 	
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		
 		String commandName = request.getParameter(RequestParameter.COMMAND.getValue());
-		UserService userService = ServiceProvider.getInstance().getUserService();
-		if (commandName == null) {
-			commandName = CommandValue.OPEN_SERVER_ERROR_PAGE.getValue();
-		}
-		else if (userService.isUserBanned(request.getSession()) && !commandName.equals(CommandValue.LOGOUT_USER.getValue())) {
-			commandName = CommandValue.OPEN_BANNED_PAGE.getValue();
-		}
 		try {
 			Command command = CommandFactory.defineCommand(commandName);
 			Router router = command.execute(request, response);

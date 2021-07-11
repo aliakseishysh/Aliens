@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 
 import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
@@ -14,6 +15,8 @@ import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.User;
+import by.shyshaliaksey.webproject.model.entity.feedback.AddNewCommentResultInfo;
+import by.shyshaliaksey.webproject.model.entity.feedback.ErrorFeedback;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,11 +35,15 @@ public class AddNewCommentCommand implements Command {
 		UserService userService = serviceProvider.getUserService();
 		Router router;
 		try {
-			Boolean newCommentResult = userService.addNewComment(userId, alienId, newComment);
-			
-			router = new Router(null, newCommentResult.toString(), RouterType.AJAX_RESPONSE);
-			
+			AddNewCommentResultInfo addNewCommentResult = userService.addNewComment(userId, alienId, newComment);
+			String jsonResponse = new JSONObject()
+					.put(ErrorFeedback.LOGIN_RESULT_INFO_EMAIL_STATUS.getValue(), addNewCommentResult.isCommentCorrect())
+					.put(ErrorFeedback.LOGIN_RESULT_INFO_PASSWORD_STATUS.getValue(), addNewCommentResult.getCommentErrorInfo())
+					.toString();
+			response.setStatus(addNewCommentResult.getStatusCode());
+			router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
 		} catch (ServiceException e) {
+			response.setStatus(500);
 			logger.log(Level.ERROR, "Exception occured while email updating: {}", e.getMessage());
 			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
 		}

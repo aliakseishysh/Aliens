@@ -56,7 +56,11 @@ public class UserDaoImpl implements UserDao {
 	private static final String PROMOTE_DEMOTE = "UPDATE users SET role_type = ? WHERE login_name = ?";
 	private static final String ADD_NEW_COMMENT = "INSERT INTO comments (user_id, alien_id, comment, comment_status) VALUES (?, ?, ?, ?)";
 	private static final String CHANGE_COMMENT_STATUS = "UPDATE comments SET comment_status = ? WHERE comment_id = ?";
+	private static final String ADD_NEW_TOKEN = "INSERT INTO tokens (email, token, expiration_date) VALUES (?, ?, ?)";
 
+	
+	
+	
 	public static UserDaoImpl getInstance() {
 		return instance;
 	}
@@ -380,6 +384,22 @@ public class UserDaoImpl implements UserDao {
 			throw new DaoException("Can not proceed request: " + CHANGE_COMMENT_STATUS, e);
 		}
 		return result == 1;
+	}
+
+	@Override
+	public boolean addNewToken(String email, String token, String expirationDate) throws DaoException {
+		int rowsAdded = 0;
+		try (Connection connection = ConnectionPool.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement(ADD_NEW_TOKEN)) {
+			statement.setString(1, email);
+			statement.setString(2, token);
+			statement.setString(3, expirationDate);
+			rowsAdded = statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", ADD_NEW_TOKEN, e.getMessage());
+			throw new DaoException("Can not proceed request: " + ADD_NEW_TOKEN, e);
+		}
+		return rowsAdded == 1;
 	}
 
 	

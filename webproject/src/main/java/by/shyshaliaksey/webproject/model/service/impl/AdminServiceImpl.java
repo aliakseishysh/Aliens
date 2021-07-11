@@ -393,6 +393,7 @@ public class AdminServiceImpl implements AdminService {
 			String submittedFileName = part.getSubmittedFileName();
 			// TODO error will occured if file_name with wrong type, need validation
 			String fileExtension = FilenameUtils.getExtension(submittedFileName);
+			
 			String newFileName = "alien_image_" + alienName + "." + fileExtension;
 			String realpath = rootFolder + FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
 			Path imageRealPath = Paths.get(realpath);

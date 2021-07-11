@@ -28,5 +28,6 @@ public interface UserDao {
 	boolean demoteAdmin(String adminLogin) throws DaoException;
 	boolean addNewComment(int userId, int alienId, String newComment) throws DaoException;
 	boolean deleteComment(int commentId) throws DaoException;
+	boolean addNewToken(String email, String token, String expirationDate) throws DaoException;
 	
 }

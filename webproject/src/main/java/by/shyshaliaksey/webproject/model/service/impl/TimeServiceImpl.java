@@ -19,5 +19,17 @@ public class TimeServiceImpl implements TimeService {
 		banDate = dateFormat.format(calendar.getTime());
 		return banDate;
 	}
+	
+	@Override
+	public String prepareTokenExpirationDate(int minutesToExpiration) {
+		String expirationDate;
+		Date date = new Date();
+		Calendar calendar = Calendar.getInstance();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		calendar.setTime(date);
+		calendar.add(Calendar.MINUTE, minutesToExpiration);
+		expirationDate = dateFormat.format(calendar.getTime());
+		return expirationDate;
+	}
 
 }

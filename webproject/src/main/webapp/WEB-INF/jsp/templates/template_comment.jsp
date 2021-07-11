@@ -10,11 +10,12 @@
 	var commentId = `${comment.id}`;
 </script>
 
-
+<!-- 
 <script type="text/javascript" src="<c:url value='${JS_ALIEN_PROFILE}'/>"></script>
+ -->
 <article id="comment_${comment.id}" class="media content-section">
 
-	<img class="rounded-circle article-img" src="<c:url value="${comment.userImage}"/>" alt="no image">
+	<img class="rounded-circle article-img" src="<c:url value="${comment.userImage}"/>" alt="${TEXT[TEMPLATE_COMMENT_IMAGE_ALT]}">
 	<div class="media-body">
 		<div class="article-metadata">
 			<div class="row row-comment">

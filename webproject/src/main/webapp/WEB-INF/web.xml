@@ -16,9 +16,9 @@
 		<param-name>web-site-name</param-name>
 		<param-value>localhost:8080</param-value>
 	</context-param>
-	<listener>
-		<listener-class>
-			by.shyshaliaksey.webproject.controller.listener.SessionListener
-		</listener-class>
-	</listener>
+	
+	<filter-mapping>
+		<filter-name>BanFilter</filter-name>
+		<url-pattern />
+	</filter-mapping>
 </web-app>

@@ -21,7 +21,8 @@ public enum RequestParameter implements EnumValue  {
 	DAYS_TO_BAN("days_to_ban"),
 	NEW_COMMENT("new-comment"),
 	COMMENT_ID("comment-id"),
-	PAGE("page");
+	PAGE("page"),
+	LOCALE("locale");
 
 	private String value;
 	

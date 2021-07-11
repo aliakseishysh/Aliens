@@ -83,29 +83,41 @@ function updateAlien() {
 };
 
 function addNewComment() {
-    var comment = document.getElementById("new-comment-form-comment").value;
+    let formNewComment = document.getElementById("form-new-comment");
+    let comment = document.getElementById("form-new-comment-comment");
+    let commentInvalidFeedback = document.getElementById("form-new-comment-comment-invalid-feedback");
+
+    let alienId = document.getElementById("form-new-comment-parameter-current-alien-id").innerHTML
+    let userId = document.getElementById("form-new-comment-parameter-current-user-id").innerHTML
+
+
     var data = {};
-    data[NEW_COMMENT] = comment;
+    data[NEW_COMMENT] = comment.value;
     data[ALIEN_ID] = alienId;
     data[USER_ID] = userId;
+
+
     var url = CONTROLLER + "?" + COMMAND + "=" + ADD_NEW_COMMENT;
     $.ajax({
         url: url,
         type: "POST",
         data: data,
-        success: function (updateResult) {
-            if (updateResult == "true") {
-                // load new comment (add to up)
-                //window.location.href = "";
-                document.getElementById("new-comment-form-comment").value = "";
-                //$("#alien-update-form").load("/" + PROJECT_NAME + "/" + CONTROLLER + "?" + COMMAND + "=" + LOAD_ALIEN_UPDATE_CREATE_FORM + " #alien-update-form");
-                //set invisible to visible validation green
-            } else if (updateResult == "false") {
-                // set invisible to visible validation red
-            }
+        success: function (data, textStatus, jqXHR) {
+            comment.classList.add("is-valid")
+            comment.classList.remove("is-invalid")
+            formNewComment.classList.add("was-validated")
         },
-        error: function () {
-            // TODO show error
+        error: function (jqXHR, textStatus, errorThrown) {
+            formAlienUpdate.classList.remove("was-validated");
+            if (jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_ALIEN_NAME_STATUS] == false) {
+                comment.classList.add("is-invalid");
+                comment.classList.remove("is-valid");
+            } else {
+                comment.classList.remove("is-invalid");
+                comment.classList.add("is-valid");
+                commentInvalidFeedback.innerHTML = jqXHR.responseJSON[ADD_NEW_COMMENT_RESULT_INFO_COMMENT_FEEDBACK];
+            }
+            formNewComment.classList.add("was-validated");
         }
     });
 };
@@ -292,5 +304,42 @@ $(document).ready(function () {
         formAlienUpdate.classList.remove('was-validated');
         image.classList.remove("is-invalid");
         image.classList.remove("is-valid");
+      })
+});
+
+$(document).ready(function () {
+    let formNewComment = document.getElementById("form-new-comment");
+    let comment = document.getElementById("form-new-comment-comment");
+    
+    let commentInvalidFeedback = document.getElementById("form-new-comment-comment-invalid-feedback");
+
+    formNewComment.addEventListener('submit', function(event) {
+        comment.classList.remove("is-invalid");
+        comment.classList.remove("is-valid");
+
+        formNewComment.classList.remove("was-validated");
+
+        let commentCheckResult = false;
+
+        if (comment.value != "" && comment.value.replaceAll('\n', '\\n').match(comment.getAttribute("pattern"))) {
+            commentCheckResult = true
+            comment.classList.add("is-valid")
+        }
+
+        if (!commentCheckResult) {
+            commentInvalidFeedback.innerHTML = ADD_NEW_COMMENT_STANDARD_COMMENT_FEEDBACK;
+            comment.classList.add("is-invalid");
+            event.preventDefault();
+            event.stopPropagation();
+        } else {
+            event.preventDefault();
+            alienProfile.addNewComment()
+        }
+      }, false);
+     
+      comment.addEventListener('input', function(event) {
+        formNewComment.classList.remove('was-validated');
+        comment.classList.remove("is-invalid");
+        comment.classList.remove("is-valid");
       })
 });

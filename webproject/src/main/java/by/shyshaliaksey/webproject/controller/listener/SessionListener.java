@@ -2,18 +2,22 @@ package by.shyshaliaksey.webproject.controller.listener;
 
 import by.shyshaliaksey.webproject.controller.EnumValue;
 import by.shyshaliaksey.webproject.controller.FilePath;
+import by.shyshaliaksey.webproject.controller.LocaleAttribute;
 import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.SessionAttribute;
+import by.shyshaliaksey.webproject.controller.ApplicationAttribute;
 import by.shyshaliaksey.webproject.controller.command.CommandValue;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.feedback.ErrorFeedback;
 import by.shyshaliaksey.webproject.model.entity.FormPattern;
+import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
 
+@WebListener
 public class SessionListener implements HttpSessionListener {
 
 	@Override
@@ -28,15 +32,13 @@ public class SessionListener implements HttpSessionListener {
 	}
 	
 	private void setSessionVariables(HttpSession session) {
-		setEnumSessionVariables(session, ErrorFeedback.values());
-		setEnumSessionVariables(session, CommandValue.values());
-		setEnumSessionVariables(session, FilePath.values());
-		setEnumSessionVariables(session, PagePath.values());
+		
+		session.setAttribute(SessionAttribute.CURRENT_LOCALIZATION_NAME.name(), LocaleAttribute.LOCALIZATION_EN.getValue());
+		session.setAttribute(SessionAttribute.TEXT.name(), LocaleAttribute.LOCALIZATION_EN.getResourceBundle());
+		session.setAttribute(SessionAttribute.CURRENT_LOCALE.name(), LocaleAttribute.LOCALIZATION_EN.getLocale());
+		
 //		setEnumSessionVariables(session, RequestAttribute.values());
-		setEnumSessionVariables(session, RequestParameter.values());
-		setEnumSessionVariables(session, SessionAttribute.values());
-		setEnumSessionVariables(session, Role.values());
-		setEnumSessionVariables(session, FormPattern.values());
+
 		
 	}
 	// ${sessionScope[CommandValue][]}
@@ -48,5 +50,7 @@ public class SessionListener implements HttpSessionListener {
 			session.setAttribute(enumName, enumValueInterface.getValue());
 		}
 	}
+	
+	
 
 }

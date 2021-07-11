@@ -51,6 +51,9 @@ public class LoginUserCommand implements Command {
 				request.getSession().setAttribute(RequestAttribute.LOGIN_NAME.getValue(), user.getLogin());
 				request.getSession().setAttribute(RequestAttribute.CURRENT_USER_ROLE.getValue(),
 						user.getRole().getValue());
+				if (user.getBannedToDate() != null) {
+					request.getSession().setAttribute(ErrorAttribute.Name.BAN_INFO.name(), user.getBannedToDate().toString());					
+				}
 				response.setStatus(200);
 				router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
 
@@ -62,12 +65,6 @@ public class LoginUserCommand implements Command {
 			logger.log(Level.ERROR, "Exception occured while user logining: {}", e.getMessage());
 			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
 		}
-
-		if (userService.isUserBanned(request.getSession())) {
-			request.getSession().setAttribute(ErrorAttribute.Name.BAN_INFO.name(), user.getBannedToDate().toString());
-			router = new Router(PagePath.PAGE_BANNED_JSP.getValue(), null, RouterType.REDIRECT);
-		}
-
 		return router;
 	}
 

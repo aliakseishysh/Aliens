@@ -50,7 +50,7 @@
 	var UPDATE_IMAGE_RESULT_INFO_IMAGE_FEEDBACK = `${UPDATE_IMAGE_RESULT_INFO_IMAGE_FEEDBACK}`;
 </script>
 <script type="text/javascript" src="<c:url value='${JS_USER_PROFILE}'/>"></script>
-<h1>User Profile</h1>
+<h1>${TEXT[TEMPLATE_USER_PROFILE_H1]}</h1>
 <div class="content-section">
 	<div class="media">
 		<jsp:include page="${TEMPLATE_USER_IMAGE_JSP}"/>

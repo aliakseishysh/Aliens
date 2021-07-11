@@ -46,6 +46,14 @@ CREATE TABLE comments (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
+-- CREATE TABLE tokens (
+--     token_id INT AUTO_INCREMENT NOT NULL,
+--     email VARCHAR(255),
+--     token VARCHAR(255),
+--     expiration_date DATETIME,
+--     PRIMARY KEY (token_id)
+-- );
+
 
 INSERT INTO aliens (_name, description_small, description_full, image_url) values 
         (

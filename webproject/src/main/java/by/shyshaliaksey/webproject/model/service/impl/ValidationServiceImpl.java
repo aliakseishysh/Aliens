@@ -62,4 +62,10 @@ public class ValidationServiceImpl implements ValidationService {
 		return result;
 	}
 
+	@Override
+	public boolean validateComment(String comment) throws ServiceException {
+		boolean result = Pattern.matches(FormPattern.VALID_COMMENT.getValue(), comment);
+		return result;
+	}
+
 }

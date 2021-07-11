@@ -27,7 +27,7 @@ class DatabasePropertiesReader {
 			DATABASE_DRIVER = resourceBundle.getString("DATABASE_DRIVER");
 			CONNECTION_POOL_DEFAULT_SIZE = Integer.parseInt(resourceBundle.getString("CONNECTION_POOL_DEFAULT_SIZE"));
 		} catch (MissingResourceException e) {
-			logger.log(Level.FATAL, "MissingResourceException: {}", e.getMessage());
+			logger.log(Level.FATAL, "MissingResourceException: {}", e.getMessage(), e);
 			throw new ExceptionInInitializerError("MissingResourceException: " + e.getMessage());
 		}
 	}

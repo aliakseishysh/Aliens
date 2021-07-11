@@ -13,5 +13,6 @@ public interface ValidationService {
 	boolean validateAlienName(String alienName) throws ServiceException;
 	boolean validateAlienSmallDescription(String alienSmallDescription) throws ServiceException;
 	boolean validateAlienFullDescription(String alienFullDescription) throws ServiceException;
+	boolean validateComment(String comment) throws ServiceException;
 	
 }

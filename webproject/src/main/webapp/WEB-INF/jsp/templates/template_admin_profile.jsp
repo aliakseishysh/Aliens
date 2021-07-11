@@ -86,7 +86,7 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
 <script type="text/javascript" src="<c:url value='${JS_USER_PROFILE}'/>"></script>
 <script type="text/javascript" src="<c:url value='${JS_ADMIN_PROFILE}'/>"></script>
-<h1>Admin Profile</h1>
+<h1>${TEXT[TEMPLATE_ADMIN_PROFILE]}</h1>
 <div class="content-section">
 	<div class="media">
 		<jsp:include page="${TEMPLATE_USER_IMAGE_JSP}"/>

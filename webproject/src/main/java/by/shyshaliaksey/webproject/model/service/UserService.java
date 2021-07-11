@@ -6,12 +6,14 @@ import java.util.Optional;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
+import by.shyshaliaksey.webproject.model.entity.feedback.AddNewCommentResultInfo;
 import by.shyshaliaksey.webproject.model.entity.feedback.EmailUpdateResultInfo;
 import by.shyshaliaksey.webproject.model.entity.feedback.ImageUpdateResultInfo;
 import by.shyshaliaksey.webproject.model.entity.feedback.LoginResultInfo;
 import by.shyshaliaksey.webproject.model.entity.feedback.LoginUpdateResultInfo;
 import by.shyshaliaksey.webproject.model.entity.feedback.PasswordUpdateResultInfo;
 import by.shyshaliaksey.webproject.model.entity.feedback.RegisterResultInfo;
+import by.shyshaliaksey.webproject.model.entity.feedback.RequestRestorePasswordTokenResultInfo;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
@@ -26,7 +28,8 @@ public interface UserService {
 	PasswordUpdateResultInfo changePassword(String password, String passwordConfirm, int userId) throws ServiceException;
 	ImageUpdateResultInfo updateImage(String serverDeploymentPath, String rootFolder, Part part, int userId) throws ServiceException;
 	boolean isUserBanned(HttpSession session);
-	boolean addNewComment(int userId, int alienId, String newComment) throws ServiceException;
+	AddNewCommentResultInfo addNewComment(int userId, int alienId, String newComment) throws ServiceException;
 	boolean deleteComment(int commentId) throws ServiceException;
+	RequestRestorePasswordTokenResultInfo requestRestorePasswordToken(String email) throws ServiceException;
 	
 }

@@ -2,11 +2,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
 <head>
-<title>Alien Profile</title>
+<title>${TEXT[PAGE_ALIEN_PROFILE_TITLE]}</title>
 <link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
+<!-- 
+<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
+ -->
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
 
 
 <link href="<c:url value="${CSS_RAITING}"/>" rel="stylesheet">
@@ -42,6 +44,10 @@
 	var ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_SMALL_DESCRIPTION_FEEDBACK = `${ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_SMALL_DESCRIPTION_FEEDBACK}`;
 	var ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_FULL_DESCRIPTION_FEEDBACK = `${ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_FULL_DESCRIPTION_FEEDBACK}`;
 	var ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_IMAGE_FEEDBACK = `${ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_IMAGE_FEEDBACK}`;
+
+	var ADD_NEW_COMMENT_STANDARD_COMMENT_FEEDBACK = `${ADD_NEW_COMMENT_STANDARD_COMMENT_FEEDBACK}`;
+	var ADD_NEW_COMMENT_COMMENT_STATUS = `${ADD_NEW_COMMENT_COMMENT_STATUS}`;
+	var ADD_NEW_COMMENT_RESULT_INFO_COMMENT_FEEDBACK = `${ADD_NEW_COMMENT_RESULT_INFO_COMMENT_FEEDBACK}`;
 	
 </script>
 
@@ -53,11 +59,11 @@
 <body>
 	<main role="main" class="container">
 		<jsp:include page="${TEMPLATE_NAV_JSP}"/>
-		<h1>Alien Profile</h1>
+		<h1>${TEXT[PAGE_ALIEN_PROFILE_H1]}</h1>
 		<div class="content-section">
 			<div class="media">
 				<img id="alien-image" class="rounded-circle account-img"
-					src="<c:url value="${alien.imageUrl}"/>" alt="no image">
+					src="<c:url value="${alien.imageUrl}"/>" alt="${TEXT[PAGE_ALIEN_PROFILE_ALIEN_IMAGE_ALT]}">
 				
 				<div class="media-body">
 					<h2 id="alien-name" class="account-heading">${alien.name}</h2>
@@ -70,7 +76,7 @@
 				</c:choose>
 			</div>
 			<div class="content-section">
-			<p class="border-bottom mb-4 h3">Alien Description</p>
+			<p class="border-bottom mb-4 h3">${TEXT[PAGE_ALIEN_PROFILE_ALIEN_DESCRIPTION]}</p>
 				<p id="alien-big-description" class="h4">${alien.bigDescription}</p>
 			</div>
 			<c:choose>
@@ -90,15 +96,15 @@
 				<c:when test="${alienComments.size() == 0}">
 					<div class="content-section">
 						<fieldset class="form-group">
-							<legend class="border-bottom mb-4">Comments</legend>
+							<legend class="border-bottom mb-4">${TEXT[PAGE_ALIEN_PROFILE_COMMENTS]}</legend>
 						</fieldset>
-						<p>No comments...</p>
+						<p>${TEXT[PAGE_ALIEN_PROFILE_NO_COMMENTS]}</p>
 					</div>
 				</c:when>
 				<c:otherwise>
 					<div class="content-section">
 						<fieldset class="form-group">
-							<legend class="border-bottom mb-4">Comments</legend>
+							<legend class="border-bottom mb-4">${TEXT[PAGE_ALIEN_PROFILE_COMMENTS]}</legend>
 						</fieldset>
 						<div class="col-md-8" id="alien-comments">
 							<c:forEach var="alienComment" items="${alienComments}">
