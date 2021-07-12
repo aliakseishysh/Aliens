@@ -20,10 +20,12 @@ import by.shyshaliaksey.webproject.controller.InitParameter;
 import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
+import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
 import by.shyshaliaksey.webproject.controller.command.Command;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.ServiceException;
+import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.entity.feedback.ErrorFeedback;
 import by.shyshaliaksey.webproject.model.entity.feedback.ImageUpdateResultInfo;
@@ -40,6 +42,7 @@ public class UpdateUserImageCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
 	
+	@AllowedRoles({Role.USER, Role.ADMIN})
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router;
@@ -63,15 +66,9 @@ public class UpdateUserImageCommand implements Command {
 				response.setStatus(400);
 				router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
 			}
-		} catch (IOException e) {
+		} catch (IOException | ServletException | ServiceException e) {
 			logger.log(Level.ERROR, "IOException occured while image updating: {} {}", e.getMessage(), e.getStackTrace(), e);
-			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
-		} catch (ServletException e) {
-			logger.log(Level.ERROR, "ServletException occured while image updating: {} {}", e.getMessage(), e.getStackTrace(), e);
-			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
-		} catch (ServiceException e) {
-			logger.log(Level.ERROR, "Exception occured while image updating: {} {} {}", e.getMessage(), e.getStackTrace(), e);
-			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
+			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
 		}
 		return router;		
 	}

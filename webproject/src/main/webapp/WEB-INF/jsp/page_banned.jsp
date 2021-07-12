@@ -4,11 +4,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>${TEXT[PAGE_HOME_TITLE]}</title>
-<!-- 
-<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
- -->
+<script>
+	var CONTROLLER = `${CONTROLLER}`;
+	var COMMAND = `${COMMAND}`;
+	var OPEN_HOME_PAGE = `${OPEN_HOME_PAGE}`;
+</script>
+<meta charset="UTF-8">
+<title>${TEXT[PAGE_BANNED_TITLE]}</title>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
 
@@ -16,8 +18,8 @@
 <body>
 <main role="main" class="container">
 	<jsp:include page="${TEMPLATE_NAV_JSP}"/>
-	<h1>${TEXT[PAGE_HOME_H1]}</h1>
-	<h2>${TEXT[PAGE_HOME_H2]} ${BAN_INFO}</h2>
+	<h1>${TEXT[PAGE_BANNED_H1]}</h1>
+	<h2>${TEXT[PAGE_BANNED_H2]} ${BAN_INFO}</h2>
 </main>
 
 </body>

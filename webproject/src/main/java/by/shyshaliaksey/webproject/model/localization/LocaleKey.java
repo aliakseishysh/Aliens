@@ -1,4 +1,6 @@
-package by.shyshaliaksey.webproject.controller;
+package by.shyshaliaksey.webproject.model.localization;
+
+import by.shyshaliaksey.webproject.controller.EnumValue;
 
 public enum LocaleKey implements EnumValue {
 
@@ -8,7 +10,7 @@ public enum LocaleKey implements EnumValue {
 	// Alien profile page
 	PAGE_ALIEN_PROFILE_TITLE("page_alien_profile_title"),
 	PAGE_ALIEN_PROFILE_H1("page_alien_profile_h1"),
-	PAGE_ALIEN_PROFILE_ALIEN_IMAGE_ALT("image_alt"),
+	PAGE_ALIEN_PROFILE_ALIEN_IMAGE_ALT("page_alien_profile_alien_image_alt"),
 	PAGE_ALIEN_PROFILE_ALIEN_DESCRIPTION("page_alien_profile_alien_description"),
 	PAGE_ALIEN_PROFILE_COMMENTS("page_alien_profile_comments"),
 	PAGE_ALIEN_PROFILE_NO_COMMENTS("page_alien_profile_no_comments"),

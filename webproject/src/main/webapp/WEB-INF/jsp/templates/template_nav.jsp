@@ -1,6 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<head>
+	<link rel="shortcut icon" type="image/png" href="/webproject/favicon.png"/>
+</head>
 <script>
 	var CONTROLLER = `${CONTROLLER}`;
 	var COMMAND = `${COMMAND}`;
@@ -38,11 +41,11 @@
 						  </div>
 					</div>
 					<c:choose>
-						<c:when test="${currentUser == null}">
+						<c:when test="${currentUser.role eq GUEST}">
 							<a class="nav-item nav-link" href='<c:url value="/${CONTROLLER}?${COMMAND}=${OPEN_LOGIN_PAGE}"/>'>${TEXT[TEMPLATE_NAV_LOGIN]}</a>
 							<a class="nav-item nav-link" href='<c:url value="/${CONTROLLER}?${COMMAND}=${OPEN_REGISTER_PAGE}"/>'>${TEXT[TEMPLATE_NAV_REGISTER]}</a>
 						</c:when>
-						<c:when test="${currentUser != null}">
+						<c:when test="${currentUser.role eq ADMIN or currentUser.role eq USER}">
 							<a class="nav-item nav-link" href='<c:url value="/${CONTROLLER}?${COMMAND}=${OPEN_USER_PROFILE_PAGE}"/>'>${TEXT[TEMPLATE_NAV_PROFILE]}</a>
 							<a class="nav-item nav-link" href='#' onclick="navigation.logoutUser()">${TEXT[TEMPLATE_NAV_LOGOUT]}</a>
 						</c:when>

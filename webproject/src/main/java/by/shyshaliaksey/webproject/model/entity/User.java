@@ -22,6 +22,13 @@ public class User {
 		this.bannedToDate = bannedToDate;
 	}
 	
+	public User(Role role) {
+		this.role = role;
+	}
+	
+	public User() {
+	}
+	
 	public enum UserStatus {
 		NORMAL, BANNED
 	}

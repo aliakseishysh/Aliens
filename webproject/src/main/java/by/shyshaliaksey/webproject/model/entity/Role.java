@@ -5,7 +5,8 @@ import by.shyshaliaksey.webproject.controller.EnumValue;
 public enum Role implements EnumValue {
 	
 	ADMIN("ADMIN"),
-	USER("USER");
+	USER("USER"),
+	GUEST("GUEST");
 
 	private String value;
 	

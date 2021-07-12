@@ -1,29 +1,48 @@
 package by.shyshaliaksey.webproject.controller.command;
 
-import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 
-import jakarta.servlet.RequestDispatcher;
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
+import by.shyshaliaksey.webproject.controller.PagePath;
+import by.shyshaliaksey.webproject.controller.RequestAttribute;
+import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
+import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface Command {
 	
 	public abstract Router execute(HttpServletRequest request, HttpServletResponse response);
-	
-	public default void forward(HttpServletRequest request, HttpServletResponse response, String pathToForward) {
-		ServletContext servletContext = request.getServletContext();
-		RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher(pathToForward);
+
+	public default Router proceed(HttpServletRequest request, HttpServletResponse response) {
+		Class<? extends Command> clazz = this.getClass();
+		Router router;
 		try {
-			requestDispatcher.forward(request, response);
-		} catch (ServletException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Class[] cArg = new Class[2];
+	        cArg[0] = HttpServletRequest.class;
+	        cArg[1] = HttpServletResponse.class;
+			Method method = clazz.getMethod("execute", cArg);
+			AllowedRoles allowedRolesAnnotation = method.getAnnotation(AllowedRoles.class);
+			Role[] allowedRoles;
+			if (allowedRolesAnnotation == null) {
+				allowedRoles = new Role[1];
+				allowedRoles[0] = Role.GUEST;
+			} else {
+				allowedRoles = allowedRolesAnnotation.value();
+			}
+			Role currentUserRole = ((User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue())).getRole();
+			if (Arrays.asList(allowedRoles).contains(currentUserRole)) {
+				router = execute(request, response);
+			} else {
+				response.setStatus(403);
+				router = new Router(PagePath.ERROR_PAGE_403_JSP.getValue(), null, RouterType.FORWARD);
+			}
+		} catch (NoSuchMethodException | SecurityException e) {
+			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
 		}
+		return router;
 	}
 	
 }

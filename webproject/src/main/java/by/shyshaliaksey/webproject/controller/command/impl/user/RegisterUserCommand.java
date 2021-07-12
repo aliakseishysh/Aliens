@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
+import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
 import by.shyshaliaksey.webproject.controller.command.Command;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
@@ -29,6 +30,7 @@ public class RegisterUserCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
 	
+	@AllowedRoles({Role.GUEST})
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		String email = request.getParameter(RequestParameter.EMAIL.getValue());
@@ -61,7 +63,7 @@ public class RegisterUserCommand implements Command {
 			}
 		} catch (ServiceException e) {
 			logger.log(Level.ERROR, "Exception occured while register: {}", e.getMessage());
-			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
+			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
 		}
 		return router;
 	}

@@ -8,14 +8,14 @@ import by.shyshaliaksey.webproject.controller.RequestParameter;
 import java.util.ResourceBundle;
 
 import by.shyshaliaksey.webproject.controller.ApplicationAttribute;
-import by.shyshaliaksey.webproject.controller.LocaleAttribute;
-import by.shyshaliaksey.webproject.controller.LocaleKey;
 import by.shyshaliaksey.webproject.controller.command.CommandValue;
 import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.entity.FormPattern;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.feedback.ErrorFeedback;
+import by.shyshaliaksey.webproject.model.localization.LocaleAttribute;
+import by.shyshaliaksey.webproject.model.localization.LocaleKey;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;

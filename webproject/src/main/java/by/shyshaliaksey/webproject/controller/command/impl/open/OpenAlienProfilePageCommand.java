@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
+import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
 import by.shyshaliaksey.webproject.controller.command.Command;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
@@ -21,6 +22,7 @@ import by.shyshaliaksey.webproject.model.dao.RatingDao;
 import by.shyshaliaksey.webproject.model.entity.Alien;
 import by.shyshaliaksey.webproject.model.entity.AlienPage;
 import by.shyshaliaksey.webproject.model.entity.Comment;
+import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.service.AlienService;
 import by.shyshaliaksey.webproject.model.service.RatingService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
@@ -31,6 +33,7 @@ public class OpenAlienProfilePageCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
 	
+	@AllowedRoles({Role.GUEST, Role.USER, Role.ADMIN})
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		int alienId = Integer.parseInt(request.getParameter(RequestParameter.ALIEN_ID.getValue()));
@@ -65,7 +68,7 @@ public class OpenAlienProfilePageCommand implements Command {
 			}
 			
 		} catch (ServiceException e) {
-			router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
+			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
 			logger.log(Level.ERROR, "Exception occured while alien searching with id {}: {}", alienId, e.getMessage());
 		}
 		return router;

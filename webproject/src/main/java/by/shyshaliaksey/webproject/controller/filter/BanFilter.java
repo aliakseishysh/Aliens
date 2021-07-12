@@ -34,7 +34,8 @@ public class BanFilter implements Filter {
 		String commandName = request.getParameter(RequestParameter.COMMAND.getValue());
 		User user = (User) httpRequest.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue());
 		if (user != null && user.getUserStatus() == User.UserStatus.BANNED
-				&& commandName != null && !commandName.equals(CommandValue.LOGOUT_USER.getValue())) {
+				&& commandName != null && !commandName.equals(CommandValue.LOGOUT_USER.getValue())
+				&& !commandName.equals(CommandValue.CHANGE_LOCALE.getValue())) {
 			result = true;
 		}
 		return result;

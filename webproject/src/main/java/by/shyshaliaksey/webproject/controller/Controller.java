@@ -1,5 +1,6 @@
 package by.shyshaliaksey.webproject.controller;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.Servlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -7,9 +8,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpSessionEvent;
-import jakarta.servlet.http.HttpSessionListener;
 
 import static by.shyshaliaksey.webproject.controller.PagePath.ERROR_PAGE_404_JSP;
 
@@ -19,23 +17,16 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
 import by.shyshaliaksey.webproject.controller.command.Command;
 import by.shyshaliaksey.webproject.controller.command.CommandFactory;
-import by.shyshaliaksey.webproject.controller.command.CommandValue;
 import by.shyshaliaksey.webproject.controller.command.Router;
-import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
-import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.entity.Role;
-import by.shyshaliaksey.webproject.model.entity.User;
-import by.shyshaliaksey.webproject.model.service.ServiceProvider;
-import by.shyshaliaksey.webproject.model.service.SessionService;
-import by.shyshaliaksey.webproject.model.service.UserService;
 
 
 /**
  * Servlet implementation class Controller
  */
-
 @MultipartConfig
 @WebServlet(name="Controller", urlPatterns={"/controller"})
 public class Controller extends HttpServlet implements Servlet {
@@ -45,7 +36,7 @@ public class Controller extends HttpServlet implements Servlet {
     public Controller() {
         super();
     }
-	
+    
 	@Override
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		processRequest(request, response);
@@ -56,16 +47,17 @@ public class Controller extends HttpServlet implements Servlet {
 		processRequest(request, response);
 	}
 	
+	//@AllowedRoles
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String commandName = request.getParameter(RequestParameter.COMMAND.getValue());
 		try {
 			Command command = CommandFactory.defineCommand(commandName);
-			Router router = command.execute(request, response);
+			Router router = command.proceed(request, response);
 			
 			switch (router.getRouterType()) {
 			case FORWARD:
-					request.getRequestDispatcher(router.getPagePath())
-						   .forward(request, response);
+				RequestDispatcher dispatcher = request.getRequestDispatcher(router.getPagePath());
+				dispatcher.forward(request, response);
 				break;
 			case REDIRECT:
 				response.sendRedirect(request.getContextPath() + router.getPagePath());

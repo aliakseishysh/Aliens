@@ -19,13 +19,13 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
-<title>${TEXT[ABOUT_PAGE_TITLE]}</title>
+<title>${TEXT[PAGE_ABOUT_TITLE]}</title>
 </head>
 <body>
 	<main role="main" class="container">
 		<jsp:include page="${TEMPLATE_NAV_JSP}" />
 		<h1>
-			${TEXT[ABOUT_PAGE_H1]}
+			${TEXT[PAGE_ABOUT_H1]}
 		</h1>
 	</main>
 </body>

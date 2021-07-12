@@ -1,17 +1,20 @@
 package by.shyshaliaksey.webproject.controller.command.impl.locale;
 
-import by.shyshaliaksey.webproject.controller.LocaleAttribute;
 import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.SessionAttribute;
+import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
 import by.shyshaliaksey.webproject.controller.command.Command;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
+import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.localization.LocaleAttribute;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class ChangeLocaleCommand implements Command {
 
+	@AllowedRoles({Role.GUEST, Role.USER, Role.ADMIN})
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		String requestedLocale = request.getParameter(RequestParameter.LOCALE.getValue());
