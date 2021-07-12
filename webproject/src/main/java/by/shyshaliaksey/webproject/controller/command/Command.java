@@ -20,10 +20,11 @@ public interface Command {
 		Class<? extends Command> clazz = this.getClass();
 		Router router;
 		try {
-			Class[] cArg = new Class[2];
-	        cArg[0] = HttpServletRequest.class;
-	        cArg[1] = HttpServletResponse.class;
-			Method method = clazz.getMethod("execute", cArg);
+			final String methodName = "execute";
+			Class[] methodArgumentsClasses = new Class[2];
+			methodArgumentsClasses[0] = HttpServletRequest.class;
+			methodArgumentsClasses[1] = HttpServletResponse.class;
+			Method method = clazz.getMethod(methodName, methodArgumentsClasses);
 			AllowedRoles allowedRolesAnnotation = method.getAnnotation(AllowedRoles.class);
 			Role[] allowedRoles;
 			if (allowedRolesAnnotation == null) {
