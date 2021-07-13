@@ -1,7 +1,5 @@
 package by.shyshaliaksey.webproject.model.service.impl;
 
-import org.apache.logging.log4j.Level;
-
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
@@ -10,8 +8,7 @@ import by.shyshaliaksey.webproject.model.service.RatingService;
 
 public class RatingServiceImpl implements RatingService {
 
-	private static final DaoProvider daoProvider = DaoProvider.getInstance();
-	private static final RatingDao ratingDao = daoProvider.getRatingDao();
+	private static final RatingDao ratingDao = DaoProvider.getInstance().getRatingDao();
 	
 	@Override
 	public int findUserRate(int alienId, int userId) throws ServiceException {

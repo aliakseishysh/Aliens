@@ -3,11 +3,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 
-<!-- 
-<fmt:setLocale value="${CURRENT_LOCALE}" />
-<fmt:setBundle basename="localization/localization" />
- -->
-
 <!DOCTYPE html>
 <html>
 <head>

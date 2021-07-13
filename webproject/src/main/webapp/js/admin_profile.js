@@ -16,27 +16,27 @@ function banUser() {
         data: data,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            if (jqXHR.responseJSON[UPDATE_EMAIL_RESULT_INFO_STATUS] == true) {
+            if (jqXHR.responseJSON[EMAIL_STATUS] == true) {
 
             }
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
             banUnbanForm.classList.remove("was-validated");
-            document.getElementById("form-update-email-email-invalid-feedback").innerHTML = jqXHR.responseJSON[UPDATE_EMAIL_RESULT_INFO_EMAIL_FEEDBACK];
-            if (jqXHR.responseJSON[BAN_UNBAN_USER_LOGIN_STATUS] == false) {
+            document.getElementById("form-update-email-email-invalid-feedback").innerHTML = jqXHR.responseJSON[EMAIL_FEEDBACK];
+            if (jqXHR.responseJSON[LOGIN_STATUS] == false) {
                 banUnbanFormLogin.classList.add("is-invalid");
                 banUnbanFormLogin.classList.remove("is-valid");
             } else {
-                banUnbanFormLoginInvalidFeedback.innerHTML = jqXHR.responseJSON[BAN_UNBAN_USER_RESULT_INFO_LOGIN_FEEDBACK]
+                banUnbanFormLoginInvalidFeedback.innerHTML = jqXHR.responseJSON[LOGIN_FEEDBACK]
                 banUnbanFormLogin.classList.remove("is-invalid");
                 banUnbanFormLogin.classList.add("is-valid");
             }
-            if (jqXHR.responseJSON[BAN_UNBAN_USER_DAYS_TO_BAN_STATUS] == false) {
+            if (jqXHR.responseJSON[DAYS_TO_BAN_STATUS] == false) {
                 banUnbanFormDaysInBan.classList.add("is-invalid");
                 banUnbanFormDaysInBan.classList.remove("is-valid");
             } else {
-                banUnbanFormDaysInBanInvalidFeedback  = jqXHR.responseJSON[BAN_UNBAN_USER_RESULT_INFO_DAYS_TO_BAN_FEEDBACK]
+                banUnbanFormDaysInBanInvalidFeedback  = jqXHR.responseJSON[DAYS_TO_BAN_FEEDBACK]
                 banUnbanFormDaysInBan.classList.remove("is-invalid");
                 banUnbanFormDaysInBan.classList.add("is-valid");
             }
@@ -62,18 +62,18 @@ function unbanUser() {
         data: data,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            if (jqXHR.responseJSON[UPDATE_EMAIL_RESULT_INFO_STATUS] == true) {
+            if (jqXHR.responseJSON[EMAIL_STATUS] == true) {
         
             }
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
             banUnbanForm.classList.remove("was-validated");
-            if (jqXHR.responseJSON[BAN_UNBAN_USER_LOGIN_STATUS] == false) {
+            if (jqXHR.responseJSON[LOGIN_STATUS] == false) {
                 banUnbanFormLogin.classList.add("is-invalid");
                 banUnbanFormLogin.classList.remove("is-valid");
             } else {
-                banUnbanFormLoginInvalidFeedback.innerHTML = jqXHR.responseJSON[BAN_UNBAN_USER_RESULT_INFO_LOGIN_FEEDBACK]
+                banUnbanFormLoginInvalidFeedback.innerHTML = jqXHR.responseJSON[LOGIN_FEEDBACK]
                 banUnbanFormLogin.classList.remove("is-invalid");
                 banUnbanFormLogin.classList.add("is-valid");
             }
@@ -95,18 +95,18 @@ function promoteUser() {
         data: data,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            if (jqXHR.responseJSON[PROMOTE_DEMOTE_USER_LOGIN_STATUS] == true) {
+            if (jqXHR.responseJSON[LOGIN_STATUS] == true) {
         
             }
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
             promoteDemoteForm.classList.remove("was-validated");
-            if (jqXHR.responseJSON[PROMOTE_DEMOTE_USER_LOGIN_STATUS] == false) {
+            if (jqXHR.responseJSON[LOGIN_STATUS] == false) {
                 promoteDemoteFormLogin.classList.add("is-invalid");
                 promoteDemoteFormLogin.classList.remove("is-valid");
             } else {
-                promoteDemoteFormLoginInvalidFeedback.innerHTML = jqXHR.responseJSON[PROMOTE_DEMOTE_USER_RESULT_INFO_LOGIN_FEEDBACK]
+                promoteDemoteFormLoginInvalidFeedback.innerHTML = jqXHR.responseJSON[LOGIN_FEEDBACK]
                 promoteDemoteFormLogin.classList.remove("is-invalid");
                 promoteDemoteFormLogin.classList.add("is-valid");
             }
@@ -128,18 +128,18 @@ function demoteAdmin() {
         data: data,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            if (jqXHR.responseJSON[PROMOTE_DEMOTE_USER_LOGIN_STATUS] == true) {
+            if (jqXHR.responseJSON[LOGIN_STATUS] == true) {
         
             }
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
             promoteDemoteForm.classList.remove("was-validated");
-            if (jqXHR.responseJSON[PROMOTE_DEMOTE_USER_LOGIN_STATUS] == false) {
+            if (jqXHR.responseJSON[LOGIN_STATUS] == false) {
                 promoteDemoteFormLogin.classList.add("is-invalid");
                 promoteDemoteFormLogin.classList.remove("is-valid");
             } else {
-                promoteDemoteFormLoginInvalidFeedback.innerHTML = jqXHR.responseJSON[PROMOTE_DEMOTE_USER_RESULT_INFO_LOGIN_FEEDBACK]
+                promoteDemoteFormLoginInvalidFeedback.innerHTML = jqXHR.responseJSON[LOGIN_FEEDBACK]
                 promoteDemoteFormLogin.classList.remove("is-invalid");
                 promoteDemoteFormLogin.classList.add("is-valid");
             }
@@ -191,37 +191,37 @@ function addNewAlien() {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             document.getElementById("form-update-image").classList.remove("was-validated");
-            if (jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_ALIEN_NAME_STATUS] == false) {
+            if (jqXHR.responseJSON[ALIEN_NAME_STATUS] == false) {
                 name.classList.add("is-invalid");
                 name.classList.remove("is-valid");
             } else {
                 name.classList.remove("is-invalid");
                 name.classList.add("is-valid");
-                nameInvalidFeedback.innerHTML = jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_NAME_FEEDBACK];
+                nameInvalidFeedback.innerHTML = jqXHR.responseJSON[ALIEN_NAME_FEEDBACK];
             }
-            if (jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_ALIEN_SMALL_DESCRIPTION_STATUS] == false) {
+            if (jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS] == false) {
                 descriptionSmall.classList.add("is-invalid");
                 descriptionSmall.classList.remove("is-valid");
             } else {
                 descriptionSmall.classList.remove("is-invalid");
                 descriptionSmall.classList.add("is-valid");
-                descriptionSmallInvalidFeedback.innerHTML = jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_SMALL_DESCRIPTION_FEEDBACK];
+                descriptionSmallInvalidFeedback.innerHTML = jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK];
             }
-            if (jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_ALIEN_FULL_DESCRIPTION_STATUS] == false) {
+            if (jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_STATUS] == false) {
                 descriptionFull.classList.add("is-invalid");
                 descriptionFull.classList.remove("is-valid");
             } else {
                 descriptionFull.classList.remove("is-invalid");
                 descriptionFull.classList.add("is-valid");
-                descriptionFullInvalidFeedback.innerHTML = jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_FULL_DESCRIPTION_FEEDBACK];
+                descriptionFullInvalidFeedback.innerHTML = jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK];
             }
-            if (jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_ALIEN_IMAGE_STATUS] == false) {
+            if (jqXHR.responseJSON[IMAGE_STATUS] == false) {
                 image.classList.add("is-invalid");
                 image.classList.remove("is-valid");
             } else {
                 image.classList.remove("is-invalid");
                 image.classList.add("is-valid");
-                imageInvalidFeedback.innerHTML = jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_IMAGE_FEEDBACK];
+                imageInvalidFeedback.innerHTML = jqXHR.responseJSON[IMAGE_FEEDBACK];
             }
             formAlienCreate.classList.add("was-validated");
         }
@@ -255,8 +255,8 @@ $(document).ready(function () {
             daysInBanField.setAttribute("required", "")
 
             if (formBanUnban.checkValidity() === false || daysInBanField.validity.valid && daysInBanField.value < 0) {
-                loginFileldInvalidFeedback.innerHTML = BAN_UNBAN_USER_STANDARD_LOGIN_FEEDBACK;
-                daysInBanFieldInvalidFeedback.innerHTML = BAN_UNBAN_USER_STANDARD_DAYS_TO_BAN_FEEDBACK;
+                loginFileldInvalidFeedback.innerHTML = STANDARD_LOGIN_FEEDBACK;
+                daysInBanFieldInvalidFeedback.innerHTML = STANDARD_DAYS_TO_BAN_FEEDBACK;
                 event.preventDefault();
                 event.stopPropagation();
             } else {
@@ -270,7 +270,7 @@ $(document).ready(function () {
             daysInBanField.removeAttribute("required")
 
             if (formBanUnban.checkValidity() === false) {
-                loginFileldInvalidFeedback.innerHTML = BAN_UNBAN_USER_STANDARD_LOGIN_FEEDBACK;
+                loginFileldInvalidFeedback.innerHTML = STANDARD_LOGIN_FEEDBACK;
                 loginField.classList.add("is-valid");
                 event.preventDefault();
                 event.stopPropagation();
@@ -303,7 +303,7 @@ $(document).ready(function () {
     
         if (event.submitter.id == "form-promote-demote-user-button-promoteuser") {
             if (formPromoteDemote.checkValidity() === false) {
-                loginFileldInvalidFeedback.innerHTML = BAN_UNBAN_USER_STANDARD_LOGIN_FEEDBACK;
+                loginFileldInvalidFeedback.innerHTML = STANDARD_LOGIN_FEEDBACK;
                 event.preventDefault();
                 event.stopPropagation();
             } else {
@@ -314,7 +314,7 @@ $(document).ready(function () {
         } else if (event.submitter.id = "form-promote-demote-user-button-demoteadmin") {
 
             if (formPromoteDemote.checkValidity() === false) {
-                loginFileldInvalidFeedback.innerHTML = BAN_UNBAN_USER_STANDARD_LOGIN_FEEDBACK;
+                loginFileldInvalidFeedback.innerHTML = STANDARD_LOGIN_FEEDBACK;
                 event.preventDefault();
                 event.stopPropagation();
             } else {
@@ -345,8 +345,6 @@ $(document).ready(function () {
     let imageLabel = document.getElementById("form-alien-create-image-label");
 
     formAlienCreate.addEventListener('submit', function(event) {
-        imageLabel.innerHTML = "Select image"; // TODO change to variable
-
         name.classList.remove("is-invalid");
         name.classList.remove("is-valid");
         descriptionSmall.classList.remove("is-invalid");
@@ -393,23 +391,23 @@ $(document).ready(function () {
 
         if (!nameCheckResult || !descriptionSmallCheckResult || !descriptionFullCheckResult || !imageCheckResult) {
             if (!nameCheckResult) {
-                nameInvalidFeedback.innerHTML = ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_NAME_FEEDBACK;
+                nameInvalidFeedback.innerHTML = STANDARD_ALIEN_NAME_FEEDBACK;
                 name.classList.add("is-invalid");
             }
             if (!descriptionSmallCheckResult) {
-                descriptionSmallInvalidFeedback.innerHTML = ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK;
+                descriptionSmallInvalidFeedback.innerHTML = STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK;
                 descriptionSmall.classList.add("is-invalid");
             }
             if (!descriptionFullCheckResult) {
-                descriptionFullInvalidFeedback.innerHTML = ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK;
+                descriptionFullInvalidFeedback.innerHTML = STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK;
                 descriptionFull.classList.add("is-invalid");
             }
             if (!imageCheckResult) {
-                imageInvalidFeedback.innerHTML = ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_IMAGE_FEEDBACK;
+                imageInvalidFeedback.innerHTML = STANDARD_IMAGE_FEEDBACK;
                 image.classList.add("is-invalid");
             }
         // formAlienCreate.classList.add('was-validated');
-           // document.getElementById("form-alien-create-image").setCustomValidity(UPDATE_IMAGE_RESULT_INFO_FEEDBACK_INVALID_IMAGE);
+           // document.getElementById("form-alien-create-image").setCustomValidity(IMAGE_FEEDBACK_INVALID);
             event.preventDefault();
             event.stopPropagation();
         } else {

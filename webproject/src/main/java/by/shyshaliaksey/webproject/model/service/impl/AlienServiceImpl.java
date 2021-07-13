@@ -1,18 +1,9 @@
 package by.shyshaliaksey.webproject.model.service.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.io.FilenameUtils;
 
-import by.shyshaliaksey.webproject.controller.FilePath;
-import by.shyshaliaksey.webproject.controller.FolderPath;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.dao.AlienDao;
@@ -22,12 +13,10 @@ import by.shyshaliaksey.webproject.model.entity.AlienPage;
 import by.shyshaliaksey.webproject.model.entity.Comment;
 import by.shyshaliaksey.webproject.model.entity.HomePage;
 import by.shyshaliaksey.webproject.model.service.AlienService;
-import jakarta.servlet.http.Part;
 
 public class AlienServiceImpl implements AlienService {
 
-	private static final DaoProvider daoProvider = DaoProvider.getInstance();
-	private static final AlienDao alienDao = daoProvider.getAlienDao();
+	private static final AlienDao alienDao = DaoProvider.getInstance().getAlienDao();
 
 	@Override
 	public int findAlienId(String alienName) throws ServiceException {

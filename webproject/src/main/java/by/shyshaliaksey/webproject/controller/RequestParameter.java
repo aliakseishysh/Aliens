@@ -2,6 +2,8 @@ package by.shyshaliaksey.webproject.controller;
 
 public enum RequestParameter implements EnumValue  {
 
+	PROJECT_NAME("webproject"),
+	CONTROLLER("controller"),
 	COMMAND("command"),
 	ALIEN_ID("alien-id"),
 	ALIEN_NAME("alienName"),
@@ -34,14 +36,5 @@ public enum RequestParameter implements EnumValue  {
 	public String getValue() {
 		return value;
 	}
-	
-	public static RequestParameter fromString(String parameterName) {
-        for (RequestParameter parameterValue : RequestParameter.values()) {
-            if (parameterValue.getValue().equals(parameterName)) {
-                return parameterValue;
-            }
-        }
-        return null;
-    }
 	
 }

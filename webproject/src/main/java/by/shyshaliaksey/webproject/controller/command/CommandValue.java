@@ -41,7 +41,6 @@ public enum CommandValue implements EnumValue {
 	OPEN_SERVER_ERROR_PAGE("server-error-page", new OpenServerErrorPageCommand()),
 	OPEN_404_ERROR_PAGE("404-error-page", new Open404ErrorPageCommand()),
 	CHANGE_LOCALE("change-locale", new ChangeLocaleCommand()),
-	// OPEN_FORGOT_PASSWORD_PAGE("forgot-password"),
 	REGISTER_USER("register-user", new RegisterUserCommand()),
 	LOGIN_USER("login-user", new LoginUserCommand()),
 	LOGOUT_USER("logout-user", new LogoutUserCommand()),
@@ -60,6 +59,7 @@ public enum CommandValue implements EnumValue {
 	ADD_NEW_COMMENT("add-new-comment", new AddNewCommentCommand()),
 	DELETE_COMMENT("delete-comment", new DeleteCommentCommand());
 	// REQUEST_RESTORE_PASSWORD_TOKEN("request-restore-password-token"); TODO if have time
+	// OPEN_FORGOT_PASSWORD_PAGE("forgot-password"), TODO if have time
 
 	private String value;
 	private Command command;

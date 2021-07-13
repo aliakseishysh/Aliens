@@ -45,37 +45,37 @@ function updateAlien() {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             formAlienUpdate.classList.remove("was-validated");
-            if (jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_ALIEN_NAME_STATUS] == false) {
+            if (jqXHR.responseJSON[ALIEN_NAME_STATUS] == false) {
                 name.classList.add("is-invalid");
                 name.classList.remove("is-valid");
             } else {
                 name.classList.remove("is-invalid");
                 name.classList.add("is-valid");
-                nameInvalidFeedback.innerHTML = jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_NAME_FEEDBACK];
+                nameInvalidFeedback.innerHTML = jqXHR.responseJSON[ALIEN_NAME_FEEDBACK];
             }
-            if (jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_ALIEN_SMALL_DESCRIPTION_STATUS] == false) {
+            if (jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS] == false) {
                 descriptionSmall.classList.add("is-invalid");
                 descriptionSmall.classList.remove("is-valid");
             } else {
                 descriptionSmall.classList.remove("is-invalid");
                 descriptionSmall.classList.add("is-valid");
-                descriptionSmallInvalidFeedback.innerHTML = jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_SMALL_DESCRIPTION_FEEDBACK];
+                descriptionSmallInvalidFeedback.innerHTML = jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK];
             }
-            if (jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_ALIEN_FULL_DESCRIPTION_STATUS] == false) {
+            if (jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_STATUS] == false) {
                 descriptionFull.classList.add("is-invalid");
                 descriptionFull.classList.remove("is-valid");
             } else {
                 descriptionFull.classList.remove("is-invalid");
                 descriptionFull.classList.add("is-valid");
-                descriptionFullInvalidFeedback.innerHTML = jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_FULL_DESCRIPTION_FEEDBACK];
+                descriptionFullInvalidFeedback.innerHTML = jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK];
             }
-            if (jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_ALIEN_IMAGE_STATUS] == false) {
+            if (jqXHR.responseJSON[IMAGE_STATUS] == false) {
                 image.classList.add("is-invalid");
                 image.classList.remove("is-valid");
             } else {
                 image.classList.remove("is-invalid");
                 image.classList.add("is-valid");
-                imageInvalidFeedback.innerHTML = jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_RESULT_INFO_ALIEN_IMAGE_FEEDBACK];
+                imageInvalidFeedback.innerHTML = jqXHR.responseJSON[IMAGE_FEEDBACK];
             }
             formAlienCreate.classList.add("was-validated");
         }
@@ -109,13 +109,13 @@ function addNewComment() {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             formAlienUpdate.classList.remove("was-validated");
-            if (jqXHR.responseJSON[ADD_NEW_UPDATE_ALIEN_ALIEN_NAME_STATUS] == false) {
+            if (jqXHR.responseJSON[ALIEN_NAME_STATUS] == false) {
                 comment.classList.add("is-invalid");
                 comment.classList.remove("is-valid");
             } else {
                 comment.classList.remove("is-invalid");
                 comment.classList.add("is-valid");
-                commentInvalidFeedback.innerHTML = jqXHR.responseJSON[ADD_NEW_COMMENT_RESULT_INFO_COMMENT_FEEDBACK];
+                commentInvalidFeedback.innerHTML = jqXHR.responseJSON[COMMENT_FEEDBACK];
             }
             formNewComment.classList.add("was-validated");
         }
@@ -211,8 +211,6 @@ $(document).ready(function () {
     let imageLabel = document.getElementById("form-alien-update-image-label");
 
     formAlienUpdate.addEventListener('submit', function(event) {
-        imageLabel.innerHTML = "Select image"; // TODO change to variable
-
         name.classList.remove("is-invalid");
         name.classList.remove("is-valid");
         descriptionSmall.classList.remove("is-invalid");
@@ -259,23 +257,23 @@ $(document).ready(function () {
 
         if (!nameCheckResult || !descriptionSmallCheckResult || !descriptionFullCheckResult || !imageCheckResult) {
             if (!nameCheckResult) {
-                nameInvalidFeedback.innerHTML = ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_NAME_FEEDBACK;
+                nameInvalidFeedback.innerHTML = STANDARD_ALIEN_NAME_FEEDBACK;
                 name.classList.add("is-invalid");
             }
             if (!descriptionSmallCheckResult) {
-                descriptionSmallInvalidFeedback.innerHTML = ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK;
+                descriptionSmallInvalidFeedback.innerHTML = STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK;
                 descriptionSmall.classList.add("is-invalid");
             }
             if (!descriptionFullCheckResult) {
-                descriptionFullInvalidFeedback.innerHTML = ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK;
+                descriptionFullInvalidFeedback.innerHTML = STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK;
                 descriptionFull.classList.add("is-invalid");
             }
             if (!imageCheckResult) {
-                imageInvalidFeedback.innerHTML = ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_IMAGE_FEEDBACK;
+                imageInvalidFeedback.innerHTML = STANDARD_IMAGE_FEEDBACK;
                 image.classList.add("is-invalid");
             }
         // formAlienCreate.classList.add('was-validated');
-           // document.getElementById("form-alien-update-image").setCustomValidity(UPDATE_IMAGE_RESULT_INFO_FEEDBACK_INVALID_IMAGE);
+           // document.getElementById("form-alien-update-image").setCustomValidity(IMAGE_FEEDBACK_INVALID);
             event.preventDefault();
             event.stopPropagation();
         } else {
@@ -327,7 +325,7 @@ $(document).ready(function () {
         }
 
         if (!commentCheckResult) {
-            commentInvalidFeedback.innerHTML = ADD_NEW_COMMENT_STANDARD_COMMENT_FEEDBACK;
+            commentInvalidFeedback.innerHTML = STANDARD_COMMENT_FEEDBACK;
             comment.classList.add("is-invalid");
             event.preventDefault();
             event.stopPropagation();

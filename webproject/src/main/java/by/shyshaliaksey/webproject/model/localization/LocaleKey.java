@@ -138,7 +138,59 @@ public enum LocaleKey implements EnumValue {
 	FORM_REGISTER_PASSWORD_CONFIRMATION_PLACEHOLDER("form_register_password_confirmation_placeholder"),
 	FORM_REGISTER_PASSWORD_SUBMIT("form_register_password_submit"),
 	FORM_REGISTER_ALREADY_HAVE_AN_ACCOUNT("form_register_already_have_an_account"),
-	FORM_REGISTER_SIGN_IN("form_register_sign_in");
+	FORM_REGISTER_SIGN_IN("form_register_sign_in"),
+	
+	// feedback
+	STANDARD_EMAIL_FEEDBACK("standard_email_feedback"),
+	STANDARD_LOGIN_FEEDBACK("standard_login_feedback"),
+	STANDARD_PASSWORD_FEEDBACK("standard_password_feedback"),
+	STANDARD_PASSWORD_CONFIRMATION_FEEDBACK("standard_password_confirmation_feedback"),
+	STANDARD_IMAGE_FEEDBACK("standard_image_feedback"),
+	STANDARD_DAYS_TO_BAN_FEEDBACK("standard_days_to_ban_feedback"),
+	STANDARD_ALIEN_NAME_FEEDBACK("standard_alien_name_feedback"),
+	STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK("standard_alien_small_description_feedback"),
+	STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK("standard_alien_full_description_feedback"),
+	STANDARD_COMMENT_FEEDBACK("standard_comment_feedback"),
+	
+	
+	
+	INTERNAL_SERVER_ERROR("internal_server_error"),
+	
+	NO_USER_WITH_EMAIL("no_user_with_email"),
+	EMAIL_FEEDBACK_INVALID("email_feedback_invalid"),
+	EMAIL_FEEDBACK_INVALID_USER_EXISTS("email_feedback_invalid_user_exists"),
+	EMAIL_FEEDBACK_INVALID_AUTHORIZATION_ERROR("email_feedback_invalid_authorization_error"),
+	EMAIL_PASSWORD_FEEDBACK_INVALID("email_password_feedback_invalid"),
+	
+	LOGIN_FEEDBACK_INVALID("login_feedback_invalid"),
+	LOGIN_FEEDBACK_INVALID_USER_EXISTS("login_feedback_invalid_user_exists"),
+	LOGIN_FEEDBACK_INVALID_USER_NOT_EXIST("login_feedback_invalid_user_not_exist"),
+	LOGIN_FEEDBACK_INVALID_AUTHORIZATION_ERROR("login_feedback_invalid_authorization_error"),
+	LOGIN_FEEDBACK_INVALID_PROMOTE_YOURSELF("login_feedback_invalid_promote_yourself"),
+	LOGIN_FEEDBACK_INVALID_DEMOTE_YOURSELF("login_feedback_invalid_demote_yourself"),
+	LOGIN_FEEDBACK_INVALID_CAN_NOT_FIND_USER_FOR_PROMOTING("login_feedback_invalid_can_not_find_user_for_promoting"),
+	LOGIN_FEEDBACK_INVALID_CAN_NOT_FIND_ADMIN_FOR_DEMOTING("login_feedback_invalid_can_not_find_admin_for_demoting"),
+
+	PASSWORD_FEEDBACK_INVALID("password_feedback_invalid"),
+	PASSWORD_CONFIRMATION_FEEDBACK_INVALID("password_confirmation_feedback_invalid"),
+	PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL("password_feedback_invalid_passwords_are_not_equal"),
+	PASSWORD_FEEDBACK_INVALID_NO_USER_WITH_ID("password_feedback_invalid_no_user_with_id"),
+	
+	IMAGE_FEEDBACK_INVALID("image_feedback_invalid"),
+	IMAGE_FEEDBACK_INVALID_EXTENSION("image_feedback_invalid_extension"),
+	IMAGE_FEEDBACK_INVALID_SIZE("image_feedback_invalid_size"),
+	
+	DAYS_TO_BAN_FEEDBACK_INVALID("days_to_ban_feedback_invalid"),
+	
+	ALIEN_NAME_FEEDBACK_INVALID_ALREADY_EXISTS("alien_name_feedback_invalid_already_exists"),
+	ALIEN_NAME_FEEDBACK_INVALID_DOES_NOT_EXIST("alien_name_feedback_invalid_does_not_exist"),
+	ALIEN_NAME_FEEDBACK_INVALID("alien_name_feedback_invalid"),
+	ALIEN_SMALL_DESCRIPTION_FEEDBACK_INVALID("alien_small_description_feedback_invalid"),
+	ALIEN_FULL_DESCRIPTION_FEEDBACK_INVALID("alien_full_description_feedback_invalid"),
+	
+	COMMENT_FEEDBACK_INVALID("comment_feedback_invalid"),
+	
+	EMPTY_MESSAGE("empty_message");
 	
 	private String value;
 	

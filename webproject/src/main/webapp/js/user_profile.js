@@ -13,7 +13,7 @@ function updateUserEmail() {
         data: data,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            if (jqXHR.responseJSON[UPDATE_EMAIL_RESULT_INFO_STATUS] == true) {
+            if (jqXHR.responseJSON[EMAIL_STATUS] == true) {
                 document.getElementById("user-profile-account-email").innerHTML = enteredEmail;
                 document.getElementById("form-update-email-parameter-current-user-email").innerHTML = enteredEmail;
                 // document.getElementById("form-update-email").classList.remove('was-validated');
@@ -23,8 +23,8 @@ function updateUserEmail() {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             document.getElementById("form-update-email").classList.remove("was-validated");
-            document.getElementById("form-update-email-email-invalid-feedback").innerHTML = jqXHR.responseJSON[UPDATE_EMAIL_RESULT_INFO_EMAIL_FEEDBACK];
-            if (jqXHR.responseJSON[UPDATE_EMAIL_RESULT_INFO_STATUS] == false) {
+            document.getElementById("form-update-email-email-invalid-feedback").innerHTML = jqXHR.responseJSON[EMAIL_FEEDBACK];
+            if (jqXHR.responseJSON[EMAIL_STATUS] == false) {
                 document.getElementById("form-update-email-email").classList.add("is-invalid");
                 document.getElementById("form-update-email-email").classList.remove("is-valid");
             } else {
@@ -50,7 +50,7 @@ function updateUserLogin() {
         data: data,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            if (jqXHR.responseJSON[UPDATE_LOGIN_RESULT_INFO_STATUS] == true) {
+            if (jqXHR.responseJSON[LOGIN_STATUS] == true) {
                 document.getElementById("user-profile-account-login").innerHTML = enteredLogin;
                 document.getElementById("form-update-login-parameter-current-user-login").innerHTML = enteredLogin;
                 // document.getElementById("form-update-LOGIN").classList.remove('was-validated');
@@ -60,8 +60,8 @@ function updateUserLogin() {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             document.getElementById("form-update-login").classList.remove("was-validated");
-            document.getElementById("form-update-login-login-invalid-feedback").innerHTML = jqXHR.responseJSON[UPDATE_LOGIN_RESULT_INFO_LOGIN_FEEDBACK];
-            if (jqXHR.responseJSON[UPDATE_LOGIN_RESULT_INFO_STATUS] == false) {
+            document.getElementById("form-update-login-login-invalid-feedback").innerHTML = jqXHR.responseJSON[LOGIN_FEEDBACK];
+            if (jqXHR.responseJSON[LOGIN_STATUS] == false) {
                 document.getElementById("form-update-login-login").classList.add("is-invalid");
                 document.getElementById("form-update-login-login").classList.remove("is-valid");
             } else {
@@ -97,16 +97,16 @@ function updateUserPassword() {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             document.getElementById("form-update-password").classList.remove("was-validated");
-            document.getElementById("form-update-password-password-invalid-feedback").innerHTML = jqXHR.responseJSON[UPDATE_PASSWORD_RESULT_INFO_PASSWORD_FEEDBACK];
-            document.getElementById("form-update-password-password-confirmation-invalid-feedback").innerHTML = jqXHR.responseJSON[UPDATE_PASSWORD_RESULT_INFO_PASSWORD_CONFIRMATION_FEEDBACK];
-            if (jqXHR.responseJSON[UPDATE_PASSWORD_RESULT_INFO_PASSWORD_STATUS] == false) {
+            document.getElementById("form-update-password-password-invalid-feedback").innerHTML = jqXHR.responseJSON[PASSWORD_FEEDBACK];
+            document.getElementById("form-update-password-password-confirmation-invalid-feedback").innerHTML = jqXHR.responseJSON[PASSWORD_CONFIRMATION_FEEDBACK];
+            if (jqXHR.responseJSON[PASSWORD_STATUS] == false) {
                 document.getElementById("form-update-password-password").classList.add("is-invalid");
                 document.getElementById("form-update-password-password").classList.remove("is-valid");
             } else {
                 document.getElementById("form-update-password-password").classList.remove("is-invalid");
                 document.getElementById("form-update-password-password").classList.add("is-valid");
             }
-            if (jqXHR.responseJSON[UPDATE_PASSWORD_RESULT_INFO_PASSWORD_CONFIRMATION_STATUS] == false) {
+            if (jqXHR.responseJSON[PASSWORD_CONFIRMATION_STATUS] == false) {
                 document.getElementById("form-update-password-password-confirmation").classList.add("is-invalid");
                 document.getElementById("form-update-password-password-confirmation").classList.remove("is-valid");
             } else {
@@ -133,7 +133,7 @@ function updateUserImage(image) {
         processData: false,
         dataType: "json", // TODO will this work?
         success: function (data, textStatus, jqXHR) {
-            if (jqXHR.responseJSON[UPDATE_IMAGE_RESULT_INFO_IMAGE_STATUS] == true) {
+            if (jqXHR.responseJSON[IMAGE_STATUS] == true) {
                 // TODO set image to avatar
                 document.getElementById("form-update-image-image").classList.add("is-valid");
                 document.getElementById("form-update-image-image").classList.remove("is-invalid");
@@ -147,8 +147,8 @@ function updateUserImage(image) {
         },
         error: function (jqXHR, textStatus, errorThrown) {
             document.getElementById("form-update-image").classList.remove("was-validated");
-            document.getElementById("form-update-image-image-invalid-feedback").innerHTML = jqXHR.responseJSON[UPDATE_IMAGE_RESULT_INFO_IMAGE_FEEDBACK];
-            if (jqXHR.responseJSON[UPDATE_IMAGE_RESULT_INFO_IMAGE_STATUS] == false) {
+            document.getElementById("form-update-image-image-invalid-feedback").innerHTML = jqXHR.responseJSON[IMAGE_FEEDBACK];
+            if (jqXHR.responseJSON[IMAGE_STATUS] == false) {
                 document.getElementById("form-update-image-image").classList.add("is-invalid");
                 document.getElementById("form-update-image-image").classList.remove("is-valid");
             } else {
@@ -173,7 +173,7 @@ $(document).ready(function () {
         document.getElementById("form-update-email-email").classList.remove("is-invalid");
         document.getElementById("form-update-email-email").classList.remove("is-valid");
         if (formUpdateEmail.checkValidity() === false) {
-            document.getElementById("form-update-email-email-invalid-feedback").innerHTML = UPDATE_STANDARD_EMAIL_FEEDBACK;
+            document.getElementById("form-update-email-email-invalid-feedback").innerHTML = STANDARD_EMAIL_FEEDBACK;
             event.preventDefault();
             event.stopPropagation();
         } else {
@@ -195,7 +195,7 @@ $(document).ready(function () {
         document.getElementById("form-update-login-login").classList.remove("is-invalid");
         document.getElementById("form-update-login-login").classList.remove("is-valid");
         if (formUpdateLogin.checkValidity() === false) {
-            document.getElementById("form-update-login-login-invalid-feedback").innerHTML = UPDATE_LOGIN_STANDARD_LOGIN_FEEDBACK;
+            document.getElementById("form-update-login-login-invalid-feedback").innerHTML = STANDARD_LOGIN_FEEDBACK;
             event.preventDefault();
             event.stopPropagation();
         } else {
@@ -219,14 +219,14 @@ $(document).ready(function () {
         document.getElementById("form-update-password-password-confirmation").classList.remove("is-invalid");
         document.getElementById("form-update-password-password-confirmation").classList.remove("is-valid");
         if (formUpdatePassword.checkValidity() === false || document.getElementById("form-update-password-password").value != document.getElementById("form-update-password-password-confirmation").value) {
-            document.getElementById("form-update-password-password-invalid-feedback").innerHTML = UPDATE_PASSWORD_STANDARD_PASSWORD_FEEDBACK;
-            document.getElementById("form-update-password-password-confirmation-invalid-feedback").innerHTML = UPDATE_PASSWORD_STANDARD_PASSWORD_FEEDBACK;
+            document.getElementById("form-update-password-password-invalid-feedback").innerHTML = STANDARD_PASSWORD_FEDDBACK;
+            document.getElementById("form-update-password-password-confirmation-invalid-feedback").innerHTML = STANDARD_PASSWORD_FEDDBACK;
            
             if (document.getElementById("form-update-password-password").value != document.getElementById("form-update-password-password-confirmation").value) {
-                document.getElementById("form-update-password-password").setCustomValidity(UPDATE_PASSWORD_RESULT_INFO_FEEDBACK_INVALID_PASSWORDS_NOT_EQUALS);
-                document.getElementById("form-update-password-password-confirmation").setCustomValidity(UPDATE_PASSWORD_RESULT_INFO_FEEDBACK_INVALID_PASSWORDS_NOT_EQUALS);
-                document.getElementById("form-update-password-password-invalid-feedback").innerHTML = UPDATE_PASSWORD_RESULT_INFO_FEEDBACK_INVALID_PASSWORDS_NOT_EQUALS;
-                document.getElementById("form-update-password-password-confirmation-invalid-feedback").innerHTML = UPDATE_PASSWORD_RESULT_INFO_FEEDBACK_INVALID_PASSWORDS_NOT_EQUALS;
+                document.getElementById("form-update-password-password").setCustomValidity(PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL);
+                document.getElementById("form-update-password-password-confirmation").setCustomValidity(PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL);
+                document.getElementById("form-update-password-password-invalid-feedback").innerHTML = PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL;
+                document.getElementById("form-update-password-password-confirmation-invalid-feedback").innerHTML = PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL;
             }
             
             event.preventDefault();
@@ -252,9 +252,6 @@ $(document).ready(function () {
 $(document).ready(function () {
     let formUpdateImage = document.getElementById("form-update-image");
     formUpdateImage.addEventListener('submit', function(event) {
-        document.getElementById("form-update-image-image-label").innerHTML = "Select image"; // change to variable
-
-
         document.getElementById("form-update-image-image").classList.remove("is-invalid");
         document.getElementById("form-update-image-image").classList.remove("is-valid");
         document.getElementById("form-update-image").classList.remove("was-validated");
@@ -277,10 +274,10 @@ $(document).ready(function () {
         }
 
         if (result == false) {
-            document.getElementById("form-update-image-image-invalid-feedback").innerHTML = UPDATE_IMAGE_STANDARD_IMAGE_FEEDBACK;
+            document.getElementById("form-update-image-image-invalid-feedback").innerHTML = STANDARD_IMAGE_FEEDBACK;
             document.getElementById("form-update-image-image").classList.add("is-invalid");
             formUpdateImage.classList.add('was-validated');
-           // document.getElementById("form-update-image-image").setCustomValidity(UPDATE_IMAGE_RESULT_INFO_FEEDBACK_INVALID_IMAGE);
+           // document.getElementById("form-update-image-image").setCustomValidity(IMAGE_FEEDBACK_INVALID);
             event.preventDefault();
             event.stopPropagation();
         } else {

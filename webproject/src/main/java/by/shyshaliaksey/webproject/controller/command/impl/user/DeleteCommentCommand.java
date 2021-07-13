@@ -34,9 +34,7 @@ public class DeleteCommentCommand implements Command {
 		Router router;
 		try {
 			Boolean deleteCommentResult = userService.deleteComment(commentId);
-			
 			router = new Router(null, deleteCommentResult.toString(), RouterType.AJAX_RESPONSE);
-			
 		} catch (ServiceException e) {
 			logger.log(Level.ERROR, "Exception occured while email updating: {}", e.getMessage());
 			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);

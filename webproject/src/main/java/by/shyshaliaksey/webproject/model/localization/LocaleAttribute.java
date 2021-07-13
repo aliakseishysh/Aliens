@@ -12,13 +12,13 @@ public enum LocaleAttribute implements EnumValue {
 	LOCALIZATION_EN("English", new LocalizationReader(new Locale("en", "GB")).getResourceBundle());
 	
 	private String value;
-	private String locale;
+	private Locale locale;
 	private ResourceBundle resourceBundle;
 
 	
 	private LocaleAttribute(String value, ResourceBundle resourceBundle) {
 		this.value = value;
-		this.locale = resourceBundle.getLocale().toString();
+		this.locale = resourceBundle.getLocale();
 		this.resourceBundle = resourceBundle;
 	}
 	
@@ -31,8 +31,12 @@ public enum LocaleAttribute implements EnumValue {
 		return resourceBundle;
 	}
 	
-	public String getLocale() {
+	public Locale getLocale() {
 		return locale;
+	}
+	
+	public String getLocalizedMessage(String key) {
+		return resourceBundle.getString(key);
 	}
 	
 	public static LocaleAttribute fromString(String requestedLocale) {

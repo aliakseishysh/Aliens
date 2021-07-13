@@ -14,8 +14,8 @@ public enum FilePath implements EnumValue  {
 	JS_REGISTER("/js/register.js"),
 	JS_USER_PROFILE("/js/user_profile.js"),
 	JS_ADMIN_PROFILE("/js/admin_profile.js"),
-	JS_ALIEN_PROFILE("/js/alien_profile.js"),
-	JS_RESTORE_PASSWORD_REQUEST_LINK("/js/restore_password_request_link.js");
+	JS_ALIEN_PROFILE("/js/alien_profile.js");
+	// TODO JS_RESTORE_PASSWORD_REQUEST_LINK("/js/restore_password_request_link.js");
 	
 	private String value;
 	

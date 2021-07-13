@@ -1,35 +1,5 @@
 package by.shyshaliaksey.webproject.controller.command;
 
-import by.shyshaliaksey.webproject.controller.command.impl.admin.AddNewAlienCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.admin.BanUserCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.admin.DemoteAdminCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.admin.PromoteUserCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.admin.UnbanUserCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.admin.UpdateAlienCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.locale.ChangeLocaleCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.open.Open404ErrorPageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.open.OpenAboutPageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.open.OpenAlienProfilePageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.open.OpenBannedPageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.open.DELETE_POTENTIALYOpenForgotPasswordPageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.open.OpenHomePageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.open.OpenLoginPageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.open.OpenRegisterPageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.open.OpenServerErrorPageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.open.OpenUserProfilePageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.rating.FindUserRateCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.rating.UpdateRatingCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.user.AddNewCommentCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.user.DeleteCommentCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.user.LoginUserCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.user.LogoutUserCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.user.RegisterUserCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.user.DELETE_POTENTIALYRequestRestorePasswordTokenCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserEmailCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserImageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserLoginCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserPasswordCommand;
-
 public class CommandFactory {
 
 	private CommandFactory() {
@@ -44,7 +14,6 @@ public class CommandFactory {
 		case OPEN_REGISTER_PAGE -> CommandValue.OPEN_REGISTER_PAGE.getCommand();
 		case OPEN_USER_PROFILE_PAGE -> CommandValue.OPEN_USER_PROFILE_PAGE.getCommand();
 		case OPEN_ALIEN_PROFILE_PAGE -> CommandValue.OPEN_ALIEN_PROFILE_PAGE.getCommand();
-		//TODO case OPEN_FORGOT_PASSWORD_PAGE -> new DELETE_POTENTIALYOpenForgotPasswordPageCommand();
 		case OPEN_BANNED_PAGE -> CommandValue.OPEN_BANNED_PAGE.getCommand();
 		case OPEN_SERVER_ERROR_PAGE -> CommandValue.OPEN_SERVER_ERROR_PAGE.getCommand();
 		case OPEN_404_ERROR_PAGE -> CommandValue.OPEN_404_ERROR_PAGE.getCommand();
@@ -66,6 +35,7 @@ public class CommandFactory {
 		case ADD_NEW_ALIEN -> CommandValue.ADD_NEW_ALIEN.getCommand();
 		case ADD_NEW_COMMENT -> CommandValue.ADD_NEW_COMMENT.getCommand();
 		case DELETE_COMMENT -> CommandValue.DELETE_COMMENT.getCommand();
+		//TODO case OPEN_FORGOT_PASSWORD_PAGE -> new DELETE_POTENTIALYOpenForgotPasswordPageCommand();
 		// case REQUEST_RESTORE_PASSWORD_TOKEN -> new RequestRestorePasswordTokenCommand(); TODO if have time
 		default -> throw new IllegalArgumentException("Value is not present in CommandFactory: " + commandName);
 		};

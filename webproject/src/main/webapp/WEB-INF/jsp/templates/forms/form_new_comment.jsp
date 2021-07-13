@@ -9,7 +9,7 @@
      					  pattern="${VALID_COMMENT}"
      					  required></textarea>
      			<div id="form-new-comment-comment-invalid-feedback" class="invalid-feedback">
-        			${ADD_NEW_COMMENT_STANDARD_COMMENT_FEEDBACK}
+        			${STANDARD_COMMENT_FEEDBACK}
       			</div>
    			</div>
 		</fieldset>

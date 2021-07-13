@@ -13,6 +13,4 @@ public @interface AllowedRoles {
 
 	Role[] value() default Role.GUEST;
 	
-	
-	
 }

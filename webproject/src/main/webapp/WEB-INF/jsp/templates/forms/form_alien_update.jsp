@@ -9,7 +9,7 @@
      			pattern="${VALID_ALIEN_NAME}"
   				required>
   				<div id="form-alien-update-name-invalid-feedback" class="invalid-feedback">
-        			${ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_NAME_FEEDBACK}
+        			${STANDARD_ALIEN_NAME_FEEDBACK}
       			</div>
    			</div>
    			<label class="control-label col-sm-2" for="form-alien-update-description-small">${TEXT[FORM_ALIEN_UPDATE_SMALL_DESCRIPTION]}</label>
@@ -19,7 +19,7 @@
      			pattern="${VALID_ALIEN_SMALL_DESCRIPTION}"
   				required>
 	   			<div id="form-alien-update-description-small-invalid-feedback" class="invalid-feedback">
-        			${ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK}
+        			${STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK}
       			</div>
    			</div>
    			<label class="control-label col-sm-2" for="form-alien-update-description-full">${TEXT[FORM_ALIEN_UPDATE_FULL_DESCRIPTION]}</label>
@@ -31,7 +31,7 @@
   				required></textarea>
  				  <!-- textarea does not support the pattern attribute -->
      			<div id="form-alien-update-description-full-invalid-feedback" class="invalid-feedback">
-        			${ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK}
+        			${STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK}
       			</div>
    			</div>
    			<label class="control-label col-sm-2" for="form-alien-update-image">${TEXT[FORM_ALIEN_UPDATE_IMAGE]}</label>
@@ -39,7 +39,7 @@
 	   			<div class="custom-file">
 	  				<input type="file" class="custom-file-input form-control-file" id="form-alien-update-image">
 	  				<div id="form-alien-update-image-invalid-feedback" class="invalid-feedback">
-	       				${ADD_NEW_UPDATE_ALIEN_STANDARD_ALIEN_IMAGE_FEEDBACK}
+	       				${STANDARD_IMAGE_FEEDBACK}
 	   				</div>
 	  				<label class="custom-file-label" for="form-alien-update-image" id="form-alien-update-image-label">${TEXT[FORM_ALIEN_UPDATE_IMAGE_LABEL]}</label>
 				</div>

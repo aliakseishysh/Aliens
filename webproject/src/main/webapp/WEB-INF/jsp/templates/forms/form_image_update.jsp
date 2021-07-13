@@ -7,7 +7,7 @@
 	   			<div class="custom-file">
 	  				<input type="file" class="custom-file-input form-control-file" id="form-update-image-image" required>
 					<div id="form-update-image-image-invalid-feedback" class="invalid-feedback">
-	       				${UPDATE_IMAGE_STANDARD_IMAGE_FEEDBACK}
+	       				${STANDARD_IMAGE_FEEDBACK}
 	   				</div>
 	  				<label id="form-update-image-image-label" class="custom-file-label text-muted" for="form-update-image-image">${TEXT[FORM_IMAGE_UPDATE_IMAGE_LABEL]}</label>
 				</div>

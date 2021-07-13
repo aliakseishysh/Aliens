@@ -9,7 +9,7 @@
     				   pattern="${VALID_PASSWORD}"
     				   required>
 			   <div id="form-update-password-password-invalid-feedback" class="invalid-feedback">
-        			${UPDATE_PASSWORD_STANDARD_PASSWORD_FEEDBACK}
+        			${STANDARD_PASSWORD_FEDDBACK}
       			</div>
    			</div>
    			<label class="control-label col-sm-2" for="form-update-password-password-confirmation">${TEXT[FORM_PASSWORD_UPDATE_PASSWORD_CONFIRMATION_LABEL]}</label>
@@ -19,7 +19,7 @@
      				   pattern="${VALID_PASSWORD}"
     				   required>
 		   		<div id="form-update-password-password-confirmation-invalid-feedback" class="invalid-feedback">
-        			${UPDATE_PASSWORD_STANDARD_PASSWORD_CONFIRMATION_FEEDBACK}
+        			${STANDARD_PASSWORD_CONFIRMATION_FEEDBACK}
       			</div>
    			</div>
 		</fieldset>

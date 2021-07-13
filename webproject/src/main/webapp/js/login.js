@@ -14,7 +14,7 @@ function loginUser() {
         data: data,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            if (jqXHR.responseJSON[LOGIN_RESULT_INFO_EMAIL_STATUS] == true && jqXHR.responseJSON[LOGIN_RESULT_INFO_PASSWORD_STATUS] == true) {
+            if (jqXHR.responseJSON[EMAIL_STATUS] == true && jqXHR.responseJSON[PASSWORD_STATUS] == true) {
                 email.classList.remove("is-invalid");
                 password.classList.remove("is-invalid");
                 formLogin.classList.add("was-validated");
@@ -25,8 +25,8 @@ function loginUser() {
         error: function (jqXHR, textStatus, errorThrown) {
             // if (serverError) {};
             formLogin.classList.remove("was-validated");
-            emailInvalidFeedback.innerHTML = jqXHR.responseJSON[LOGIN_RESULT_INFO_EMAIL_FEEDBACK];
-            passwordInvalidFeedback.innerHTML = jqXHR.responseJSON[LOGIN_RESULT_INFO_PASSWORD_FEEDBACK];
+            emailInvalidFeedback.innerHTML = jqXHR.responseJSON[LOGIN_FEEDBACK];
+            passwordInvalidFeedback.innerHTML = jqXHR.responseJSON[PASSWORD_FEEDBACK];
             if (jqXHR.responseJSON.email_status == false) {
                 email.classList.remove("is-valid");
                 email.classList.add("is-invalid");

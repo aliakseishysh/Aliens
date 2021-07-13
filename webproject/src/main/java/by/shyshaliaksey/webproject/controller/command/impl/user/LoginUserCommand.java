@@ -1,5 +1,6 @@
 package by.shyshaliaksey.webproject.controller.command.impl.user;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.logging.log4j.Level;
@@ -11,16 +12,16 @@ import by.shyshaliaksey.webproject.controller.ErrorAttribute;
 import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
+import by.shyshaliaksey.webproject.controller.SessionAttribute;
 import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
 import by.shyshaliaksey.webproject.controller.command.Command;
+import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
-import by.shyshaliaksey.webproject.model.entity.feedback.ErrorFeedback;
-import by.shyshaliaksey.webproject.model.entity.feedback.LoginResultInfo;
-import by.shyshaliaksey.webproject.model.service.AlienService;
+import by.shyshaliaksey.webproject.model.localization.LocaleAttribute;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,43 +30,51 @@ import jakarta.servlet.http.HttpServletResponse;
 public class LoginUserCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
-
+	private static final UserService userService = ServiceProvider.getInstance().getUserService();
+	
 	@AllowedRoles({Role.GUEST})
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		String email = request.getParameter(RequestParameter.EMAIL.getValue());
-		String password = request.getParameter(RequestParameter.PASSWORD.getValue());
 		Router router;
-		User user = null;
-		ServiceProvider serviceProvider = ServiceProvider.getInstance();
-		UserService userService = serviceProvider.getUserService();
+		Map<Feedback.Key, Object> result;
 		try {
-			LoginResultInfo loginResult = userService.userLogIn(email, password);
-			// TODO to separate class, create new constants
+			String email = request.getParameter(RequestParameter.EMAIL.getValue());
+			String password = request.getParameter(RequestParameter.PASSWORD.getValue());
+			User user = null;
+			result = userService.userLogIn(email, password);
+			
+			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			String jsonResponse = new JSONObject()
-					.put(ErrorFeedback.LOGIN_RESULT_INFO_EMAIL_STATUS.getValue(), loginResult.isEmailCorrect())
-					.put(ErrorFeedback.LOGIN_RESULT_INFO_PASSWORD_STATUS.getValue(), loginResult.isPasswordCorrect())
-					.put(ErrorFeedback.LOGIN_RESULT_INFO_EMAIL_FEEDBACK.getValue(), loginResult.getEmailErrorInfo())
-					.put(ErrorFeedback.LOGIN_RESULT_INFO_PASSWORD_FEEDBACK	.getValue(), loginResult.getPasswordErrorInfo())
+					.put(Feedback.Key.EMAIL_STATUS.getValue(),
+							result.get(Feedback.Key.EMAIL_STATUS)
+							.toString())
+					.put(Feedback.Key.PASSWORD_STATUS.getValue(),
+							result.get(Feedback.Key.PASSWORD_STATUS)
+							.toString())
+					.put(Feedback.Key.EMAIL_FEEDBACK.getValue(),
+							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.EMAIL_FEEDBACK)
+							.toString()))
+					.put(Feedback.Key.PASSWORD_FEEDBACK.getValue(),
+							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.PASSWORD_FEEDBACK)
+									.toString()))
 					.toString();
-			if (loginResult.isEmailCorrect() && loginResult.isPasswordCorrect()) {
+			if (Boolean.TRUE.equals(result.get(Feedback.Key.EMAIL_STATUS)) 
+					&& Boolean.TRUE.equals(result.get(Feedback.Key.PASSWORD_STATUS))) {
 				user = userService.findUserByEmail(email).get();
 				request.getSession(true).setAttribute(RequestAttribute.CURRENT_USER.getValue(), user);
 				request.getSession().setAttribute(RequestAttribute.LOGIN_NAME.getValue(), user.getLogin());
 				request.getSession().setAttribute(RequestAttribute.CURRENT_USER_ROLE.getValue(),
 						user.getRole().getValue());
 				if (user.getBannedToDate() != null) {
-					request.getSession().setAttribute(ErrorAttribute.Name.BAN_INFO.name(), user.getBannedToDate().toString());					
+					request.getSession().setAttribute(ErrorAttribute.BAN_INFO.name(), user.getBannedToDate().toString());					
 				}
-				response.setStatus(200);
-				router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
-
-			} else {
-				response.setStatus(400);
-				router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
 			}
+			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
+			router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
 		} catch (ServiceException e) {
-			logger.log(Level.ERROR, "Exception occured while user logining: {}", e.getMessage());
+			response.setStatus(500);
+			logger.log(Level.ERROR, "Exception occured while alien adding: {} {} {}", e.getMessage(), e.getStackTrace(),
+					e);
 			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
 		}
 		return router;

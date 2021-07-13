@@ -17,13 +17,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
@@ -160,37 +163,41 @@ public class UserDaoImpl implements UserDao {
 	}
 	
 	@Override
-	public Optional<LoginData> findUserLoginData(String userEmail) throws DaoException {
-		Optional<LoginData> loginData = Optional.empty();
+	public Map<Feedback.Key, Optional<String>> findUserLoginData(String userEmail) throws DaoException {
+		Map<Feedback.Key, Optional<String>> result = new EnumMap<>(Feedback.Key.class);
+		result.put(Feedback.Key.PASSWORD, Optional.empty());
+		result.put(Feedback.Key.SALT, Optional.empty());
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(FIND_USER_LOGIN_DATA)) {
 			statement.setString(1, userEmail);
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
-				loginData = Optional.of(new LoginData(resultSet.getString(USER_PASSWORD_HASH), resultSet.getString(USER_SALT)));
+				result.put(Feedback.Key.PASSWORD, Optional.of(resultSet.getString(USER_PASSWORD_HASH)));
+				result.put(Feedback.Key.SALT, Optional.of(resultSet.getString(USER_SALT)));
 			}
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_USER_LOGIN_DATA, e.getMessage());
 			throw new DaoException("Can not proceed request: " + FIND_USER_LOGIN_DATA, e);
 		}
-		return loginData;
+		return result;
 	}
 	
 	@Override
-	public Optional<LoginData> findUserLoginData(int userId) throws DaoException {
-		Optional<LoginData> loginData = Optional.empty();
+	public Map<Feedback.Key, Optional<String>> findUserLoginData(int userId) throws DaoException {
+		Map<Feedback.Key, Optional<String>> result = new EnumMap<>(Feedback.Key.class);
+		result.put(Feedback.Key.SALT, Optional.empty());
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(FIND_USER_LOGIN_DATA_BY_ID)) {
 			statement.setInt(1, userId);
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
-				loginData = Optional.of(new LoginData(resultSet.getString(USER_PASSWORD_HASH), resultSet.getString(USER_SALT)));
+				result.put(Feedback.Key.SALT, Optional.of(resultSet.getString(USER_SALT)));
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_USER_LOGIN_DATA_BY_ID, e.getMessage());
-			throw new DaoException("Can not proceed request: " + FIND_USER_LOGIN_DATA_BY_ID, e);
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_USER_LOGIN_DATA, e.getMessage());
+			throw new DaoException("Can not proceed request: " + FIND_USER_LOGIN_DATA, e);
 		}
-		return loginData;
+		return result;
 	}
 
 	@Override

@@ -7,13 +7,12 @@ import by.shyshaliaksey.webproject.controller.RequestParameter;
 
 import java.util.ResourceBundle;
 
-import by.shyshaliaksey.webproject.controller.ApplicationAttribute;
 import by.shyshaliaksey.webproject.controller.command.CommandValue;
+import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.entity.FormPattern;
 import by.shyshaliaksey.webproject.model.entity.Role;
-import by.shyshaliaksey.webproject.model.entity.feedback.ErrorFeedback;
 import by.shyshaliaksey.webproject.model.localization.LocaleAttribute;
 import by.shyshaliaksey.webproject.model.localization.LocaleKey;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
@@ -29,10 +28,10 @@ public class ApplicationListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		ServletContextListener.super.contextInitialized(sce);
 		ConnectionPool.getInstance();
+		DaoProvider.getInstance();
         ServiceProvider.getInstance();
-        DaoProvider.getInstance();
         setSessionVariables(sce.getServletContext());
-        ResourceBundle rb = LocaleAttribute.LOCALIZATION_EN.getResourceBundle();
+        LocaleAttribute.LOCALIZATION_EN.getResourceBundle();
 	}
 
 	@Override
@@ -41,13 +40,12 @@ public class ApplicationListener implements ServletContextListener {
 		ConnectionPool.getInstance().destroyConnectionPool();
 	}
 	
-	private void setSessionVariables(ServletContext  servletContext) {
-		setEnumApplicationVariables(servletContext, ErrorFeedback.values());
+	private void setSessionVariables(ServletContext servletContext) {
+		setEnumApplicationVariables(servletContext, Feedback.Key.values());
 		setEnumApplicationVariables(servletContext, CommandValue.values());
 		setEnumApplicationVariables(servletContext, FilePath.values());
 		setEnumApplicationVariables(servletContext, PagePath.values());
 		setEnumApplicationVariables(servletContext, RequestParameter.values());
-		setEnumApplicationVariables(servletContext, ApplicationAttribute.values());
 		setEnumApplicationVariables(servletContext, Role.values());
 		setEnumApplicationVariables(servletContext, FormPattern.values());
 		setEnumApplicationVariables(servletContext, LocaleAttribute.values());

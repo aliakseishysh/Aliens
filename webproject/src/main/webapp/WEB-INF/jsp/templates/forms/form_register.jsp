@@ -10,7 +10,7 @@
    					   pattern="${VALID_EMAIL}"
    					   required>
    				<div id="form-register-email-invalid-feedback" class="invalid-feedback">
-        			${REGISTER_STANDARD_EMAIL_FEEDBACK}
+        			${STANDARD_EMAIL_FEEDBACK}
       			</div>
    			</div>
    			<label class="control-label col-sm-2" for="form-register-login">${TEXT[FORM_REGISTER_LOGIN_LABEL]}</label>
@@ -20,7 +20,7 @@
    					   pattern="${VALID_LOGIN}"
    					   required>
    				<div id="form-register-login-invalid-feedback" class="invalid-feedback">
-        			${REGISTER_STANDARD_LOGIN_FEEDBACK}
+        			${STANDARD_LOGIN_FEEDBACK}
       			</div>
    			</div>
    			<label class="control-label col-sm-2" for="form-register-password">${TEXT[FORM_REGISTER_PASSWORD_LABEL]}</label>
@@ -30,7 +30,7 @@
    					   pattern="${VALID_PASSWORD}"
    					   required>
    				<div id="form-register-password-invalid-feedback" class="invalid-feedback">
-        			${REGISTER_STANDARD_PASSWORD_FEEDBACK}
+        			${STANDARD_PASSWORD_FEDDBACK}
       			</div>
    			</div>
    			<label class="control-label col-sm-2" for="form-register-password-confirm">${TEXT[FORM_REGISTER_PASSWORD_CONFIRMATION_LABEL]}</label>
@@ -40,7 +40,7 @@
    				       pattern="${VALID_PASSWORD}"
    				       required>
    				<div id="form-register-password-confirm-invalid-feedback" class="invalid-feedback">
-        			${REGISTER_STANDARD_PASSWORD_CONFIRM_FEEDBACK}
+        			${STANDARD_PASSWORD_CONFIRMATION_FEEDBACK}
       			</div>
    			</div>
 		</fieldset>

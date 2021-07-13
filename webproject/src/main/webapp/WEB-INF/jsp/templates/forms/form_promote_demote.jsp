@@ -9,7 +9,7 @@
   				pattern="${VALID_LOGIN}"
   				required>
   				<div id="form-promote-demote-user-login-invalid-feedback" class="invalid-feedback">
-        			${PROMOTE_DEMOTE_USER_STANDARD_LOGIN_FEEDBACK}
+        			${STANDARD_LOGIN_FEEDBACK}
       			</div>
   			</div>
 		</fieldset>

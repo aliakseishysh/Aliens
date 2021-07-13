@@ -1,18 +1,13 @@
 package by.shyshaliaksey.webproject.controller.listener;
 
 import by.shyshaliaksey.webproject.controller.EnumValue;
-import by.shyshaliaksey.webproject.controller.FilePath;
-import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
-import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.SessionAttribute;
-import by.shyshaliaksey.webproject.controller.ApplicationAttribute;
-import by.shyshaliaksey.webproject.controller.command.CommandValue;
+import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
-import by.shyshaliaksey.webproject.model.entity.feedback.ErrorFeedback;
 import by.shyshaliaksey.webproject.model.localization.LocaleAttribute;
-import by.shyshaliaksey.webproject.model.entity.FormPattern;
+import by.shyshaliaksey.webproject.model.localization.LocaleKey;
 import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.HttpSessionEvent;
@@ -36,13 +31,19 @@ public class SessionListener implements HttpSessionListener {
 		session.setAttribute(RequestAttribute.CURRENT_USER.getValue(), new User(Role.GUEST));
 		session.setAttribute(SessionAttribute.CURRENT_LOCALIZATION_NAME.name(), LocaleAttribute.LOCALIZATION_EN.getValue());
 		session.setAttribute(SessionAttribute.TEXT.name(), LocaleAttribute.LOCALIZATION_EN.getResourceBundle());
-		session.setAttribute(SessionAttribute.CURRENT_LOCALE.name(), LocaleAttribute.LOCALIZATION_EN.getLocale());
+		session.setAttribute(SessionAttribute.CURRENT_LOCALE.name(), LocaleAttribute.LOCALIZATION_EN);
 		
-//		setEnumSessionVariables(session, RequestAttribute.values());
-
-		
+		session.setAttribute(LocaleKey.STANDARD_EMAIL_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_EMAIL_FEEDBACK.getValue()));
+		session.setAttribute(LocaleKey.STANDARD_LOGIN_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_LOGIN_FEEDBACK.getValue()));
+		session.setAttribute(LocaleKey.STANDARD_PASSWORD_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_PASSWORD_FEEDBACK.getValue()));
+		session.setAttribute(LocaleKey.STANDARD_PASSWORD_CONFIRMATION_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_PASSWORD_CONFIRMATION_FEEDBACK.getValue()));
+		session.setAttribute(LocaleKey.STANDARD_IMAGE_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_IMAGE_FEEDBACK.getValue()));
+		session.setAttribute(LocaleKey.STANDARD_DAYS_TO_BAN_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_DAYS_TO_BAN_FEEDBACK.getValue()));
+		session.setAttribute(LocaleKey.STANDARD_ALIEN_NAME_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_ALIEN_NAME_FEEDBACK.getValue()));
+		session.setAttribute(LocaleKey.STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK.getValue()));
+		session.setAttribute(LocaleKey.STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK.getValue()));
+		session.setAttribute(LocaleKey.STANDARD_COMMENT_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_COMMENT_FEEDBACK.getValue()));
 	}
-	// ${sessionScope[CommandValue][]}
 	
 	private <T extends Enum<?>> void setEnumSessionVariables(HttpSession session, T[] enumValues) {
 		for(T enumValue: enumValues) {

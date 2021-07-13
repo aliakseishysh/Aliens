@@ -9,7 +9,7 @@
   				pattern="${VALID_LOGIN}"
   				required>
   				<div id="form-user-ban-unban-login-invalid-feedback" class="invalid-feedback">
-        			${BAN_UNBAN_USER_STANDARD_LOGIN_FEEDBACK}
+        			${STANDARD_LOGIN_FEEDBACK}
       			</div>
   			</div>
   			<label class="control-label col-sm-2" for="form-user-ban-unban-days-in-ban">${TEXT[FORM_USER_BAN_UNBAN_DAYS_IN_BAN]}</label>
@@ -20,7 +20,7 @@
   				<!-- required when banning user -->
   				<!-- integer greater then 0 (check in js)-->
   				<div id="form-user-ban-unban-days-in-ban-invalid-feedback" class="invalid-feedback">
-        			${BAN_UNBAN_USER_STANDARD_DAYS_TO_BAN_FEEDBACK}
+        			${STANDARD_DAYS_TO_BAN_FEEDBACK}
       			</div>
   			</div>
 		</fieldset>
