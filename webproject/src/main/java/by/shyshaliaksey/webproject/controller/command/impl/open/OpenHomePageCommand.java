@@ -48,7 +48,7 @@ public class OpenHomePageCommand implements Command {
 			request.setAttribute(RequestAttribute.ALIEN_LIST.getValue(), aliens);
 			router = new Router(PagePath.PAGE_HOME_JSP.getValue(), null, RouterType.FORWARD);
 		} catch (ServiceException e) {
-			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
+			router = new Router(PagePath.ERROR_PAGE_500_JSP.getValue(), null, RouterType.FORWARD);
 			logger.log(Level.ERROR, "Exception occured while opening {}: {}", PagePath.PAGE_HOME_JSP, e.getMessage());
 		}
 		return router;

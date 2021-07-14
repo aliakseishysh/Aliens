@@ -14,7 +14,7 @@ public class OpenServerErrorPageCommand implements Command {
 	@AllowedRoles({Role.GUEST, Role.USER, Role.ADMIN})
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		Router router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
+		Router router = new Router(PagePath.ERROR_PAGE_500_JSP.getValue(), null, RouterType.FORWARD);
 		return router;
 	}
 

@@ -85,7 +85,7 @@ $(document).ready(function () {
         if (formRegister.checkValidity() === false || document.getElementById("form-register-password").value != document.getElementById("form-register-password-confirm").value) {
             document.getElementById("form-register-email-invalid-feedback").innerHTML = STANDARD_EMAIL_FEEDBACK;
             document.getElementById("form-register-login-invalid-feedback").innerHTML = STANDARD_LOGIN_FEEDBACK;
-            document.getElementById("form-register-password-invalid-feedback").innerHTML = STANDARD_PASSWORD_FEDDBACK;
+            document.getElementById("form-register-password-invalid-feedback").innerHTML = STANDARD_PASSWORD_FEEDBACK;
             document.getElementById("form-register-password-confirm-invalid-feedback").innerHTML = STANDARD_PASSWORD_CONFIRMATION_FEEDBACK;
             
             if (document.getElementById("form-register-password").value != document.getElementById("form-register-password-confirm").value) {
@@ -111,7 +111,7 @@ $(document).ready(function () {
 //         if (formRegister.checkValidity() === false) {
 //             document.getElementById("form-register-email-invalid-feedback").innerHTML = STANDARD_EMAIL_FEEDBACK;
 //             document.getElementById("form-register-login-invalid-feedback").innerHTML = STANDARD_LOGIN_FEEDBACK;
-//             document.getElementById("form-register-password-invalid-feedback").innerHTML = STANDARD_PASSWORD_FEDDBACK;
+//             document.getElementById("form-register-password-invalid-feedback").innerHTML = STANDARD_PASSWORD_FEEDBACK;
 //             document.getElementById("form-register-password-confirm-invalid-feedback").innerHTML = STANDARD_PASSWORD_CONFIRMATION_FEEDBACK;
 //             event.preventDefault();
 //             event.stopPropagation();

@@ -3,7 +3,6 @@ package by.shyshaliaksey.webproject.controller.listener;
 import by.shyshaliaksey.webproject.controller.EnumValue;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.SessionAttribute;
-import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.localization.LocaleAttribute;
@@ -43,6 +42,8 @@ public class SessionListener implements HttpSessionListener {
 		session.setAttribute(LocaleKey.STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK.getValue()));
 		session.setAttribute(LocaleKey.STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK.getValue()));
 		session.setAttribute(LocaleKey.STANDARD_COMMENT_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_COMMENT_FEEDBACK.getValue()));
+		session.setAttribute(LocaleKey.PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL.getValue()));
+
 	}
 	
 	private <T extends Enum<?>> void setEnumSessionVariables(HttpSession session, T[] enumValues) {

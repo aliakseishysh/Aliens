@@ -55,7 +55,7 @@ public class UpdateUserEmailCommand implements Command {
 		} catch (ServiceException e) {
 			response.setStatus(500);
 			logger.log(Level.ERROR, "Exception occured while email updating: {}", e.getMessage());
-			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
+			router = new Router(PagePath.ERROR_PAGE_500_JSP.getValue(), null, RouterType.FORWARD);
 		}
 		return router;
 	}

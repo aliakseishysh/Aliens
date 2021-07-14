@@ -30,7 +30,7 @@
    					   pattern="${VALID_PASSWORD}"
    					   required>
    				<div id="form-register-password-invalid-feedback" class="invalid-feedback">
-        			${STANDARD_PASSWORD_FEDDBACK}
+        			${STANDARD_PASSWORD_FEEDBACK}
       			</div>
    			</div>
    			<label class="control-label col-sm-2" for="form-register-password-confirm">${TEXT[FORM_REGISTER_PASSWORD_CONFIRMATION_LABEL]}</label>

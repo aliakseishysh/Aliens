@@ -1,6 +1,5 @@
 package by.shyshaliaksey.webproject.controller.command.impl.locale;
 
-import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.SessionAttribute;
 import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
@@ -35,6 +34,7 @@ public class ChangeLocaleCommand implements Command {
 		session.setAttribute(LocaleKey.STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK.name(), locale.getLocalizedMessage(LocaleKey.STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK.getValue()));
 		session.setAttribute(LocaleKey.STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK.name(), locale.getLocalizedMessage(LocaleKey.STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK.getValue()));
 		session.setAttribute(LocaleKey.STANDARD_COMMENT_FEEDBACK.name(), locale.getLocalizedMessage(LocaleKey.STANDARD_COMMENT_FEEDBACK.getValue()));
+		session.setAttribute(LocaleKey.PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL.name(), locale.getLocalizedMessage(LocaleKey.PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL.getValue()));
 		
 		Router router = new Router(null, Boolean.TRUE.toString(), RouterType.AJAX_RESPONSE);
 		return router;

@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import static by.shyshaliaksey.webproject.controller.PagePath.ERROR_PAGE_SERVER_JSP;
+import static by.shyshaliaksey.webproject.controller.PagePath.ERROR_PAGE_500_JSP;
 
 import java.io.IOException;
 import java.util.Map;
@@ -67,7 +67,7 @@ public class Controller extends HttpServlet {
 			break;
 		default:
 			logger.log(Level.ERROR, "Invalid RouterType value: {}", commandName);
-			request.getRequestDispatcher(ERROR_PAGE_SERVER_JSP.getValue()).forward(request, response);
+			request.getRequestDispatcher(ERROR_PAGE_500_JSP.getValue()).forward(request, response);
 		}
 	}
 

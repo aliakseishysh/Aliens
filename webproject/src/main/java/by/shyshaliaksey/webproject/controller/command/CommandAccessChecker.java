@@ -49,7 +49,7 @@ public class CommandAccessChecker {
 			}
 		} catch (NoSuchMethodException | SecurityException e) {
 			result.put(MapKey.RESULT, Boolean.FALSE);
-			result.put(MapKey.ROUTER, new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD));
+			result.put(MapKey.ROUTER, new Router(PagePath.ERROR_PAGE_500_JSP.getValue(), null, RouterType.FORWARD));
 		}
 		return result;
 	}

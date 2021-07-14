@@ -9,7 +9,7 @@
     				   pattern="${VALID_PASSWORD}"
     				   required>
 			   <div id="form-update-password-password-invalid-feedback" class="invalid-feedback">
-        			${STANDARD_PASSWORD_FEDDBACK}
+        			${STANDARD_PASSWORD_FEEDBACK}
       			</div>
    			</div>
    			<label class="control-label col-sm-2" for="form-update-password-password-confirmation">${TEXT[FORM_PASSWORD_UPDATE_PASSWORD_CONFIRMATION_LABEL]}</label>

@@ -67,7 +67,7 @@
 				
 				<div class="media-body">
 					<h2 id="alien-name" class="account-heading">${alien.name}</h2>
-					<p id="alien-small-description" class="h4">${alien.smallDescription}</p>
+					<p id="alien-small-description" class="h4 text-break">${alien.smallDescription}</p>
 				</div>
 				<c:choose>
 					<c:when test="${currentUser.role == USER}">
@@ -77,7 +77,7 @@
 			</div>
 			<div class="content-section">
 			<p class="border-bottom mb-4 h3">${TEXT[PAGE_ALIEN_PROFILE_ALIEN_DESCRIPTION]}</p>
-				<p id="alien-big-description" class="h4">${alien.bigDescription}</p>
+				<p id="alien-big-description text-break" class="h4">${alien.bigDescription}</p>
 			</div>
 			<c:choose>
 				<c:when test="${currentUser.role == ADMIN}">

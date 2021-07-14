@@ -52,7 +52,7 @@ public class AddNewCommentCommand implements Command {
 			response.setStatus(500);
 			logger.log(Level.ERROR, "Exception occured while alien adding: {} {} {}", e.getMessage(), e.getStackTrace(),
 					e);
-			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
+			router = new Router(PagePath.ERROR_PAGE_500_JSP.getValue(), null, RouterType.FORWARD);
 		}
 		return router;
 	}

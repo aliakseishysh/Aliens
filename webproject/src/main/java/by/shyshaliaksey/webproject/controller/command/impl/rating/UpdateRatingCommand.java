@@ -50,7 +50,7 @@ public class UpdateRatingCommand implements Command {
 			router = new Router(null, averageRate.toString(), RouterType.AJAX_RESPONSE);
 		} catch (ServiceException e) {
 			logger.log(Level.ERROR, "Exception occured while rating updating: {}", e.getMessage());
-			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
+			router = new Router(PagePath.ERROR_PAGE_500_JSP.getValue(), null, RouterType.FORWARD);
 		}
 		return router;
 	}

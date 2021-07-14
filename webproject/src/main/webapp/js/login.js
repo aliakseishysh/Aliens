@@ -25,7 +25,7 @@ function loginUser() {
         error: function (jqXHR, textStatus, errorThrown) {
             // if (serverError) {};
             formLogin.classList.remove("was-validated");
-            emailInvalidFeedback.innerHTML = jqXHR.responseJSON[LOGIN_FEEDBACK];
+            emailInvalidFeedback.innerHTML = jqXHR.responseJSON[EMAIL_FEEDBACK];
             passwordInvalidFeedback.innerHTML = jqXHR.responseJSON[PASSWORD_FEEDBACK];
             if (jqXHR.responseJSON.email_status == false) {
                 email.classList.remove("is-valid");
@@ -68,7 +68,7 @@ $(document).ready(function () {
     formLogin.addEventListener('submit', function(event) {
         if (formLogin.checkValidity() === false) {
             emailInvalidFeedback.innerHTML = STANDARD_EMAIL_FEEDBACK
-            passwordInvalidFeedback.innerHTML = STANDARD_PASSWORD_FEDDBACK
+            passwordInvalidFeedback.innerHTML = STANDARD_PASSWORD_FEEDBACK
             event.preventDefault();
             event.stopPropagation();
         } else {

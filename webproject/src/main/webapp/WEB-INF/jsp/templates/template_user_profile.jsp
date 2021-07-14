@@ -37,13 +37,13 @@
 	var LOGIN_FEEDBACK = `${LOGIN_FEEDBACK}`;	
 
 
-	var STANDARD_PASSWORD_FEDDBACK = `${STANDARD_PASSWORD_FEDDBACK}`;
+	var STANDARD_PASSWORD_FEEDBACK = `${STANDARD_PASSWORD_FEEDBACK}`;
 	var STANDARD_PASSWORD_CONFIRMATION_FEEDBACK = `${STANDARD_PASSWORD_CONFIRMATION_FEEDBACK}`;
 	var PASSWORD_STATUS = `${PASSWORD_STATUS}`;
 	var PASSWORD_FEEDBACK = `${PASSWORD_FEEDBACK}`;
 	var PASSWORD_CONFIRMATION_STATUS = `${PASSWORD_CONFIRMATION_STATUS}`;
 	var PASSWORD_CONFIRMATION_FEEDBACK = `${PASSWORD_CONFIRMATION_FEEDBACK}`;
-
+	var PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL = `${PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL}`;
 
 	var STANDARD_IMAGE_FEEDBACK = `${STANDARD_IMAGE_FEEDBACK}`;
 	var IMAGE_FEEDBACK_INVALID = `${IMAGE_FEEDBACK_INVALID}`;
@@ -56,8 +56,8 @@
 	<div class="media">
 		<jsp:include page="${TEMPLATE_USER_IMAGE_JSP}"/>
 		<div class="media-body">
-			<h2 id="user-profile-account-login" class="account-heading">${currentUser.login}</h2>
-			<p id="user-profile-account-email" class="text-secondary">${currentUser.email}</p>
+			<h2 id="user-profile-account-login" class="account-heading text-break">${currentUser.login}</h2>
+			<p id="user-profile-account-email" class="text-secondary text-break">${currentUser.email}</p>
 		</div>
 	</div>
 	<jsp:include page="${FORM_UPDATE_EMAIL_JSP}"/>

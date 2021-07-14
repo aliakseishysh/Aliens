@@ -42,7 +42,7 @@ public class OpenUserProfilePageCommand implements Command {
 				logger.log(Level.INFO, "No user with such user login: {}", user.getLogin());
 			}
 		} catch (ServiceException e) {
-			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
+			router = new Router(PagePath.ERROR_PAGE_500_JSP.getValue(), null, RouterType.FORWARD);
 			logger.log(Level.ERROR, "Exception occured while redirecting to {}: {}", PagePath.PAGE_PROFILE_JSP,
 					e.getMessage());
 		}

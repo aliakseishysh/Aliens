@@ -31,8 +31,8 @@ public class LoginUserCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
 	private static final UserService userService = ServiceProvider.getInstance().getUserService();
-	
-	@AllowedRoles({Role.GUEST})
+
+	@AllowedRoles({ Role.GUEST })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router;
@@ -42,23 +42,19 @@ public class LoginUserCommand implements Command {
 			String password = request.getParameter(RequestParameter.PASSWORD.getValue());
 			User user = null;
 			result = userService.userLogIn(email, password);
+
+			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
+					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			
-			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			String jsonResponse = new JSONObject()
-					.put(Feedback.Key.EMAIL_STATUS.getValue(),
-							result.get(Feedback.Key.EMAIL_STATUS)
-							.toString())
-					.put(Feedback.Key.PASSWORD_STATUS.getValue(),
-							result.get(Feedback.Key.PASSWORD_STATUS)
-							.toString())
+					.put(Feedback.Key.EMAIL_STATUS.getValue(), result.get(Feedback.Key.EMAIL_STATUS))
+					.put(Feedback.Key.PASSWORD_STATUS.getValue(), result.get(Feedback.Key.PASSWORD_STATUS))
 					.put(Feedback.Key.EMAIL_FEEDBACK.getValue(),
-							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.EMAIL_FEEDBACK)
-							.toString()))
+							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.EMAIL_FEEDBACK).toString()))
 					.put(Feedback.Key.PASSWORD_FEEDBACK.getValue(),
-							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.PASSWORD_FEEDBACK)
-									.toString()))
+							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.PASSWORD_FEEDBACK).toString()))
 					.toString();
-			if (Boolean.TRUE.equals(result.get(Feedback.Key.EMAIL_STATUS)) 
+			if (Boolean.TRUE.equals(result.get(Feedback.Key.EMAIL_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.PASSWORD_STATUS))) {
 				user = userService.findUserByEmail(email).get();
 				request.getSession(true).setAttribute(RequestAttribute.CURRENT_USER.getValue(), user);
@@ -66,7 +62,8 @@ public class LoginUserCommand implements Command {
 				request.getSession().setAttribute(RequestAttribute.CURRENT_USER_ROLE.getValue(),
 						user.getRole().getValue());
 				if (user.getBannedToDate() != null) {
-					request.getSession().setAttribute(ErrorAttribute.BAN_INFO.name(), user.getBannedToDate().toString());					
+					request.getSession().setAttribute(ErrorAttribute.BAN_INFO.name(),
+							user.getBannedToDate().toString());
 				}
 			}
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
@@ -75,7 +72,7 @@ public class LoginUserCommand implements Command {
 			response.setStatus(500);
 			logger.log(Level.ERROR, "Exception occured while alien adding: {} {} {}", e.getMessage(), e.getStackTrace(),
 					e);
-			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
+			router = new Router(PagePath.ERROR_PAGE_500_JSP.getValue(), null, RouterType.FORWARD);
 		}
 		return router;
 	}

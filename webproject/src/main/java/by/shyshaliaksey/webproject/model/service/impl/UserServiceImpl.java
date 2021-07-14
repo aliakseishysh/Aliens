@@ -29,38 +29,52 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Map<Feedback.Key, Object> userLogIn(String email, String password) throws ServiceException {
-		Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
-		UtilService utilService = ServiceProvider.getInstance().getUtilService();
-		ValidationService validationService = ServiceProvider.getInstance().getValidationService();
-		UserDao userDao = DaoProvider.getInstance().getUserDao();
 		try {
-			Map<Feedback.Key, Optional<String>> loginData = userDao.findUserLoginData(email);
-			result.put(Feedback.Key.EMAIL_STATUS, LocaleKey.EMPTY_MESSAGE.getValue());
-			result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-			result.put(Feedback.Key.PASSWORD_STATUS, LocaleKey.EMPTY_MESSAGE.getValue());
-			result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-			Optional<String> passwordDatabaseOptional = loginData.get(Feedback.Key.PASSWORD);
-			Optional<String> saltDatabaseOptional = loginData.get(Feedback.Key.SALT);
-			if (passwordDatabaseOptional.isPresent() && saltDatabaseOptional.isPresent()) {
-				result.put(Feedback.Key.EMAIL_STATUS, Boolean.TRUE);
-				String passwordHash = passwordDatabaseOptional.get();
-				String saltHex = saltDatabaseOptional.get();
-				byte[] salt = DatatypeConverter.parseHexBinary(saltHex);
-				String enteredPassword = DatatypeConverter.printHexBinary(utilService.hashPassword(password, salt));
-				if (enteredPassword.equals(passwordHash)) {
-					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-					result.put(Feedback.Key.PASSWORD_STATUS, Boolean.TRUE);
-					result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-					result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
+			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
+			validationService.validateEmailFormInput(result, email);
+			validationService.validatePasswordFormInput(result, password);
+
+			if (Boolean.TRUE.equals(result.get(Feedback.Key.EMAIL_STATUS))
+					&& Boolean.TRUE.equals(result.get(Feedback.Key.PASSWORD_STATUS))) {
+				UserDao userDao = DaoProvider.getInstance().getUserDao();
+				Map<Feedback.Key, Optional<String>> loginData = userDao.findUserLoginData(email);
+				Optional<String> passwordDatabaseOptional = loginData.get(Feedback.Key.PASSWORD);
+				Optional<String> saltDatabaseOptional = loginData.get(Feedback.Key.SALT);
+				if (passwordDatabaseOptional.isPresent() && saltDatabaseOptional.isPresent()) {
+					String passwordHash = passwordDatabaseOptional.get();
+					String saltHex = saltDatabaseOptional.get();
+					byte[] salt = DatatypeConverter.parseHexBinary(saltHex);
+					UtilService utilService = ServiceProvider.getInstance().getUtilService();
+					String enteredPassword = DatatypeConverter.printHexBinary(utilService.hashPassword(password, salt));
+					if (enteredPassword.equals(passwordHash)) {
+						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
+						result.put(Feedback.Key.EMAIL_STATUS, Boolean.TRUE);
+						result.put(Feedback.Key.PASSWORD_STATUS, Boolean.TRUE);
+						result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+					} else {
+						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
+						result.put(Feedback.Key.EMAIL_STATUS, Boolean.FALSE);
+						result.put(Feedback.Key.PASSWORD_STATUS, Boolean.FALSE);
+						result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMAIL_PASSWORD_FEEDBACK_INVALID.getValue());
+						result.put(Feedback.Key.PASSWORD_FEEDBACK,
+								LocaleKey.EMAIL_PASSWORD_FEEDBACK_INVALID.getValue());
+					}
 				} else {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
+					result.put(Feedback.Key.EMAIL_STATUS, Boolean.FALSE);
 					result.put(Feedback.Key.PASSWORD_STATUS, Boolean.FALSE);
+					result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMAIL_PASSWORD_FEEDBACK_INVALID.getValue());
 					result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.EMAIL_PASSWORD_FEEDBACK_INVALID.getValue());
 				}
 			} else {
 				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 				result.put(Feedback.Key.EMAIL_STATUS, Boolean.FALSE);
 				result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMAIL_PASSWORD_FEEDBACK_INVALID.getValue());
+				result.put(Feedback.Key.PASSWORD_STATUS, Boolean.FALSE);
+				result.put(Feedback.Key.PASSWORD_FEEDBACK,
+						LocaleKey.PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL.getValue());
 			}
 			return result;
 		} catch (DaoException e) {
@@ -84,56 +98,24 @@ public class UserServiceImpl implements UserService {
 	public Map<Feedback.Key, Object> registerUser(String email, String login, String password, String passwordRepeat,
 			String imagePath, Role role) throws ServiceException {
 		Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
-		result.put(Feedback.Key.EMAIL_STATUS, LocaleKey.EMPTY_MESSAGE.getValue());
-		result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-		result.put(Feedback.Key.LOGIN_STATUS, LocaleKey.EMPTY_MESSAGE.getValue());
-		result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-		result.put(Feedback.Key.PASSWORD_STATUS, LocaleKey.EMPTY_MESSAGE.getValue());
-		result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-		result.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS, LocaleKey.EMPTY_MESSAGE.getValue());
-		result.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 		ValidationService validationService = ServiceProvider.getInstance().getValidationService();
-		UtilService utilService = ServiceProvider.getInstance().getUtilService();
-		UserDao userDao = DaoProvider.getInstance().getUserDao();
-		if (validationService.validateEmail(email)) {
-			result.put(Feedback.Key.EMAIL_STATUS, Boolean.TRUE);
-		} else {
-			result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-			result.put(Feedback.Key.EMAIL_STATUS, Boolean.FALSE);
-			result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMAIL_FEEDBACK_INVALID.getValue());
-		}
-		if (validationService.validateLogin(login)) {
-			result.put(Feedback.Key.LOGIN_STATUS, Boolean.TRUE);
-		} else {
-			result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-			result.put(Feedback.Key.LOGIN_STATUS, Boolean.FALSE);
-			result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.LOGIN_FEEDBACK_INVALID.getValue());
-		}
-		if (validationService.validatePassword(password)) {
-			result.put(Feedback.Key.PASSWORD_STATUS, Boolean.TRUE);
-		} else {
-			result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-			result.put(Feedback.Key.PASSWORD_STATUS, Boolean.FALSE);
-			result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.PASSWORD_FEEDBACK_INVALID.getValue());
-		}
-		if (validationService.validatePassword(passwordRepeat)) {
-			result.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS, Boolean.TRUE);
-		} else {
-			result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-			result.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS, Boolean.FALSE);
-			result.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK,
-					LocaleKey.PASSWORD_CONFIRMATION_FEEDBACK_INVALID.getValue());
-		}
+		validationService.validateEmailFormInput(result, email);
+		validationService.validateLoginFormInput(result, login);
+		validationService.validatePasswordFormInput(result, password);
+		validationService.validatePasswordFormInput(result, passwordRepeat);
+
 		try {
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.EMAIL_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.LOGIN_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.PASSWORD_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.PASSWORD_CONFIRMATION_STATUS))) {
 				if (password.equals(passwordRepeat)) {
+					UtilService utilService = ServiceProvider.getInstance().getUtilService();
 					byte[] salt = utilService.createSalt();
 					byte[] hashedPassword = utilService.hashPassword(password, salt);
 					String saltHex = DatatypeConverter.printHexBinary(salt);
 					String hashedPasswordHex = DatatypeConverter.printHexBinary(hashedPassword);
+					UserDao userDao = DaoProvider.getInstance().getUserDao();
 					Optional<User> userOptional = userDao.findByEmail(email);
 					boolean registerResult = false;
 
@@ -142,10 +124,10 @@ public class UserServiceImpl implements UserService {
 								IMAGE_DEFAULT.getValue(), Role.USER);
 						if (registerResult) {
 							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-							result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+							result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+							result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+							result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+							result.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 						} else {
 							result.put(Feedback.Key.EMAIL_STATUS, Boolean.FALSE);
 							result.put(Feedback.Key.LOGIN_STATUS, Boolean.FALSE);
@@ -158,6 +140,7 @@ public class UserServiceImpl implements UserService {
 									LocaleKey.INTERNAL_SERVER_ERROR.getValue());
 						}
 					} else {
+						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 						User user = userOptional.get();
 						if (user.getEmail().equals(email)) {
 							result.put(Feedback.Key.EMAIL_STATUS, Boolean.FALSE);
@@ -171,6 +154,7 @@ public class UserServiceImpl implements UserService {
 						}
 					}
 				} else {
+					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 					result.put(Feedback.Key.PASSWORD_STATUS, Boolean.FALSE);
 					result.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS, Boolean.FALSE);
 					result.put(Feedback.Key.PASSWORD_FEEDBACK,
@@ -178,6 +162,8 @@ public class UserServiceImpl implements UserService {
 					result.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK,
 							LocaleKey.PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL.getValue());
 				}
+			} else {
+				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 			}
 			return result;
 		} catch (DaoException e) {
@@ -200,24 +186,20 @@ public class UserServiceImpl implements UserService {
 	public Map<Feedback.Key, Object> changeEmail(String email, String newEmail, int userId) throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
-			UserDao userDao = DaoProvider.getInstance().getUserDao();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
-			result.put(Feedback.Key.EMAIL_STATUS, LocaleKey.EMPTY_MESSAGE.getValue());
-			result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-			if (validationService.validateEmail(newEmail)) {
-				result.put(Feedback.Key.EMAIL_STATUS, Boolean.TRUE);
+			validationService.validateEmailFormInput(result, newEmail);
+
+			if (Boolean.TRUE.equals(result.get(Feedback.Key.EMAIL_STATUS))) {
+				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				Optional<User> userOld = userDao.findByEmail(newEmail);
-				if (userOld.isPresent()) {
-					result.put(Feedback.Key.EMAIL_STATUS, Boolean.FALSE);
-					result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMAIL_FEEDBACK_INVALID_USER_EXISTS.getValue());
-				} else {
+				if (!userOld.isPresent()) {
 					Optional<User> user = userDao.findByEmail(email);
 					if (user.isPresent() && user.get().getId() == userId) {
 						boolean updateResult = userDao.updateUserEmail(newEmail, userId);
 						if (updateResult) {
-							result.put(Feedback.Key.EMAIL_STATUS, Boolean.TRUE);
 							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-							result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+							result.put(Feedback.Key.EMAIL_STATUS, Boolean.TRUE);
+							result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 						} else {
 							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 							result.put(Feedback.Key.EMAIL_STATUS, Boolean.FALSE);
@@ -229,11 +211,13 @@ public class UserServiceImpl implements UserService {
 						result.put(Feedback.Key.EMAIL_FEEDBACK,
 								LocaleKey.EMAIL_FEEDBACK_INVALID_AUTHORIZATION_ERROR.getValue());
 					}
+				} else {
+					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
+					result.put(Feedback.Key.EMAIL_STATUS, Boolean.FALSE);
+					result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMAIL_FEEDBACK_INVALID_USER_EXISTS.getValue());
 				}
 			} else {
 				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-				result.put(Feedback.Key.EMAIL_STATUS, Boolean.FALSE);
-				result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMAIL_FEEDBACK_INVALID.getValue());
 			}
 			return result;
 		} catch (DaoException e) {
@@ -245,25 +229,20 @@ public class UserServiceImpl implements UserService {
 	public Map<Feedback.Key, Object> changeLogin(String login, String newLogin, int userId) throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
-			UserDao userDao = DaoProvider.getInstance().getUserDao();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
-			result.put(Feedback.Key.LOGIN_STATUS, LocaleKey.EMPTY_MESSAGE.getValue());
-			result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-			if (validationService.validateLogin(newLogin)) {
-				result.put(Feedback.Key.LOGIN_STATUS, Boolean.TRUE);
+			validationService.validateLoginFormInput(result, newLogin);
+			
+			if (Boolean.TRUE.equals(result.get(Feedback.Key.LOGIN_STATUS))) {
+				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				Optional<User> userOld = userDao.findByLogin(newLogin);
-				if (userOld.isPresent()) {
-					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-					result.put(Feedback.Key.LOGIN_STATUS, Boolean.FALSE);
-					result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.LOGIN_FEEDBACK_INVALID_USER_EXISTS.getValue());
-				} else {
+				if (!userOld.isPresent()) {
 					Optional<User> user = userDao.findByLogin(login);
 					if (user.isPresent() && user.get().getId() == userId) {
 						boolean updateResult = userDao.updateUserLogin(newLogin, userId);
 						if (updateResult) {
 							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 							result.put(Feedback.Key.LOGIN_STATUS, Boolean.TRUE);
-							result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+							result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 						} else {
 							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 							result.put(Feedback.Key.LOGIN_STATUS, Boolean.FALSE);
@@ -275,11 +254,13 @@ public class UserServiceImpl implements UserService {
 						result.put(Feedback.Key.LOGIN_FEEDBACK,
 								LocaleKey.LOGIN_FEEDBACK_INVALID_AUTHORIZATION_ERROR.getValue());
 					}
+				} else {
+					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
+					result.put(Feedback.Key.LOGIN_STATUS, Boolean.FALSE);
+					result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.LOGIN_FEEDBACK_INVALID_USER_EXISTS.getValue());
 				}
 			} else {
 				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-				result.put(Feedback.Key.LOGIN_STATUS, Boolean.FALSE);
-				result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.LOGIN_FEEDBACK_INVALID.getValue());
 			}
 			return result;
 		} catch (DaoException e) {
@@ -292,38 +273,14 @@ public class UserServiceImpl implements UserService {
 			throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
-			UtilService utilService = ServiceProvider.getInstance().getUtilService();
-			UserDao userDao = DaoProvider.getInstance().getUserDao();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
-			result.put(Feedback.Key.PASSWORD_STATUS, LocaleKey.EMPTY_MESSAGE.getValue());
-			result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-			result.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS, LocaleKey.EMPTY_MESSAGE.getValue());
-			result.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-			if (validationService.validatePassword(password)) {
-				result.put(Feedback.Key.PASSWORD_STATUS, Boolean.TRUE);
-			} else {
-				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-				result.put(Feedback.Key.PASSWORD_STATUS, Boolean.FALSE);
-				result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.PASSWORD_FEEDBACK_INVALID.getValue());
-			}
-			if (validationService.validatePassword(passwordConfirm)) {
-				result.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS, Boolean.TRUE);
-			} else {
-				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-				result.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS, Boolean.FALSE);
-				result.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK, LocaleKey.PASSWORD_CONFIRMATION_FEEDBACK_INVALID.getValue());
-			}
-			if (!password.equals(passwordConfirm)) {
-				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-				result.put(Feedback.Key.PASSWORD_STATUS, Boolean.FALSE);
-				result.put(Feedback.Key.PASSWORD_FEEDBACK,
-						LocaleKey.PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL.getValue());
-				result.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS, Boolean.FALSE);
-				result.put(Feedback.Key.PASSWORD_FEEDBACK,
-						LocaleKey.PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL.getValue());
-			}
+			validationService.validatePasswordFormInput(result, password);
+			validationService.validatePasswordConfirmationFormInput(result, passwordConfirm);
+			validationService.validatePasswordEquality(result, password, passwordConfirm);
+			
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.PASSWORD_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.PASSWORD_CONFIRMATION_STATUS))) {
+				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				Optional<User> user = userDao.findById(userId);
 				if (user.isPresent() && user.get().getId() == userId) {
 					Map<Feedback.Key, Optional<String>> loginData = userDao.findUserLoginData(userId);
@@ -331,19 +288,18 @@ public class UserServiceImpl implements UserService {
 					if (saltDatabaseOptional.isPresent()) {
 						String saltHex = saltDatabaseOptional.get();
 						byte[] salt = DatatypeConverter.parseHexBinary(saltHex);
+						UtilService utilService = ServiceProvider.getInstance().getUtilService();
 						String hashedPassword = DatatypeConverter
 								.printHexBinary(utilService.hashPassword(password, salt));
 						boolean passwordUpdateResult = userDao.updateUserPassword(hashedPassword, userId);
 						if (passwordUpdateResult) {
-							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-							result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 						} else {
 							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 							result.put(Feedback.Key.PASSWORD_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
 							result.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS, Boolean.FALSE);
 							result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+							result.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
 						}
 					} else {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
@@ -356,12 +312,14 @@ public class UserServiceImpl implements UserService {
 				} else {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 					result.put(Feedback.Key.PASSWORD_STATUS, Boolean.FALSE);
-					result.put(Feedback.Key.PASSWORD_FEEDBACK,
-							LocaleKey.PASSWORD_FEEDBACK_INVALID_NO_USER_WITH_ID.getValue());
 					result.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS, Boolean.FALSE);
 					result.put(Feedback.Key.PASSWORD_FEEDBACK,
 							LocaleKey.PASSWORD_FEEDBACK_INVALID_NO_USER_WITH_ID.getValue());
+					result.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK,
+							LocaleKey.PASSWORD_FEEDBACK_INVALID_NO_USER_WITH_ID.getValue());
 				}
+			} else {
+				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 			}
 			return result;
 		} catch (DaoException e) {
@@ -374,36 +332,21 @@ public class UserServiceImpl implements UserService {
 			throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
-			UtilService utilService = ServiceProvider.getInstance().getUtilService();
-			UserDao userDao = DaoProvider.getInstance().getUserDao();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
-			result.put(Feedback.Key.IMAGE_STATUS, LocaleKey.EMPTY_MESSAGE.getValue());
-			result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-			String submittedFileName = part.getSubmittedFileName();
-			String fileExtension = FilenameUtils.getExtension(submittedFileName);
-
-			if (validationService.validateImageExtension(fileExtension)) {
-				if (validationService.validateImageSize(part.getSize())) {
-					result.put(Feedback.Key.IMAGE_STATUS, Boolean.TRUE);
-
-				} else {
-					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-					result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
-					result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.IMAGE_FEEDBACK_INVALID_SIZE.getValue());
-				}
-			} else {
-				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-				result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
-				result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.IMAGE_FEEDBACK_INVALID_EXTENSION.getValue());
-			}
+			String fileExtension = FilenameUtils.getExtension(part.getSubmittedFileName());
+			validationService.validateImageFormInput(result, fileExtension, part.getSize());
+			
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 				final String imagePrefix = "user_profile_image_";
-				Optional<String> urlResult = utilService.uploadUserImage(userId, imagePrefix, fileExtension, rootFolder, serverDeploymentPath, part);
+				UtilService utilService = ServiceProvider.getInstance().getUtilService();
+				Optional<String> urlResult = utilService.uploadUserImage(userId, imagePrefix, fileExtension, rootFolder,
+						serverDeploymentPath, part);
 				if (urlResult.isPresent()) {
+					UserDao userDao = DaoProvider.getInstance().getUserDao();
 					boolean updateImageResult = userDao.updateProfileImage(urlResult.get(), userId);
 					if (updateImageResult) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 					} else {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 						result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
@@ -415,11 +358,12 @@ public class UserServiceImpl implements UserService {
 					result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
 				}
 			} else {
-				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
+				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 			}
 			return result;
 		} catch (ServiceException | DaoException e) {
-			throw new ServiceException("Error occured when updating image for userId " + userId + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occured when updating image for userId " + userId + " :" + e.getMessage(),
+					e);
 		}
 	}
 
@@ -437,22 +381,15 @@ public class UserServiceImpl implements UserService {
 	public Map<Feedback.Key, Object> addNewComment(int userId, int alienId, String newComment) throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
-			UserDao userDao = DaoProvider.getInstance().getUserDao();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
-			result.put(Feedback.Key.COMMENT_STATUS, LocaleKey.EMPTY_MESSAGE.getValue());
-			result.put(Feedback.Key.COMMENT_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-			if (validationService.validateComment(newComment)) {
-				result.put(Feedback.Key.COMMENT_STATUS, Boolean.TRUE);
-			} else {
-				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-				result.put(Feedback.Key.COMMENT_STATUS, Boolean.FALSE);
-				result.put(Feedback.Key.COMMENT_FEEDBACK, LocaleKey.COMMENT_FEEDBACK_INVALID.getValue());
-			}
-			if (Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
+			validationService.validateCommentFormInput(result, newComment);
+			
+			if (Boolean.TRUE.equals(result.get(Feedback.Key.COMMENT_STATUS))) {
+				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				boolean addResult = userDao.addNewComment(userId, alienId, newComment);
 				if (addResult) {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-					result.put(Feedback.Key.COMMENT_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+					result.put(Feedback.Key.COMMENT_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 				} else {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 					result.put(Feedback.Key.COMMENT_STATUS, Boolean.FALSE);
@@ -463,8 +400,7 @@ public class UserServiceImpl implements UserService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured while adding comment for user " + userId + " :" + e.getMessage(),
-					e);
+			throw new ServiceException("Error occured while adding comment for user " + userId + " :" + e.getMessage(), e);
 		}
 	}
 

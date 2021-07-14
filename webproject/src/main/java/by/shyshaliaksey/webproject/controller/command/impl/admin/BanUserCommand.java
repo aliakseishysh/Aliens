@@ -60,7 +60,7 @@ public class BanUserCommand implements Command {
 			router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
 		} catch (ServiceException e) {
 			logger.log(Level.ERROR, "Exception occured while user banning: {} {} {}", e.getMessage(), e.getStackTrace(), e);
-			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
+			router = new Router(PagePath.ERROR_PAGE_500_JSP.getValue(), null, RouterType.FORWARD);
 		}
 		return router;	
 	}

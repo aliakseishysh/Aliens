@@ -1,18 +1,21 @@
 package by.shyshaliaksey.webproject.model.service;
 
+import java.util.Map;
+
+import by.shyshaliaksey.webproject.controller.command.Feedback.Key;
 import by.shyshaliaksey.webproject.exception.ServiceException;
+import jakarta.servlet.http.Part;
 
 public interface ValidationService {
 
-	boolean validateEmail(String email) throws ServiceException;
-	boolean validateLogin(String login) throws ServiceException;
-	boolean validatePassword(String password) throws ServiceException;
-	boolean validateImageExtension(String imageExtension) throws ServiceException;
-	boolean validateImageSize(long imageSize) throws ServiceException;
-	boolean validateDaysToBan(int daysToBan) throws ServiceException;
-	boolean validateAlienName(String alienName) throws ServiceException;
-	boolean validateAlienSmallDescription(String alienSmallDescription) throws ServiceException;
-	boolean validateAlienFullDescription(String alienFullDescription) throws ServiceException;
-	boolean validateComment(String comment) throws ServiceException;
-	
+	void validateAlienFormInput(Map<Key, Object> result, String alienName, String alienSmallDescription,
+			String alienFullDescription, Part alienImage) throws ServiceException;
+	void validateBanFormInput(Map<Key, Object> result, String userLogin, String daysToBan) throws ServiceException;
+	void validateLoginFormInput(Map<Key, Object> result, String login) throws ServiceException;
+	void validateEmailFormInput(Map<Key, Object> result, String email) throws ServiceException;
+	void validatePasswordFormInput(Map<Key, Object> result, String password) throws ServiceException;
+	void validatePasswordConfirmationFormInput(Map<Key, Object> result, String password) throws ServiceException;
+	void validatePasswordEquality(Map<Key, Object> result, String password, String passwordConfirmation) throws ServiceException;
+	void validateImageFormInput(Map<Key, Object> result, String fileExtension, long fileSize) throws ServiceException;
+	void validateCommentFormInput(Map<Key, Object> result, String comment) throws ServiceException;
 }

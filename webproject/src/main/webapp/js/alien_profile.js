@@ -103,26 +103,25 @@ function addNewComment() {
         type: "POST",
         data: data,
         success: function (data, textStatus, jqXHR) {
-            comment.classList.add("is-valid")
             comment.classList.remove("is-invalid")
-            formNewComment.classList.add("was-validated")
+            comment.classList.add("is-valid")
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            formAlienUpdate.classList.remove("was-validated");
+            formNewComment.classList.remove("was-validated");
+            commentInvalidFeedback.innerHTML = jqXHR.responseJSON[COMMENT_FEEDBACK];
             if (jqXHR.responseJSON[ALIEN_NAME_STATUS] == false) {
                 comment.classList.add("is-invalid");
                 comment.classList.remove("is-valid");
             } else {
                 comment.classList.remove("is-invalid");
                 comment.classList.add("is-valid");
-                commentInvalidFeedback.innerHTML = jqXHR.responseJSON[COMMENT_FEEDBACK];
             }
             formNewComment.classList.add("was-validated");
         }
     });
 };
 
-function deleteComment() {
+function deleteComment(commentId) {
     var data = {};
     data[COMMENT_ID] = commentId;
     var url = CONTROLLER + "?" + COMMAND + "=" + DELETE_COMMENT;

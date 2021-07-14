@@ -43,7 +43,7 @@ public class FindUserRateCommand implements Command {
 			router = new Router(null, userRate.toString(), RouterType.AJAX_RESPONSE);
 		} catch (ServiceException e) {
 			logger.log(Level.ERROR, "Error occured while processing FindUserRateCommand: {}", e.getMessage(), e);
-			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
+			router = new Router(PagePath.ERROR_PAGE_500_JSP.getValue(), null, RouterType.FORWARD);
 		}
 		return router;
 	}

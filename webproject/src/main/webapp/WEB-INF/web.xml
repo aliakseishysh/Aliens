@@ -6,11 +6,15 @@
 	version="5.0">
 	<error-page>
 		<error-code>403</error-code>
-		<location>/WEB-INF/error_pages/error_page_403.jsp</location>
+		<location>/WEB-INF/jsp/error_pages/error_page_403.jsp</location>
 	</error-page>
 	<error-page>
 		<error-code>404</error-code>
-		<location>/WEB-INF/error_pages/error_page_404.jsp</location>
+		<location>/WEB-INF/jsp/error_pages/error_page_404.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/jsp/error_pages/error_page_500.jsp</location>
 	</error-page>
 	<context-param>
 		<param-name>web-app-root-folder</param-name>

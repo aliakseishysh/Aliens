@@ -12,8 +12,8 @@
 	<jsp:include page="/WEB-INF/jsp/templates/template_nav.jsp"/>
 	<h3>Error Page</h3>
 	<div class="content-section">
-		<h4>Server error:</h4><br>
-		<h1>Server error occured</h1>
+		<h1>500</h1><hr/>
+		<h4>Server error</h4>
 	</div>
 </main>
 </body>

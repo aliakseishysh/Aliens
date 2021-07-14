@@ -24,7 +24,7 @@ public enum PagePath implements EnumValue  {
 	// Error Pages
 	ERROR_PAGE_403_JSP("/WEB-INF/jsp/error_pages/error_page_403.jsp"),
 	ERROR_PAGE_404_JSP("/WEB-INF/jsp/error_pages/error_page_404.jsp"),
-	ERROR_PAGE_SERVER_JSP("/WEB-INF/jsp/error_pages/error_page_server.jsp"),
+	ERROR_PAGE_500_JSP("/WEB-INF/jsp/error_pages/error_page_500.jsp"),
 	// FORMS
 	FORM_ALIEN_UPDATE_JSP("/WEB-INF/jsp/templates/forms/form_alien_update.jsp"),
 	FORM_ALIEN_CREATE_JSP("/WEB-INF/jsp/templates/forms/form_alien_create.jsp"),

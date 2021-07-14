@@ -72,10 +72,11 @@ public class ConnectionPool {
 		return connection;
 	}
 
-	void releaseConnection(Connection connection) {
+	boolean releaseConnection(Connection connection) {
+		boolean result = true;
 		if (!(connection instanceof ConnectionProxy)) {
 			logger.log(Level.ERROR, "Unboxed connection is detected: {}", connection);
-			// TODO need to throw exception or just close
+			result = false;
 		}
 		occupiedConnections.removeFirstOccurrence(connection);
 		try {
@@ -83,6 +84,7 @@ public class ConnectionPool {
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 		}
+		return result;
 	}
 
 	// TODO close only freeConnections or do something with rollback

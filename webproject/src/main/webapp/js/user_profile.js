@@ -1,11 +1,14 @@
 function updateUserEmail() {
-    let userId = document.getElementById("form-update-email-parameter-current-user-id").innerHTML;
-    let userEmail = document.getElementById("form-update-email-parameter-current-user-email").innerHTML;
-    let enteredEmail = document.getElementById("form-update-email-email").value;
+    let userId = document.getElementById("form-update-email-parameter-current-user-id");
+    let userEmail = document.getElementById("form-update-email-parameter-current-user-email");
+    let formUpdateEmailEmail = document.getElementById("form-update-email-email");
+    let userProfileAccountEmail = document.getElementById("user-profile-account-email");
+    let formUpdateEmail =  document.getElementById("form-update-email");
+    let formUpdateEmailInvalidFeedback = document.getElementById("form-update-email-email-invalid-feedback");
     let data = {};
-    data[USER_ID] = userId;
-    data[EMAIL] = userEmail;
-    data[NEW_EMAIL] = enteredEmail;
+    data[USER_ID] = userId.innerHTML;
+    data[EMAIL] = userEmail.innerHTML;
+    data[NEW_EMAIL] = formUpdateEmailEmail.value;
     let url = CONTROLLER + "?" + COMMAND + "=" + UPDATE_USER_EMAIL;
     $.ajax({
         url: url,
@@ -14,35 +17,36 @@ function updateUserEmail() {
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
             if (jqXHR.responseJSON[EMAIL_STATUS] == true) {
-                document.getElementById("user-profile-account-email").innerHTML = enteredEmail;
-                document.getElementById("form-update-email-parameter-current-user-email").innerHTML = enteredEmail;
-                // document.getElementById("form-update-email").classList.remove('was-validated');
-                // document.getElementById("form-update-email-email").classList.remove("is-invalid");
+                userProfileAccountEmail.innerHTML = formUpdateEmailEmail.value;
+                userEmail.innerHTML = formUpdateEmailEmail.value;
             }
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            document.getElementById("form-update-email").classList.remove("was-validated");
-            document.getElementById("form-update-email-email-invalid-feedback").innerHTML = jqXHR.responseJSON[EMAIL_FEEDBACK];
+            formUpdateEmail.classList.remove("was-validated");
+            formUpdateEmailInvalidFeedback.innerHTML = jqXHR.responseJSON[EMAIL_FEEDBACK];
             if (jqXHR.responseJSON[EMAIL_STATUS] == false) {
-                document.getElementById("form-update-email-email").classList.add("is-invalid");
-                document.getElementById("form-update-email-email").classList.remove("is-valid");
+                formUpdateEmailEmail.classList.remove("is-valid");
+                formUpdateEmailEmail.classList.add("is-invalid");
             } else {
-                document.getElementById("form-update-email-email").classList.remove("is-invalid");
-                document.getElementById("form-update-email-email").classList.add("is-valid");
+                formUpdateEmailEmail.classList.remove("is-invalid");
+                formUpdateEmailEmail.classList.add("is-valid");
             }
         }
     });
 };
 
 function updateUserLogin() {
-    let userId = document.getElementById("form-update-login-parameter-current-user-id").innerHTML;
-    let userLogin = document.getElementById("form-update-login-parameter-current-user-login").innerHTML;
-    let enteredLogin = document.getElementById("form-update-login-login").value;
+    let userId = document.getElementById("form-update-login-parameter-current-user-id");
+    let userLogin = document.getElementById("form-update-login-parameter-current-user-login");
+    let formUpdateLoginLogin = document.getElementById("form-update-login-login");
+    let formUpdateLoginLoginInvalidFeedback = document.getElementById("form-update-login-login-invalid-feedback");
+    let formUpdateLogin = document.getElementById("form-update-login");
+    let userProfileAccountLogin = document.getElementById("user-profile-account-login");
     let data = {};
-    data[USER_ID] = userId;
-    data[LOGIN] = userLogin;
-    data[NEW_LOGIN] = enteredLogin;
+    data[USER_ID] = userId.innerHTML;
+    data[LOGIN] = userLogin.innerHTML;
+    data[NEW_LOGIN] = formUpdateLoginLogin.value;
     let url = CONTROLLER + "?" + COMMAND + "=" + UPDATE_USER_LOGIN;
     $.ajax({
         url: url,
@@ -51,22 +55,20 @@ function updateUserLogin() {
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
             if (jqXHR.responseJSON[LOGIN_STATUS] == true) {
-                document.getElementById("user-profile-account-login").innerHTML = enteredLogin;
-                document.getElementById("form-update-login-parameter-current-user-login").innerHTML = enteredLogin;
-                // document.getElementById("form-update-LOGIN").classList.remove('was-validated');
-                // document.getElementById("form-update-LOGIN-LOGIN").classList.remove("is-invalid");
+                userProfileAccountLogin.innerHTML = formUpdateLoginLogin.value;
+                userLogin.innerHTML = formUpdateLoginLogin.value;
             }
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            document.getElementById("form-update-login").classList.remove("was-validated");
-            document.getElementById("form-update-login-login-invalid-feedback").innerHTML = jqXHR.responseJSON[LOGIN_FEEDBACK];
+            formUpdateLogin.classList.remove("was-validated");
+            formUpdateLoginLoginInvalidFeedback.innerHTML = jqXHR.responseJSON[LOGIN_FEEDBACK];
             if (jqXHR.responseJSON[LOGIN_STATUS] == false) {
-                document.getElementById("form-update-login-login").classList.add("is-invalid");
-                document.getElementById("form-update-login-login").classList.remove("is-valid");
+                formUpdateLoginLogin.classList.remove("is-valid");
+                formUpdateLoginLogin.classList.add("is-invalid");
             } else {
-                document.getElementById("form-update-login-login").classList.remove("is-invalid");
-                document.getElementById("form-update-login-login").classList.add("is-valid");
+                formUpdateLoginLogin.classList.remove("is-invalid");
+                formUpdateLoginLogin.classList.add("is-valid");
             }
         }
     });
@@ -74,13 +76,18 @@ function updateUserLogin() {
 
 
 function updateUserPassword() {
-    let userId = document.getElementById("form-update-password-parameter-current-user-id").innerHTML;
-    let password = document.getElementById("form-update-password-password").value;
-    let passwordConfirm = document.getElementById("form-update-password-password-confirmation").value;
+    let userId = document.getElementById("form-update-password-parameter-current-user-id");
+    let password = document.getElementById("form-update-password-password");
+    let passwordConfirm = document.getElementById("form-update-password-password-confirmation");
+    let formUpdatePassword = document.getElementById("form-update-password");
+    let formUpdatePasswordPassword = document.getElementById("form-update-password-password");
+    let formUpdatePasswordPasswordConfirmation = document.getElementById("form-update-password-password-confirmation");
+    let formUpdatePasswordPasswordInvalidFeedback = document.getElementById("form-update-password-password-invalid-feedback");
+    let formUpdatePasswordPasswordConfirmationInvalidFeedback = document.getElementById("form-update-password-password-confirmation-invalid-feedback");
     let data = {};
-    data[USER_ID] = userId;
-    data[PASSWORD] = password;
-    data[PASSWORD_CONFIRM] = passwordConfirm;
+    data[USER_ID] = userId.innerHTML;
+    data[PASSWORD] = password.value;
+    data[PASSWORD_CONFIRM] = passwordConfirm.value;
     let url = CONTROLLER + "?" + COMMAND + "=" + UPDATE_USER_PASSWORD;
     $.ajax({
         url: url,
@@ -88,39 +95,40 @@ function updateUserPassword() {
         data: data,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            if (jqXHR.responseJSON[UPDATE_PASSWORD_RESULT_INFO_STATUS] == true) {
-                document.getElementById("form-update-password-parameter-current-user-id").innerHTML = userId;
-                // document.getElementById("form-update-PASSWORD").classList.remove('was-validated');
-                // document.getElementById("form-update-PASSWORD-PASSWORD").classList.remove("is-invalid");
+            if (jqXHR.responseJSON[PASSWORD_STATUS] == true) {
+                // document.getElementById("form-update-password-parameter-current-user-id").innerHTML = userId;
             }
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            document.getElementById("form-update-password").classList.remove("was-validated");
-            document.getElementById("form-update-password-password-invalid-feedback").innerHTML = jqXHR.responseJSON[PASSWORD_FEEDBACK];
-            document.getElementById("form-update-password-password-confirmation-invalid-feedback").innerHTML = jqXHR.responseJSON[PASSWORD_CONFIRMATION_FEEDBACK];
+            formUpdatePassword.classList.remove("was-validated");
+            formUpdatePasswordPasswordInvalidFeedback.innerHTML = jqXHR.responseJSON[PASSWORD_FEEDBACK];
+            formUpdatePasswordPasswordConfirmationInvalidFeedback.innerHTML = jqXHR.responseJSON[PASSWORD_CONFIRMATION_FEEDBACK];
             if (jqXHR.responseJSON[PASSWORD_STATUS] == false) {
-                document.getElementById("form-update-password-password").classList.add("is-invalid");
-                document.getElementById("form-update-password-password").classList.remove("is-valid");
+                formUpdatePasswordPassword.classList.add("is-invalid");
+                formUpdatePasswordPassword.classList.remove("is-valid");
             } else {
-                document.getElementById("form-update-password-password").classList.remove("is-invalid");
-                document.getElementById("form-update-password-password").classList.add("is-valid");
+                formUpdatePasswordPassword.classList.remove("is-invalid");
+                formUpdatePasswordPassword.classList.add("is-valid");
             }
             if (jqXHR.responseJSON[PASSWORD_CONFIRMATION_STATUS] == false) {
-                document.getElementById("form-update-password-password-confirmation").classList.add("is-invalid");
-                document.getElementById("form-update-password-password-confirmation").classList.remove("is-valid");
+                formUpdatePasswordPasswordConfirmation.classList.add("is-invalid");
+                formUpdatePasswordPasswordConfirmation.classList.remove("is-valid");
             } else {
-                document.getElementById("form-update-password-password-confirmation").classList.remove("is-invalid");
-                document.getElementById("form-update-password-password-confirmation").classList.add("is-valid");
+                formUpdatePasswordPasswordConfirmation.classList.remove("is-invalid");
+                formUpdatePasswordPasswordConfirmation.classList.add("is-valid");
             }
         }
     });
 };
 
 function updateUserImage(image) {
-    let userId = document.getElementById("form-update-image-parameter-current-user-id").innerHTML;
+    let userId = document.getElementById("form-update-image-parameter-current-user-id");
+    let formUpdateImage =  document.getElementById("form-update-image");
+    let formUpdateImageImage = document.getElementById("form-update-image-image");
+    let formUpdateImageImageInvalidFeedback =  document.getElementById("form-update-image-image-invalid-feedback");
     let formData = new FormData();
-    formData.append(USER_ID, userId);
+    formData.append(USER_ID, userId.innerHTML);
     formData.append(NEW_IMAGE, image);
     let url = CONTROLLER + "?" + COMMAND + "=" + UPDATE_USER_IMAGE;
 
@@ -135,27 +143,22 @@ function updateUserImage(image) {
         success: function (data, textStatus, jqXHR) {
             if (jqXHR.responseJSON[IMAGE_STATUS] == true) {
                 // TODO set image to avatar
-                document.getElementById("form-update-image-image").classList.add("is-valid");
-                document.getElementById("form-update-image-image").classList.remove("is-invalid");
-                document.getElementById("form-update-image").classList.add("was-validated");
-
-                // document.getElementById("form-update-login-parameter-current-user-login").innerHTML = enteredLogin;
-                // document.getElementById("form-update-LOGIN").classList.remove('was-validated');
-                // document.getElementById("form-update-LOGIN-LOGIN").classList.remove("is-invalid");
+                formUpdateImageImage.classList.remove("is-invalid");
+                formUpdateImageImage.classList.add("is-valid");
+                formUpdateImage.classList.add("was-validated");
             }
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            document.getElementById("form-update-image").classList.remove("was-validated");
-            document.getElementById("form-update-image-image-invalid-feedback").innerHTML = jqXHR.responseJSON[IMAGE_FEEDBACK];
+            formUpdateImage.classList.remove("was-validated");
+            formUpdateImageImageInvalidFeedback.innerHTML = jqXHR.responseJSON[IMAGE_FEEDBACK];
             if (jqXHR.responseJSON[IMAGE_STATUS] == false) {
-                document.getElementById("form-update-image-image").classList.add("is-invalid");
-                document.getElementById("form-update-image-image").classList.remove("is-valid");
+                formUpdateImageImage.classList.remove("is-valid");
+                formUpdateImageImage.classList.add("is-invalid");
             } else {
-                document.getElementById("form-update-image-image").classList.remove("is-invalid");
-                document.getElementById("form-update-image-image").classList.add("is-valid");
+                formUpdateImageImage.classList.remove("is-invalid");
+                formUpdateImageImage.classList.add("is-valid");
             }
-            document.getElementById("form-update-image").classList.add("was-validated");
         }
     });
 };
@@ -169,11 +172,13 @@ const userProfile = {
 
 $(document).ready(function () {
     let formUpdateEmail = document.getElementById("form-update-email");
+    let formUpdateEmailEmail = document.getElementById("form-update-email-email");
+    let formUpdateEmailEmailInvalidFeedback = document.getElementById("form-update-email-email-invalid-feedback");
     formUpdateEmail.addEventListener('submit', function(event) {
-        document.getElementById("form-update-email-email").classList.remove("is-invalid");
-        document.getElementById("form-update-email-email").classList.remove("is-valid");
+        formUpdateEmailEmail.classList.remove("is-invalid");
+        formUpdateEmailEmail.classList.remove("is-valid");
         if (formUpdateEmail.checkValidity() === false) {
-            document.getElementById("form-update-email-email-invalid-feedback").innerHTML = STANDARD_EMAIL_FEEDBACK;
+            formUpdateEmailEmailInvalidFeedback.innerHTML = STANDARD_EMAIL_FEEDBACK;
             event.preventDefault();
             event.stopPropagation();
         } else {
@@ -182,20 +187,22 @@ $(document).ready(function () {
         }
         formUpdateEmail.classList.add('was-validated');
       }, false);
-      document.getElementById("form-update-email-email").addEventListener('input', function(event) {
+      formUpdateEmailEmail.addEventListener('input', function(event) {
         formUpdateEmail.classList.remove('was-validated');
-        document.getElementById("form-update-email-email").classList.remove("is-invalid");
-        document.getElementById("form-update-email-email").classList.remove("is-valid");
+        formUpdateEmailEmail.classList.remove("is-invalid");
+        formUpdateEmailEmail.classList.remove("is-valid");
       })
 });
 
 $(document).ready(function () {
     let formUpdateLogin = document.getElementById("form-update-login");
+    let formUpdateLoginLogin = document.getElementById("form-update-login-login");
+    let formUpdateLoginLoginInvalidFeedback = document.getElementById("form-update-login-login-invalid-feedback");
     formUpdateLogin.addEventListener('submit', function(event) {
-        document.getElementById("form-update-login-login").classList.remove("is-invalid");
-        document.getElementById("form-update-login-login").classList.remove("is-valid");
+        formUpdateLoginLogin.classList.remove("is-invalid");
+        formUpdateLoginLogin.classList.remove("is-valid");
         if (formUpdateLogin.checkValidity() === false) {
-            document.getElementById("form-update-login-login-invalid-feedback").innerHTML = STANDARD_LOGIN_FEEDBACK;
+            formUpdateLoginLoginInvalidFeedback.innerHTML = STANDARD_LOGIN_FEEDBACK;
             event.preventDefault();
             event.stopPropagation();
         } else {
@@ -204,29 +211,35 @@ $(document).ready(function () {
         }
         formUpdateLogin.classList.add('was-validated');
       }, false);
-      document.getElementById("form-update-login-login").addEventListener('input', function(event) {
+      formUpdateLoginLogin.addEventListener('input', function(event) {
         formUpdateLogin.classList.remove('was-validated');
-        document.getElementById("form-update-login-login").classList.remove("is-invalid");
-        document.getElementById("form-update-login-login").classList.remove("is-valid");
+        formUpdateLoginLogin.classList.remove("is-invalid");
+        formUpdateLoginLogin.classList.remove("is-valid");
       })
 });
 
 $(document).ready(function () {
     let formUpdatePassword = document.getElementById("form-update-password");
+    let formUpdatePasswordPassword = document.getElementById("form-update-password-password");
+    let formUpdatePasswordPasswordConfirmation = document.getElementById("form-update-password-password-confirmation");
+    let formUpdatePasswordPasswordInvalidFeedback =  document.getElementById("form-update-password-password-invalid-feedback");
+    let formUpdatePasswordPasswordConfirmationInvalidFeedback =  document.getElementById("form-update-password-password-confirmation-invalid-feedback");
+   
+
     formUpdatePassword.addEventListener('submit', function(event) {
-        document.getElementById("form-update-password-password").classList.remove("is-invalid");
-        document.getElementById("form-update-password-password").classList.remove("is-valid");
-        document.getElementById("form-update-password-password-confirmation").classList.remove("is-invalid");
-        document.getElementById("form-update-password-password-confirmation").classList.remove("is-valid");
-        if (formUpdatePassword.checkValidity() === false || document.getElementById("form-update-password-password").value != document.getElementById("form-update-password-password-confirmation").value) {
-            document.getElementById("form-update-password-password-invalid-feedback").innerHTML = STANDARD_PASSWORD_FEDDBACK;
-            document.getElementById("form-update-password-password-confirmation-invalid-feedback").innerHTML = STANDARD_PASSWORD_FEDDBACK;
+        formUpdatePasswordPassword.classList.remove("is-invalid");
+        formUpdatePasswordPassword.classList.remove("is-valid");
+        formUpdatePasswordPasswordConfirmation.classList.remove("is-invalid");
+        formUpdatePasswordPasswordConfirmation.classList.remove("is-valid");
+        if (formUpdatePassword.checkValidity() === false || formUpdatePasswordPassword.value != formUpdatePasswordPasswordConfirmation.value) {
+            formUpdatePasswordPasswordInvalidFeedback.innerHTML = STANDARD_PASSWORD_FEEDBACK;
+            formUpdatePasswordPasswordConfirmationInvalidFeedback.innerHTML = STANDARD_PASSWORD_FEEDBACK;
            
-            if (document.getElementById("form-update-password-password").value != document.getElementById("form-update-password-password-confirmation").value) {
-                document.getElementById("form-update-password-password").setCustomValidity(PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL);
-                document.getElementById("form-update-password-password-confirmation").setCustomValidity(PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL);
-                document.getElementById("form-update-password-password-invalid-feedback").innerHTML = PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL;
-                document.getElementById("form-update-password-password-confirmation-invalid-feedback").innerHTML = PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL;
+            if (formUpdatePasswordPassword.value != formUpdatePasswordPasswordConfirmation.value) {
+                formUpdatePasswordPassword.setCustomValidity(PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL);
+                formUpdatePasswordPasswordConfirmation.setCustomValidity(PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL);
+                formUpdatePasswordPasswordInvalidFeedback.innerHTML = PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL;
+                formUpdatePasswordPasswordConfirmationInvalidFeedback.innerHTML = PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL;
             }
             
             event.preventDefault();
@@ -237,26 +250,29 @@ $(document).ready(function () {
         }
         formUpdatePassword.classList.add('was-validated');
       }, false);
-      document.getElementById("form-update-password-password").addEventListener('input', function(event) {
+      formUpdatePasswordPassword.addEventListener('input', function(event) {
         formUpdatePassword.classList.remove('was-validated');
-        document.getElementById("form-update-password-password").classList.remove("is-invalid");
-        document.getElementById("form-update-password-password").classList.remove("is-valid");
+        formUpdatePasswordPassword.classList.remove("is-invalid");
+        formUpdatePasswordPassword.classList.remove("is-valid");
       })
-      document.getElementById("form-update-password-password-confirmation").addEventListener('input', function(event) {
+      formUpdatePasswordPasswordConfirmation.addEventListener('input', function(event) {
         formUpdatePassword.classList.remove('was-validated');
-        document.getElementById("form-update-password-password-confirmation").classList.remove("is-invalid");
-        document.getElementById("form-update-password-password-confirmation").classList.remove("is-valid");
+        formUpdatePasswordPasswordConfirmation.classList.remove("is-invalid");
+        formUpdatePasswordPasswordConfirmation.classList.remove("is-valid");
       })
 });
 
 $(document).ready(function () {
     let formUpdateImage = document.getElementById("form-update-image");
+    let formUpdateImageImage = document.getElementById("form-update-image-image");
+    let formUpdateImageImageInvalidFeedback = document.getElementById("form-update-image-image-invalid-feedback");
+
     formUpdateImage.addEventListener('submit', function(event) {
         document.getElementById("form-update-image-image").classList.remove("is-invalid");
         document.getElementById("form-update-image-image").classList.remove("is-valid");
-        document.getElementById("form-update-image").classList.remove("was-validated");
+        formUpdateImage.classList.remove("was-validated");
 
-        let files = document.getElementById("form-update-image-image").files;
+        let files = formUpdateImageImage.files;
         let result = false;
         let validExtensions = ["image/jpg", "image/jpeg", "image/png"];
         
@@ -274,10 +290,10 @@ $(document).ready(function () {
         }
 
         if (result == false) {
-            document.getElementById("form-update-image-image-invalid-feedback").innerHTML = STANDARD_IMAGE_FEEDBACK;
-            document.getElementById("form-update-image-image").classList.add("is-invalid");
+            formUpdateImageImageInvalidFeedback.innerHTML = STANDARD_IMAGE_FEEDBACK;
+            formUpdateImageImage.classList.add("is-invalid");
             formUpdateImage.classList.add('was-validated');
-           // document.getElementById("form-update-image-image").setCustomValidity(IMAGE_FEEDBACK_INVALID);
+           // formUpdateImageImage.setCustomValidity(IMAGE_FEEDBACK_INVALID);
             event.preventDefault();
             event.stopPropagation();
         } else {
@@ -286,11 +302,11 @@ $(document).ready(function () {
             userProfile.updateUserImage(files[0]);
         }
       }, false);
-      document.getElementById("form-update-image-image").addEventListener('input', function(event) {
-        document.getElementById("form-update-image-image-label").innerHTML = document.getElementById("form-update-image-image").files[0].name;
+      formUpdateImageImage.addEventListener('input', function(event) {
+        document.getElementById("form-update-image-image-label").innerHTML = formUpdateImageImage.files[0].name;
         formUpdateImage.classList.remove('was-validated');
-        document.getElementById("form-update-image-image").classList.remove("is-invalid");
-        document.getElementById("form-update-image-image").classList.remove("is-valid");
+        formUpdateImageImage.classList.remove("is-invalid");
+        formUpdateImageImage.classList.remove("is-valid");
       })
 });
 

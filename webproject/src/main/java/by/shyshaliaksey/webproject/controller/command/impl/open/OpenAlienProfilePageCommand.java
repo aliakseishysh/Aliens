@@ -68,7 +68,7 @@ public class OpenAlienProfilePageCommand implements Command {
 			}
 			
 		} catch (ServiceException e) {
-			router = new Router(PagePath.ERROR_PAGE_SERVER_JSP.getValue(), null, RouterType.FORWARD);
+			router = new Router(PagePath.ERROR_PAGE_500_JSP.getValue(), null, RouterType.FORWARD);
 			logger.log(Level.ERROR, "Exception occured while alien searching with id {}: {}", alienId, e.getMessage());
 		}
 		return router;
