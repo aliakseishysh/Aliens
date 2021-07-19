@@ -15,6 +15,7 @@ import jakarta.servlet.http.Part;
 
 public class ValidationServiceImpl implements ValidationService {
 
+	@Override
 	public void validateAlienFormInput(Map<Feedback.Key, Object> result, String alienName, String alienSmallDescription,
 			String alienFullDescription, Part alienImage) throws ServiceException {
 		if (validateAlienName(alienName)) {
@@ -181,6 +182,18 @@ public class ValidationServiceImpl implements ValidationService {
 			result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 			result.put(Feedback.Key.COMMENT_STATUS, Boolean.FALSE);
 			result.put(Feedback.Key.COMMENT_FEEDBACK, LocaleKey.COMMENT_FEEDBACK_INVALID.getValue());
+		}
+	}
+	
+	@Override 
+	public void validateAlienNameFormInput(Map<Key, Object> result, String alienName) throws ServiceException {
+		if (validateAlienName(alienName)) {
+			result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.TRUE);
+			result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+		} else {
+			result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
+			result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.ALIEN_NAME_FEEDBACK_INVALID.getValue());
+			result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 		}
 	}
 	

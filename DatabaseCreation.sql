@@ -5,10 +5,20 @@ USE aliens_web_project;
 CREATE TABLE aliens (
     alien_id INT AUTO_INCREMENT NOT NULL,
     _name VARCHAR(255),
+    _status ENUM('NORMAL', 'UNDER_CONSIDERATION', 'DECLINED'),
     description_small VARCHAR(255),
     description_full VARCHAR(3000),
     image_url VARCHAR(255),
     PRIMARY KEY (alien_id)
+);
+
+CREATE TABLE aliens_images (
+    alien_image_id INT AUTO_INCREMENT NOT NULL,
+    alien_id INT,
+    image_url VARCHAR(255),
+    _status ENUM('NORMAL', 'UNDER_CONSIDERATION', 'DECLINED'),
+    PRIMARY KEY (alien_image_id),
+    FOREIGN KEY (alien_id) REFERENCES aliens(alien_id)
 );
 
 CREATE TABLE users (
@@ -55,37 +65,42 @@ CREATE TABLE comments (
 -- );
 
 
-INSERT INTO aliens (_name, description_small, description_full, image_url) values 
+INSERT INTO aliens (_name, _status, description_small, description_full, image_url) values 
         (
             'BABA_YAGA', 
+            'NORMAL',
             'Very good woman', 
             'Very good woman with coockies!', 
             '/images/alien/baba_yaga.png'
         );
-INSERT INTO aliens (_name, description_small, description_full, image_url) values  
+INSERT INTO aliens (_name, _status, description_small, description_full, image_url) values 
     (
         'LESHIY',
+        'NORMAL',
         'Lives in forest',
         'Lives in forest of despair!',
         '/images/alien/leshiy.png'
     );
-INSERT INTO aliens (_name, description_small, description_full, image_url) values 
+INSERT INTO aliens (_name, _status, description_small, description_full, image_url) values 
     (
         'SONIC_X',
+        'NORMAL',
         'Very fast',
         'Very fast! Speeed, speeeeeeeeeeeeeeed, SPEEEEEEEEEEEEEEEEEEEEEED!!!',
         '/images/alien/sonic_x.png'
     );
-INSERT INTO aliens (_name, description_small, description_full, image_url) values 
+INSERT INTO aliens (_name, _status, description_small, description_full, image_url) values 
     (
         'ODIN',
+        'NORMAL',
         'He is a god',
         'With a fork in the eye!',
         '/images/alien/odin.png'
     );
-INSERT INTO aliens (_name, description_small, description_full, image_url) values 
+INSERT INTO aliens (_name, _status, description_small, description_full, image_url) values 
     (
         'DOOMGUY',
+        'NORMAL',
         'RUN',
         'RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! 
         RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! 
@@ -93,9 +108,10 @@ INSERT INTO aliens (_name, description_small, description_full, image_url) value
         '/images/alien/doomguy.png'
     );
 
-INSERT INTO aliens (_name, description_small, description_full, image_url) values 
+INSERT INTO aliens (_name, _status, description_small, description_full, image_url) values 
     (
         'DOOMGUY2',
+        'NORMAL',
         'RUN',
         'RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! 
         RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! 
@@ -103,15 +119,29 @@ INSERT INTO aliens (_name, description_small, description_full, image_url) value
         '/images/alien/doomguy.png'
     );
 
-INSERT INTO aliens (_name, description_small, description_full, image_url) values 
+INSERT INTO aliens (_name, _status, description_small, description_full, image_url) values 
     (
         'DOOMGUY3',
+        'NORMAL',
         'RUN',
         'RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! 
         RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! 
         RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR! RIP AND TEAR!!!',
         '/images/alien/doomguy.png'
     );
+
+INSERT INTO aliens_images (alien_id, image_url, _status) values (1, '/images/alien/baba_yaga.png', 'NORMAL');
+INSERT INTO aliens_images (alien_id, image_url, _status) values (1, '/images/alien/baba_yaga_2.jpg', 'NORMAL');
+INSERT INTO aliens_images (alien_id, image_url, _status) values (2, '/images/alien/leshiy.png', 'NORMAL');
+INSERT INTO aliens_images (alien_id, image_url, _status) values (3, '/images/alien/sonic_x.png', 'NORMAL');
+INSERT INTO aliens_images (alien_id, image_url, _status) values (4, '/images/alien/odin.png', 'NORMAL');
+INSERT INTO aliens_images (alien_id, image_url, _status) values (5, '/images/alien/doomguy.png', 'NORMAL');
+INSERT INTO aliens_images (alien_id, image_url, _status) values (6, '/images/alien/doomguy.png', 'NORMAL');
+INSERT INTO aliens_images (alien_id, image_url, _status) values (7, '/images/alien/doomguy.png', 'NORMAL');
+
+
+
+
 
 INSERT INTO users (email, login_name, password_hash, salt, image_url, role_type, _status) values 
     ('adminadmin@gmail.com', 'adminadmin', 

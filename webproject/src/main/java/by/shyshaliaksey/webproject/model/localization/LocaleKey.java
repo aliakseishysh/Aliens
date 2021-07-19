@@ -4,9 +4,10 @@ import by.shyshaliaksey.webproject.controller.EnumValue;
 
 public enum LocaleKey implements EnumValue {
 
-	// About page
-	PAGE_ABOUT_TITLE("page_about_title"),
-	PAGE_ABOUT_H1("page_about_h1"),
+	// Suggest alien
+	PAGE_SUGGEST_ALIEN_TITLE("page_suggest_alien_title"),
+	PAGE_SUGGEST_ALIEN_H1("page_suggest_alien_h1"),
+	PAGE_SUGGEST_ALIEN_SUBMIT("page_suggest_alien_submit"),
 	// Alien profile page
 	PAGE_ALIEN_PROFILE_TITLE("page_alien_profile_title"),
 	PAGE_ALIEN_PROFILE_H1("page_alien_profile_h1"),
@@ -43,7 +44,7 @@ public enum LocaleKey implements EnumValue {
 	// Template nav
 	TEMPLATE_NAV_ALIENS("template_nav_aliens"),
 	TEMPLATE_NAV_HOME("template_nav_home"),
-	TEMPLATE_NAV_ABOUT("template_nav_about"),
+	TEMPLATE_NAV_SUGGEST("template_nav_suggest"),
 	TEMPLATE_NAV_LOGIN("template_nav_login"),
 	TEMPLATE_NAV_REGISTER("template_nav_register"),
 	TEMPLATE_NAV_PROFILE("template_nav_profile"),
@@ -54,7 +55,9 @@ public enum LocaleKey implements EnumValue {
 	TEMPLATE_USER_IMAGE_ALT("template_user_image_alt"),
 	// Template user profile
 	TEMPLATE_USER_PROFILE_H1("template_user_profile_h1"),
-	// Form alien create
+	// Form alien create/suggest
+	FORM_ALIEN_SUGGEST_LEGEND("form_alien_suggest_legend"),
+	FORM_ALIEN_SUGGEST_IMAGE_LEGEND("form_alien_suggest_image_legend"),
 	FORM_ALIEN_CREATE_LEGEND("form_alien_create_legend"),
 	FORM_ALIEN_CREATE_NAME("form_alien_create_name"),
 	FORM_ALIEN_CREATE_NAME_PLACEHOLDER("form_alien_create_name_placeholder"),

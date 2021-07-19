@@ -21,6 +21,7 @@ public class Feedback {
 		IMAGE_FEEDBACK("image_feedback"),
 		DAYS_TO_BAN_STATUS("days_to_ban_status"),
 		DAYS_TO_BAN_FEEDBACK("days_to_ban_feedback"),
+		ALIEN_STATUS("alien_status"),
 		ALIEN_NAME_STATUS("alien_name_status"),
 		ALIEN_NAME_FEEDBACK("alien_name_feedback"),
 		ALIEN_SMALL_DESCRIPTION_STATUS("alien_small_description_status"),

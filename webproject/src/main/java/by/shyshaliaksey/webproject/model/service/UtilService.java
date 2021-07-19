@@ -9,9 +9,9 @@ import jakarta.servlet.http.Part;
 
 public interface UtilService {
 
-	Optional<String> uploadAlienImage(String alienName, String imagePrefix, String rootFolder, String serverDeploymentPath, Part part) throws ServiceException;
+	Optional<String> uploadAlienImage(String rootFolder, String serverDeploymentPath, Part part) throws ServiceException;
 	
-	Optional<String> uploadUserImage(int userId, String imagePrefix, String fileExtension, String rootFolder, String serverDeploymentPath, Part part) throws ServiceException;
+	Optional<String> uploadUserImage(int userId, String fileExtension, String rootFolder, String serverDeploymentPath, Part part) throws ServiceException;
 
 	long createFile(InputStream inputStream, Path imagePath) throws ServiceException;
 

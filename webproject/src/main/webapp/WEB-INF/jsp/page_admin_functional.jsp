@@ -14,7 +14,7 @@
 <body>
 <main role="main" class="container">
 	<jsp:include page="${TEMPLATE_NAV_JSP}"/>
-	<jsp:include page="${TEMPLATE_USER_PROFILE_JSP}"/>
+	<jsp:include page="${TEMPLATE_ADMIN_PROFILE_JSP}"/>
 </main>
 </body>
 </html>

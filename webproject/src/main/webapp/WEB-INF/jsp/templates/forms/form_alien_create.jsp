@@ -40,7 +40,7 @@
 	  				<div id="form-alien-create-image-invalid-feedback" class="invalid-feedback">
 	       				${STANDARD_IMAGE_FEEDBACK}
 	   				</div>
-	  				<label class="custom-file-label" for="form-alien-create-image" id="form-alien-create-image-label">${TEXT[FORM_ALIEN_CREATE_IMAGE_LABEL]}</label>
+	  				<label class="custom-file-label text-muted" for="form-alien-create-image" id="form-alien-create-image-label">${TEXT[FORM_ALIEN_CREATE_IMAGE_LABEL]}</label>
 				</div>
    			</div>
 		</fieldset>

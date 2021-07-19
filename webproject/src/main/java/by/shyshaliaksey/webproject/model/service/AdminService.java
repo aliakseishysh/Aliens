@@ -22,4 +22,12 @@ public interface AdminService {
 	Map<Feedback.Key, Object> updateAlien(int alienId, String alienName, String alienSmallDescription,
 			String alienFullDescription, Part alienImage, String rootFolder, String serverDeploymentPath)
 			throws ServiceException;
+	
+	boolean approveAlien(String alienId) throws ServiceException;
+
+	boolean declineAlien(String alienId) throws ServiceException;
+
+	boolean approveAlienImage(String alienId) throws ServiceException;
+
+	boolean declineAlienImage(String alienImageUrl) throws ServiceException;
 }

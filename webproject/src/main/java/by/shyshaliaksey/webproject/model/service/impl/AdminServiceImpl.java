@@ -25,8 +25,6 @@ import jakarta.servlet.http.Part;
 
 public class AdminServiceImpl implements AdminService {
 
-	private static final String IMAGE_PREFIX = "alien_image_";
-
 	@Override
 	public Map<Feedback.Key, Object> banUser(String userLogin, String daysToBan) throws ServiceException {
 		try {
@@ -202,11 +200,12 @@ public class AdminServiceImpl implements AdminService {
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
 				if (!alienInDatabase.isPresent()) {
-					Optional<String> urlResult = utilService.uploadAlienImage(alienName, IMAGE_PREFIX, rootFolder, serverDeploymentPath, alienImage);
+					Optional<String> urlResult = utilService.uploadAlienImage(rootFolder, serverDeploymentPath, alienImage);
 					if (urlResult.isPresent()) {
-						boolean addResult = alienDao.addNewAlien(alienName, alienSmallDescription, alienFullDescription,
+						int alienId = alienDao.addNewAlien(alienName, alienSmallDescription, alienFullDescription,
 								urlResult.get());
-						if (addResult) {
+						boolean addToGaleryResult = alienDao.addNewImageToGalery(alienId, urlResult.get());
+						if (addToGaleryResult) {
 							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -264,12 +263,14 @@ public class AdminServiceImpl implements AdminService {
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
-				if (!alienInDatabase.isPresent()) {
-					Optional<String> urlResult = utilService.uploadAlienImage(alienName, IMAGE_PREFIX, rootFolder, serverDeploymentPath, alienImage);
+				if (alienInDatabase.isPresent()) {
+					// TODO images
+					Optional<String> urlResult = utilService.uploadAlienImage(rootFolder, serverDeploymentPath, alienImage);
 					if (urlResult.isPresent()) {
 						boolean addResult = alienDao.updateAlien(alienId, alienName, alienSmallDescription,
 								alienFullDescription, urlResult.get());
-						if (addResult) {
+						boolean addToGaleryResult = alienDao.addNewImageToGalery(alienId, urlResult.get());
+						if (addResult && addToGaleryResult) {
 							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -308,6 +309,54 @@ public class AdminServiceImpl implements AdminService {
 			return result;
 		} catch (DaoException e) {
 			throw new ServiceException("Error occured when adding new alien " + alienName + " :" + e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public boolean approveAlien(String alienIdString) throws ServiceException {
+		int alienId = Integer.parseInt(alienIdString);
+		try {
+			AlienDao adminDao = DaoProvider.getInstance().getAlienDao();
+			boolean approvingResult = adminDao.approveAlien(alienId);
+			boolean changeProfileStatus = adminDao.approveProfileImage(alienId);
+			return approvingResult && changeProfileStatus;
+		} catch (DaoException e) {
+			throw new ServiceException("Error occured when approving alien " + alienIdString + " :" + e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public boolean declineAlien(String alienIdString) throws ServiceException {
+		int alienId = Integer.parseInt(alienIdString);
+		try {
+			AlienDao adminDao = DaoProvider.getInstance().getAlienDao();
+			boolean approvingResult = adminDao.declineAlien(alienId);
+			boolean changeProfileStatus = adminDao.declineProfileImage(alienId);
+			return approvingResult && changeProfileStatus;
+		} catch (DaoException e) {
+			throw new ServiceException("Error occured when declining alien " + alienIdString + " :" + e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public boolean approveAlienImage(String alienImageUrl) throws ServiceException {
+		try {
+			AlienDao adminDao = DaoProvider.getInstance().getAlienDao();
+			boolean changeImageStatus = adminDao.approveSuggestedImage(alienImageUrl);
+			return changeImageStatus;
+		} catch (DaoException e) {
+			throw new ServiceException("Error occured when approving alien image " + alienImageUrl + " :" + e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public boolean declineAlienImage(String alienImageUrl) throws ServiceException {
+		try {
+			AlienDao adminDao = DaoProvider.getInstance().getAlienDao();
+			boolean changeImageStatus = adminDao.declineSuggestedImage(alienImageUrl);
+			return changeImageStatus;
+		} catch (DaoException e) {
+			throw new ServiceException("Error occured when declining alien image " + alienImageUrl + " :" + e.getMessage(), e);
 		}
 	}
 	

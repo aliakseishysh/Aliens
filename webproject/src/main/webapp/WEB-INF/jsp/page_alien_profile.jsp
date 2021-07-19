@@ -61,24 +61,8 @@
 		<jsp:include page="${TEMPLATE_NAV_JSP}"/>
 		<h1>${TEXT[PAGE_ALIEN_PROFILE_H1]}</h1>
 		<div class="content-section">
-			<div class="media">
-				<img id="alien-image" class="rounded-circle account-img"
-					src="<c:url value="${alien.imageUrl}"/>" alt="${TEXT[PAGE_ALIEN_PROFILE_ALIEN_IMAGE_ALT]}">
-				
-				<div class="media-body">
-					<h2 id="alien-name" class="account-heading">${alien.name}</h2>
-					<p id="alien-small-description" class="h4 text-break">${alien.smallDescription}</p>
-				</div>
-				<c:choose>
-					<c:when test="${currentUser.role == USER}">
-						<jsp:include page="${TEMPLATE_ALIEN_RATING_JSP}"/>						
-					</c:when>
-				</c:choose>
-			</div>
-			<div class="content-section">
-			<p class="border-bottom mb-4 h3">${TEXT[PAGE_ALIEN_PROFILE_ALIEN_DESCRIPTION]}</p>
-				<p id="alien-big-description text-break" class="h4">${alien.bigDescription}</p>
-			</div>
+			<jsp:include page="${TEMPLATE_ALIEN_JSP}"/>	
+			<jsp:include page="${TEMPLATE_CAROUSEL}"/>	
 			<c:choose>
 				<c:when test="${currentUser.role == ADMIN}">
 					<jsp:include page="${FORM_ALIEN_UPDATE_JSP}"></jsp:include>

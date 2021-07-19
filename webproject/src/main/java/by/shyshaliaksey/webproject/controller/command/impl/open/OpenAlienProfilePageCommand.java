@@ -6,17 +6,21 @@ import java.util.Optional;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
 import by.shyshaliaksey.webproject.controller.command.Command;
+import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.dao.AlienDao;
+import by.shyshaliaksey.webproject.model.dao.ColumnName;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.dao.RatingDao;
 import by.shyshaliaksey.webproject.model.entity.Alien;
@@ -61,6 +65,18 @@ public class OpenAlienProfilePageCommand implements Command {
 				request.setAttribute(RequestAttribute.CURRENT_COMMENT_PAGE.getValue(), page);
 				List<Comment> comments = alienService.findAllCommentsInPage(alienId, page);
 				request.setAttribute(RequestAttribute.ALIEN_COMMENTS.getValue(), comments);
+				// carousel images
+				List<String> imagesUrls = alienService.findImages(alienId);
+				JSONArray jsonArray = new JSONArray();
+				for(String url: imagesUrls) {
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put(ColumnName.ALIEN_IMAGE_IMAGE_URL, url);
+					jsonArray.put(jsonObject);
+				}
+				request.setAttribute(RequestAttribute.ALIEN_IMAGES.getValue(), jsonArray);
+				
+				
+				
 				router = new Router(PagePath.PAGE_ALIEN_PROFILE_JSP.getValue(), null, RouterType.FORWARD);
 			} else {
 				router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);

@@ -7,6 +7,7 @@ public enum FilePath implements EnumValue  {
 	CSS_RAITING("/css/raiting.css"),
 	CSS_USER_PROFILE("/css/user_profile.css"),
 	CSS_COMMENT("/css/comment.css"),
+	CSS_CAROUSEL("css/carousel.css"),
 	JS_RAITING("/js/raiting.js"),
 	JS_HOME("/js/home.js"),
 	JS_LOGIN("/js/login.js"),
@@ -14,7 +15,11 @@ public enum FilePath implements EnumValue  {
 	JS_REGISTER("/js/register.js"),
 	JS_USER_PROFILE("/js/user_profile.js"),
 	JS_ADMIN_PROFILE("/js/admin_profile.js"),
-	JS_ALIEN_PROFILE("/js/alien_profile.js");
+	JS_ALIEN_PROFILE("/js/alien_profile.js"),
+	JS_ALIEN_SUGGEST("/js/alien_suggest.js"),
+	JS_SUGGESTED_ALIENS("/js/admin_page_suggested_aliens.js"),
+	JS_SUGGESTED_ALIENS_IMAGES("/js/admin_page_suggested_aliens_images.js"),
+	JS_CAROUSEL("/js/carousel.js");
 	// TODO JS_RESTORE_PASSWORD_REQUEST_LINK("/js/restore_password_request_link.js");
 	
 	private String value;

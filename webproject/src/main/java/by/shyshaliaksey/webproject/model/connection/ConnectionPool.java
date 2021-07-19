@@ -6,8 +6,8 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.logging.log4j.Level;
@@ -19,12 +19,12 @@ public class ConnectionPool {
 	private static final Logger logger = LogManager.getRootLogger();
 	private static ConnectionPool instance;
 	private static final AtomicBoolean isConnectionPoolCreated = new AtomicBoolean(false);
-	private BlockingDeque<ConnectionProxy> freeConnections;
-	private BlockingDeque<ConnectionProxy> occupiedConnections;
+	private BlockingQueue<ConnectionProxy> freeConnections;
+	private BlockingQueue<ConnectionProxy> occupiedConnections;
 
 	private ConnectionPool() {
-		occupiedConnections = new LinkedBlockingDeque<>();
-		freeConnections = new LinkedBlockingDeque<>();
+		occupiedConnections = new LinkedBlockingQueue<>();
+		freeConnections = new LinkedBlockingQueue<>();
 		for (int i = 0; i < CONNECTION_POOL_DEFAULT_SIZE; i++) {
 			try {
 				Connection connection = ConnectionFactory.createConnection();
@@ -78,7 +78,7 @@ public class ConnectionPool {
 			logger.log(Level.ERROR, "Unboxed connection is detected: {}", connection);
 			result = false;
 		}
-		occupiedConnections.removeFirstOccurrence(connection);
+		occupiedConnections.remove(connection);
 		try {
 			freeConnections.put((ConnectionProxy) connection);
 		} catch (InterruptedException e) {

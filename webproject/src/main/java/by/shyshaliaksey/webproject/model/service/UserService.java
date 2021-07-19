@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import by.shyshaliaksey.webproject.controller.command.Feedback;
+import by.shyshaliaksey.webproject.controller.command.Feedback.Key;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
@@ -24,5 +25,9 @@ public interface UserService {
 	boolean isUserBanned(HttpSession session);
 	Map<Feedback.Key, Object> addNewComment(int userId, int alienId, String newComment) throws ServiceException;
 	boolean deleteComment(int commentId) throws ServiceException;
+	Map<Key, Object> suggestNewAlien(String alienName, String alienSmallDescription, String alienFullDescription,
+			Part alienImage, String rootFolder, String serverDeploymentPath) throws ServiceException;
+	Map<Key, Object> suggestNewAlienImage(String alienName, Part alienImage, String rootFolder,
+			String serverDeploymentPath) throws ServiceException;
 	
 }

@@ -8,6 +8,10 @@ public class Alien {
 	private String bigDescription;
 	private String imageUrl;
 	
+	public enum Status {
+		NORMAL, UNDER_CONSIDERATION, DECLINED
+	}
+	
 	public Alien(int id, String name, String smallDescription, String bigDescription, String imageUrl) {
 		this.id = id;
 		this.name = name;
@@ -20,6 +24,12 @@ public class Alien {
 		this.name = name;
 		this.smallDescription = smallDescription;
 		this.bigDescription = bigDescription;
+		this.imageUrl = imageUrl;
+	}
+	
+	public Alien(int id, String name, String imageUrl) {
+		this.id = id;
+		this.name = name;
 		this.imageUrl = imageUrl;
 	}
 	

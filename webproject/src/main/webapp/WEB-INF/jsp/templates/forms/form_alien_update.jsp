@@ -41,7 +41,7 @@
 	  				<div id="form-alien-update-image-invalid-feedback" class="invalid-feedback">
 	       				${STANDARD_IMAGE_FEEDBACK}
 	   				</div>
-	  				<label class="custom-file-label" for="form-alien-update-image" id="form-alien-update-image-label">${TEXT[FORM_ALIEN_UPDATE_IMAGE_LABEL]}</label>
+	  				<label class="custom-file-label text-muted" for="form-alien-update-image" id="form-alien-update-image-label">${TEXT[FORM_ALIEN_UPDATE_IMAGE_LABEL]}</label>
 				</div>
    			</div>
 		</fieldset>

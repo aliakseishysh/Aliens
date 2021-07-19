@@ -14,9 +14,20 @@ public class CommandFactory {
 		case OPEN_REGISTER_PAGE -> CommandValue.OPEN_REGISTER_PAGE.getCommand();
 		case OPEN_USER_PROFILE_PAGE -> CommandValue.OPEN_USER_PROFILE_PAGE.getCommand();
 		case OPEN_ALIEN_PROFILE_PAGE -> CommandValue.OPEN_ALIEN_PROFILE_PAGE.getCommand();
+		case OPEN_ADMIN_FUNCTIONAL_PAGE -> CommandValue.OPEN_ADMIN_FUNCTIONAL_PAGE.getCommand();
+		case OPEN_ADMIN_SUGGESTED_ALIENS_PAGE -> CommandValue.OPEN_ADMIN_SUGGESTED_ALIENS_PAGE.getCommand();
+		case OPEN_USER_SUGGEST_ALIEN_PAGE -> CommandValue.OPEN_USER_SUGGEST_ALIEN_PAGE.getCommand();
+		case OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE -> CommandValue.OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE.getCommand();
 		case OPEN_BANNED_PAGE -> CommandValue.OPEN_BANNED_PAGE.getCommand();
 		case OPEN_SERVER_ERROR_PAGE -> CommandValue.OPEN_SERVER_ERROR_PAGE.getCommand();
 		case OPEN_404_ERROR_PAGE -> CommandValue.OPEN_404_ERROR_PAGE.getCommand();
+		
+		case ADMIN_APPROVE_ALIEN -> CommandValue.ADMIN_APPROVE_ALIEN.getCommand();
+		case ADMIN_DECLINE_ALIEN -> CommandValue.ADMIN_DECLINE_ALIEN.getCommand();
+		case ADMIN_APPROVE_ALIEN_IMAGE -> CommandValue.ADMIN_APPROVE_ALIEN_IMAGE.getCommand();
+		case ADMIN_DECLINE_ALIEN_IMAGE -> CommandValue.ADMIN_DECLINE_ALIEN_IMAGE.getCommand();
+		case SUGGEST_ALIEN -> CommandValue.SUGGEST_ALIEN.getCommand();
+		case SUGGEST_ALIEN_IMAGE -> CommandValue.SUGGEST_ALIEN_IMAGE.getCommand();
 		case CHANGE_LOCALE -> CommandValue.CHANGE_LOCALE.getCommand();
 		case REGISTER_USER -> CommandValue.REGISTER_USER.getCommand();
 		case LOGIN_USER -> CommandValue.LOGIN_USER.getCommand();

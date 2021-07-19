@@ -18,4 +18,5 @@ public interface ValidationService {
 	void validatePasswordEquality(Map<Key, Object> result, String password, String passwordConfirmation) throws ServiceException;
 	void validateImageFormInput(Map<Key, Object> result, String fileExtension, long fileSize) throws ServiceException;
 	void validateCommentFormInput(Map<Key, Object> result, String comment) throws ServiceException;
+	void validateAlienNameFormInput(Map<Key, Object> result, String alienName) throws ServiceException;
 }

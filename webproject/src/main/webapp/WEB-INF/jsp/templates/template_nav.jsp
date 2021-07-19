@@ -27,11 +27,19 @@
 			<div class="collapse navbar-collapse" id="navbarToggle">
 				<div class="navbar-nav mr-auto">
 					<a class="nav-item nav-link" href="<c:url value="/${CONTROLLER}?${COMMAND}=${OPEN_HOME_PAGE}"/>">${TEXT[TEMPLATE_NAV_HOME]}</a>
-					<a class="nav-item nav-link" href="<c:url value="/${CONTROLLER}?${COMMAND}=${OPEN_ABOUT_PAGE}"/>">${TEXT[TEMPLATE_NAV_ABOUT]}</a>
+					<c:if test="${currentUser.role eq ADMIN}">
+						<a class="nav-item nav-link" href='<c:url value="/${CONTROLLER}?${COMMAND}=${OPEN_ADMIN_FUNCTIONAL_PAGE}"/>'>${TEXT[TEMPLATE_NAV_PROFILE]}</a>
+						<a class="nav-item nav-link" href='<c:url value="/${CONTROLLER}?${COMMAND}=${OPEN_ADMIN_SUGGESTED_ALIENS_PAGE}"/>'>${TEXT[TEMPLATE_NAV_PROFILE]}</a>
+						<a class="nav-item nav-link" href='<c:url value="/${CONTROLLER}?${COMMAND}=${OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE}"/>'>${TEXT[TEMPLATE_NAV_PROFILE]}</a>
+					</c:if>
+					<c:if test="${currentUser.role eq USER}">
+						<a class="nav-item nav-link" href='<c:url value="/${CONTROLLER}?${COMMAND}=${OPEN_USER_SUGGEST_ALIEN_PAGE}"/>'>${TEXT[TEMPLATE_NAV_SUGGEST]}</a>
+					</c:if>
+				
 				</div>
 				<div class="navbar-nav nav-item nav-link">
 					<div class="dropdown" id="nav-dropdawn-container">
-						  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  <button class="btn btn-secondary dropdown-toggle disabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						  		${CURRENT_LOCALIZATION_NAME}
 						  </button>
 						  <!-- TODO hrefs -->

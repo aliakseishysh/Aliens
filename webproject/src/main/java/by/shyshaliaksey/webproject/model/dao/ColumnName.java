@@ -14,6 +14,13 @@ public class ColumnName {
 	public static final String ALIEN_DESCRIPTION_FULL = "description_full";
 	public static final String ALIEN_IMAGE_URL = "image_url";
 	
+	// table: `aliens_images`
+	public static final String ALIEN_IMAGE_ID = "alien_image_id";
+	public static final String ALIEN_IMAGE_ALIEN_ID = "alien_id";
+	// TODO if change this, go to carousel.js and change key
+	public static final String ALIEN_IMAGE_IMAGE_URL = "image_url";
+	public static final String ALIEN_IMAGE_STATUS = "_status";
+	
 //	// table: `roles`
 //	public static final String ROLE_ID = "role_id";
 //	public static final String ROLE_NAME = "_name";
@@ -46,6 +53,7 @@ public class ColumnName {
 	public static final String AVERAGE_RATE = "averageRate";
 	public static final String RATES_COUNT = "ratesCount";
 	public static final String ALIEN_COUNT = "alienCount";
+	public static final String ALIENS_IMAGES_COUNT = "aliensImagesCount";
 	public static final String ALIEN_COMMENTS_COUNT = "alienCommentsCount";
 	
 	private ColumnName() {

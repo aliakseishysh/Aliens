@@ -12,8 +12,10 @@ import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
+import by.shyshaliaksey.webproject.model.dao.AlienDao;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.dao.UserDao;
+import by.shyshaliaksey.webproject.model.entity.Alien;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.localization.LocaleKey;
@@ -337,9 +339,9 @@ public class UserServiceImpl implements UserService {
 			validationService.validateImageFormInput(result, fileExtension, part.getSize());
 			
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
-				final String imagePrefix = "user_profile_image_";
+				
 				UtilService utilService = ServiceProvider.getInstance().getUtilService();
-				Optional<String> urlResult = utilService.uploadUserImage(userId, imagePrefix, fileExtension, rootFolder,
+				Optional<String> urlResult = utilService.uploadUserImage(userId, fileExtension, rootFolder,
 						serverDeploymentPath, part);
 				if (urlResult.isPresent()) {
 					UserDao userDao = DaoProvider.getInstance().getUserDao();
@@ -413,6 +415,120 @@ public class UserServiceImpl implements UserService {
 			return result;
 		} catch (DaoException e) {
 			throw new ServiceException("Error occured while deleting comment " + commentId + " :" + e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public Map<Feedback.Key, Object> suggestNewAlien(String alienName, String alienSmallDescription,
+			String alienFullDescription, Part alienImage, String rootFolder, String serverDeploymentPath)
+			throws ServiceException {
+		try {
+			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
+			UtilService utilService = ServiceProvider.getInstance().getUtilService();
+			AlienDao alienDao = DaoProvider.getInstance().getAlienDao();
+			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
+			validationService.validateAlienFormInput(result, alienName, alienSmallDescription, alienFullDescription, alienImage);
+
+			if (Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_NAME_STATUS)) 
+					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS))
+					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS))
+					&& Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
+				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
+				if (!alienInDatabase.isPresent()) {
+					Optional<String> urlResult = utilService.uploadAlienImage(rootFolder, serverDeploymentPath, alienImage);
+					if (urlResult.isPresent()) {
+						int alienId = alienDao.suggestNewAlien(alienName, alienSmallDescription, alienFullDescription, urlResult.get());
+						boolean suggestImageResult = alienDao.suggestNewAlienImage(alienId, urlResult.get());
+						if (suggestImageResult) {
+							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
+							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						} else {
+							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
+							result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
+							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS, Boolean.FALSE);
+							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS, Boolean.FALSE);
+							result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
+							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+						}
+					} else {
+						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
+						result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
+						result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS, Boolean.FALSE);
+						result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS, Boolean.FALSE);
+						result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
+						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+						result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+						result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+					}
+				} else {
+					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
+					result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
+					result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.ALIEN_NAME_FEEDBACK_INVALID_ALREADY_EXISTS.getValue());
+				}
+			} else {
+				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
+			}
+			return result;
+		} catch (DaoException e) {
+			throw new ServiceException("Error occured when suggesting new alien " + alienName + " :" + e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public Map<Feedback.Key, Object> suggestNewAlienImage(String alienName, Part alienImage, String rootFolder, String serverDeploymentPath)
+			throws ServiceException {
+		try {
+			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
+			UtilService utilService = ServiceProvider.getInstance().getUtilService();
+			AlienDao alienDao = DaoProvider.getInstance().getAlienDao();
+			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
+			validationService.validateAlienNameFormInput(result, alienName);
+			String fileExtension = FilenameUtils.getExtension(alienImage.getSubmittedFileName());
+			validationService.validateImageFormInput(result, fileExtension, alienImage.getSize());
+
+			if (Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_NAME_STATUS)) 
+					&& Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
+				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
+				if (alienInDatabase.isPresent()) {
+					Optional<String> urlResult = utilService.uploadAlienImage(rootFolder, serverDeploymentPath, alienImage);
+					if (urlResult.isPresent()) {
+						boolean addResult = alienDao.suggestNewAlienImage(alienInDatabase.get().getId(), urlResult.get());
+						if (addResult) {
+							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
+							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						} else {
+							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
+							result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
+							result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
+							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+						}
+					} else {
+						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
+						result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
+						result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
+						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+					}
+				} else {
+					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
+					result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
+					result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.ALIEN_NAME_FEEDBACK_INVALID_DOES_NOT_EXIST.getValue());
+				}
+			} else {
+				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
+			}
+			return result;
+		} catch (DaoException e) {
+			throw new ServiceException("Error occured when suggesting new alien image " + alienName + " :" + e.getMessage(), e);
 		}
 	}
 

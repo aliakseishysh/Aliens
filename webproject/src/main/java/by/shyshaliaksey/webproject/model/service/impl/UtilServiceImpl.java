@@ -11,6 +11,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Optional;
+import java.util.Random;
 
 // TODO change to jakarta
 import javax.crypto.SecretKeyFactory;
@@ -29,17 +30,18 @@ import jakarta.servlet.http.Part;
 public class UtilServiceImpl implements UtilService {
 
 	private static final UserDao userDao = DaoProvider.getInstance().getUserDao();
-
+	private static final String ALIEN_IMAGE_PREFIX = "alien_image_";
+	private static final String USER_IMAGE_PREFIX = "user_profile_image_";
 //	// TODO refactor
 	@Override
-	public Optional<String> uploadAlienImage(String alienName, String imagePrefix, String rootFolder, String serverDeploymentPath, Part part) throws ServiceException {
+	public Optional<String> uploadAlienImage(String rootFolder, String serverDeploymentPath, Part part) throws ServiceException {
 		Optional<String> result = Optional.empty();
 		try (InputStream inputStream1 = part.getInputStream(); InputStream inputStream2 = part.getInputStream();) {
 			String submittedFileName = part.getSubmittedFileName();
 			// TODO error will occured if file_name with wrong type, need validation
 			String fileExtension = FilenameUtils.getExtension(submittedFileName);
 
-			String newFileName = imagePrefix + alienName + "." + fileExtension;
+			String newFileName = ALIEN_IMAGE_PREFIX + createRandomName() + "." + fileExtension;
 			String realpath = rootFolder + FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
 			Path imageRealPath = Paths.get(realpath);
 			Path imageServerDeploymentPath = Paths.get(serverDeploymentPath + newFileName);
@@ -51,17 +53,17 @@ public class UtilServiceImpl implements UtilService {
 			}
 		} catch (IOException e) {
 			throw new ServiceException(
-					"Error occured when uploading image to server for: " + alienName + " :" + e.getMessage(), e);
+					"Error occured when uploading image to server" + ": " + e.getMessage(), e);
 		}
 		return result;
 	}
 
 	//user_profile_image_
 	@Override
-	public Optional<String> uploadUserImage(int userId, String imagePrefix, String fileExtension, String rootFolder, String serverDeploymentPath, Part part) throws ServiceException {
+	public Optional<String> uploadUserImage(int userId, String fileExtension, String rootFolder, String serverDeploymentPath, Part part) throws ServiceException {
 		try (InputStream inputStream1 = part.getInputStream(); InputStream inputStream2 = part.getInputStream();) {
 			Optional<String> result = Optional.empty();
-			String newFileName = imagePrefix + userId + "." + fileExtension;
+			String newFileName = USER_IMAGE_PREFIX + createRandomName() + "." + fileExtension;
 			String realpath = rootFolder + FolderPath.PROFILE_IMAGE_FOLDER.getValue() + newFileName;
 			Path imageRealPath = Paths.get(realpath);
 			Path imageServerDeploymentPath = Paths.get(serverDeploymentPath + newFileName);
@@ -116,6 +118,14 @@ public class UtilServiceImpl implements UtilService {
 		byte[] salt = new byte[16];
 		secureRandom.nextBytes(salt);
 		return salt;
+	}
+	
+	private String createRandomName() {
+		Random random = new Random(Long.MAX_VALUE);
+		Long long1 = random.nextLong();
+		Long long2 = random.nextLong();
+		String result = long1.toString() + Long.toHexString(long2);
+		return result;
 	}
 
 }
