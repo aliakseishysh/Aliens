@@ -30,7 +30,7 @@ public class User {
 	}
 	
 	public enum UserStatus {
-		NORMAL, BANNED
+		NORMAL, BANNED, CONFIRMATION_AWAITING
 	}
 	
 	public int getId() {

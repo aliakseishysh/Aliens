@@ -48,6 +48,13 @@ public class ColumnName {
 	public static final String COMMENT_USER_ID ="user_id";
 	public static final String COMMENT ="comment";
 	
+	// table: `tokens`
+	public static final String TOKEN_ID ="token_id";
+	public static final String TOKEN_EMAIL ="email";
+	public static final String TOKEN ="token";
+	public static final String TOKEN_STATUS ="_status";
+	public static final String TOKEN_EXPIRATION ="expiration_date";
+	
 	// operations
 	public static final String USERS_COUNT = "usersCount";
 	public static final String AVERAGE_RATE = "averageRate";

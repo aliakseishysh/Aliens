@@ -11,6 +11,7 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Random;
 
 // TODO change to jakarta
@@ -24,8 +25,20 @@ import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.dao.UserDao;
+import by.shyshaliaksey.webproject.model.email.EmailPropertiesReader;
+import by.shyshaliaksey.webproject.model.service.ServiceProvider;
+import by.shyshaliaksey.webproject.model.service.TimeService;
 import by.shyshaliaksey.webproject.model.service.UtilService;
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.Part;
+import jakarta.xml.bind.DatatypeConverter;
 
 public class UtilServiceImpl implements UtilService {
 
@@ -118,6 +131,73 @@ public class UtilServiceImpl implements UtilService {
 		byte[] salt = new byte[16];
 		secureRandom.nextBytes(salt);
 		return salt;
+	}
+	
+	@Override
+	public String createToken(String email) throws ServiceException {
+		final int iterations = 10;
+		final int size = 32 * 8;
+		KeySpec spec = new PBEKeySpec(email.toCharArray(), createSalt(), iterations, size);
+		final String algorithmName = "PBKDF2WithHmacSHA1";
+		try {
+			SecretKeyFactory factory = SecretKeyFactory.getInstance(algorithmName);
+			byte[] hash = factory.generateSecret(spec).getEncoded();
+			return DatatypeConverter.printHexBinary(hash);
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+			throw new ServiceException("Error occured while instantiating SecretKeyFactory with algorithm "
+					+ algorithmName + " :" + e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public boolean sendEmail(String emailTo, String address) throws ServiceException {
+		Properties properties = EmailPropertiesReader.getPropeties();
+		final String userKey = "mail.smtp.user";
+		final String passwordKey = "mail.smtp.password";
+		final String user = properties.getProperty(userKey);
+		final String password = properties.getProperty(passwordKey);
+		properties.remove(userKey);
+		properties.remove(passwordKey);
+		
+		Session session = Session.getDefaultInstance(properties, new Authenticator() {
+			@Override
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(user, password);
+			}
+		});
+		try {
+			Message message = new MimeMessage(session);
+			message.setFrom(new InternetAddress(user));
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailTo));
+			final String subject = "Email Confirmation";
+			message.setSubject(subject);
+			final String content = "Click to confirm email: <a href='" + address + "'>link</a>";
+			final String contentType = "text/html";
+			message.setContent(content, contentType);
+			Transport.send(message);
+			return true;
+		} catch (MessagingException e) {
+			throw new ServiceException("Can not send message : " + e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public boolean activateAccount(String email, String token) throws ServiceException {
+		try {
+			boolean result = false;
+			TimeService timeService = ServiceProvider.getInstance().getTimeService();
+			Optional<String> tokenExpires = userDao.findTokenExpiresDate(email, token);
+			if(tokenExpires.isPresent()) {
+				boolean isExpired = timeService.isExpired(tokenExpires.get());
+				if (!isExpired) {
+					boolean activateUserAccountResult = userDao.changeUserStatus(email);
+					result = activateUserAccountResult;
+				}
+			}
+			return result;
+		} catch (DaoException e) {
+			throw new ServiceException("Can not activate user account", e);
+		}
 	}
 	
 	private String createRandomName() {

@@ -29,7 +29,7 @@ CREATE TABLE users (
     salt VARCHAR(32),
     image_url VARCHAR(255),
     role_type ENUM('ADMIN', 'USER'),
-    _status ENUM('NORMAL', 'BANNED'),
+    _status ENUM('NORMAL', 'BANNED', 'CONFIRMATION_AWAITING'),
     banned_to_datetime DATETIME,
     PRIMARY KEY (user_id)
 );
@@ -56,13 +56,14 @@ CREATE TABLE comments (
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
--- CREATE TABLE tokens (
---     token_id INT AUTO_INCREMENT NOT NULL,
---     email VARCHAR(255),
---     token VARCHAR(255),
---     expiration_date DATETIME,
---     PRIMARY KEY (token_id)
--- );
+CREATE TABLE tokens (
+    token_id INT AUTO_INCREMENT NOT NULL,
+    email VARCHAR(255),
+    token VARCHAR(255),
+    _status ENUM('NORMAL', 'EXPIRED'),
+    expiration_date DATETIME,
+    PRIMARY KEY (token_id)
+);
 
 
 INSERT INTO aliens (_name, _status, description_small, description_full, image_url) values 

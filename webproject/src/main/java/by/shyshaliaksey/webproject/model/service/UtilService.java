@@ -3,6 +3,7 @@ package by.shyshaliaksey.webproject.model.service;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.Properties;
 
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import jakarta.servlet.http.Part;
@@ -18,5 +19,11 @@ public interface UtilService {
 	byte[] hashPassword(String password, byte[] salt) throws ServiceException;
 
 	byte[] createSalt() throws ServiceException;
+
+	String createToken(String email) throws ServiceException;
+
+	boolean sendEmail(String emailTo, String message) throws ServiceException;
+
+	boolean activateAccount(String email, String token) throws ServiceException;
 
 }

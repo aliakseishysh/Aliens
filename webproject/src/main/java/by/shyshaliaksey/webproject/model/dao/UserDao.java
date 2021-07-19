@@ -31,5 +31,7 @@ public interface UserDao {
 	boolean addNewComment(int userId, int alienId, String newComment) throws DaoException;
 	boolean deleteComment(int commentId) throws DaoException;
 	boolean addNewToken(String email, String token, String expirationDate) throws DaoException;
+	boolean changeUserStatus(String email) throws DaoException;
+	Optional<String> findTokenExpiresDate(String email, String token) throws DaoException;
 	
 }

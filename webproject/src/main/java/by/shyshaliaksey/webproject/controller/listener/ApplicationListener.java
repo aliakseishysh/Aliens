@@ -11,6 +11,7 @@ import by.shyshaliaksey.webproject.controller.command.CommandValue;
 import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
+import by.shyshaliaksey.webproject.model.email.EmailPropertiesReader;
 import by.shyshaliaksey.webproject.model.entity.FormPattern;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.localization.LocaleAttribute;
@@ -29,6 +30,7 @@ public class ApplicationListener implements ServletContextListener {
 		ServletContextListener.super.contextInitialized(sce);
 		ConnectionPool.getInstance();
 		DaoProvider.getInstance();
+		EmailPropertiesReader.getPropeties();
         ServiceProvider.getInstance();
         setSessionVariables(sce.getServletContext());
         LocaleAttribute.LOCALIZATION_EN.getResourceBundle();

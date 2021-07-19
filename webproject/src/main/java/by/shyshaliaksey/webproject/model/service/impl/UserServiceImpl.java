@@ -20,6 +20,7 @@ import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.localization.LocaleKey;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
+import by.shyshaliaksey.webproject.model.service.TimeService;
 import by.shyshaliaksey.webproject.model.service.UserService;
 import by.shyshaliaksey.webproject.model.service.UtilService;
 import by.shyshaliaksey.webproject.model.service.ValidationService;
@@ -104,7 +105,7 @@ public class UserServiceImpl implements UserService {
 		validationService.validateEmailFormInput(result, email);
 		validationService.validateLoginFormInput(result, login);
 		validationService.validatePasswordFormInput(result, password);
-		validationService.validatePasswordFormInput(result, passwordRepeat);
+		validationService.validatePasswordConfirmationFormInput(result, passwordRepeat);
 
 		try {
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.EMAIL_STATUS))
@@ -125,6 +126,19 @@ public class UserServiceImpl implements UserService {
 						registerResult = userDao.registerUser(email, login, hashedPasswordHex, saltHex,
 								IMAGE_DEFAULT.getValue(), Role.USER);
 						if (registerResult) {
+							String token = utilService.createToken(email);
+							TimeService timeService = ServiceProvider.getInstance().getTimeService();
+							final int minutesToExpriration = 5;
+							String expirationTime = timeService.prepareTokenExpirationDate(minutesToExpriration);
+							final String emailMessage = "http://localhost:8080/webproject/controller?command=login-page&token=" + token + "&email=" + email;
+							userDao.addNewToken(email, token, expirationTime);
+							// send message
+							utilService.sendEmail(email, emailMessage);
+							
+							
+							
+							// TODO start demon thread
+							
 							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 							result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 							result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -531,5 +545,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException("Error occured when suggesting new alien image " + alienName + " :" + e.getMessage(), e);
 		}
 	}
+	
+	
 
 }

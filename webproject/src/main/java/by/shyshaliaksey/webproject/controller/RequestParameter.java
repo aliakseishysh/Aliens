@@ -24,6 +24,7 @@ public enum RequestParameter implements EnumValue  {
 	NEW_COMMENT("new-comment"),
 	COMMENT_ID("comment-id"),
 	PAGE("page"),
+	TOKEN("token"),
 	LOCALE("locale");
 
 	private String value;

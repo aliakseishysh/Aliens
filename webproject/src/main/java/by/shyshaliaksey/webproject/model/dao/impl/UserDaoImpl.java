@@ -10,6 +10,7 @@ import static by.shyshaliaksey.webproject.model.dao.ColumnName.USER_BANNED_TO_DA
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.USER_IMAGE_URL;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.USER_ROLE_TYPE;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.USERS_COUNT;
+import static by.shyshaliaksey.webproject.model.dao.ColumnName.TOKEN_EXPIRATION;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -37,6 +38,7 @@ import by.shyshaliaksey.webproject.model.service.TimeService;
 import by.shyshaliaksey.webproject.model.entity.Comment;
 import by.shyshaliaksey.webproject.model.entity.LoginData;
 import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.Token;
 
 public class UserDaoImpl implements UserDao {
 
@@ -47,7 +49,7 @@ public class UserDaoImpl implements UserDao {
 	private static final String FIND_BY_ID = String.join(SPACE, FIND_ALL, "WHERE users.user_id=?");
 	private static final String FIND_BY_LOGIN = String.join(SPACE, FIND_ALL, "WHERE users.login_name=?");
 	private static final String FIND_BY_EMAIL = String.join(SPACE, FIND_ALL, "WHERE users.email=?");
-	private static final String FIND_USER_LOGIN_DATA = "SELECT password_hash, salt FROM users WHERE email=?";
+	private static final String FIND_USER_LOGIN_DATA = "SELECT password_hash, salt FROM users WHERE email=? AND _status=?";
 	private static final String FIND_USER_LOGIN_DATA_BY_ID = "SELECT password_hash, salt FROM users WHERE user_id=?";
 	private static final String LOGIN_AND_PASSWORD_CHECK = "SELECT count(*) as usersCount FROM users WHERE email=? AND password_hash=?";
 	private static final String REGISTER = "INSERT INTO users (email, login_name, password_hash, salt, image_url, role_type, _status) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -59,8 +61,9 @@ public class UserDaoImpl implements UserDao {
 	private static final String PROMOTE_DEMOTE = "UPDATE users SET role_type = ? WHERE login_name = ?";
 	private static final String ADD_NEW_COMMENT = "INSERT INTO comments (user_id, alien_id, comment, comment_status) VALUES (?, ?, ?, ?)";
 	private static final String CHANGE_COMMENT_STATUS = "UPDATE comments SET comment_status = ? WHERE comment_id = ?";
-	private static final String ADD_NEW_TOKEN = "INSERT INTO tokens (email, token, expiration_date) VALUES (?, ?, ?)";
-
+	private static final String ADD_NEW_TOKEN = "INSERT INTO tokens (email, token, expiration_date, _status) VALUES (?, ?, ?, ?)";
+	private static final String CHANGE_USER_STATUS = "UPDATE users SET _status = ? WHERE email = ?";
+	private static final String FIND_TOKEN_EXPIRES_DATE = "SELECT expiration_date FROM tokens WHERE email = ? AND token = ?";
 	
 	
 	
@@ -170,6 +173,7 @@ public class UserDaoImpl implements UserDao {
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(FIND_USER_LOGIN_DATA)) {
 			statement.setString(1, userEmail);
+			statement.setString(2, User.UserStatus.NORMAL.name());
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
 				result.put(Feedback.Key.PASSWORD, Optional.of(resultSet.getString(USER_PASSWORD_HASH)));
@@ -212,7 +216,7 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(4, saltHex);
 			statement.setString(5, defaultImage);
 			statement.setString(6, defaultRole.getValue());
-			statement.setString(7, User.UserStatus.NORMAL.name());
+			statement.setString(7, User.UserStatus.CONFIRMATION_AWAITING.name());
 			rowsAdded = statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", REGISTER, e.getMessage());
@@ -401,12 +405,46 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(1, email);
 			statement.setString(2, token);
 			statement.setString(3, expirationDate);
+			statement.setString(4, Token.Status.NORMAL.name());
 			rowsAdded = statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", ADD_NEW_TOKEN, e.getMessage());
 			throw new DaoException("Can not proceed request: " + ADD_NEW_TOKEN, e);
 		}
 		return rowsAdded == 1;
+	}
+
+	@Override
+	public boolean changeUserStatus(String email) throws DaoException {
+		int rowsAdded = 0;
+		try (Connection connection = ConnectionPool.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement(CHANGE_USER_STATUS)) {
+			statement.setString(1, User.UserStatus.NORMAL.name());
+			statement.setString(2, email);
+			rowsAdded = statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", CHANGE_USER_STATUS, e.getMessage());
+			throw new DaoException("Can not proceed request: " + CHANGE_USER_STATUS, e);
+		}
+		return rowsAdded == 1;
+	}
+
+	@Override
+	public Optional<String> findTokenExpiresDate(String email, String token) throws DaoException {
+		Optional<String> result = Optional.empty();
+		try (Connection connection = ConnectionPool.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement(FIND_TOKEN_EXPIRES_DATE)) {
+			statement.setString(1, email);
+			statement.setString(2, token);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				result = Optional.of(resultSet.getString(TOKEN_EXPIRATION));
+			}
+		} catch (SQLException e) {
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_TOKEN_EXPIRES_DATE, e.getMessage());
+			throw new DaoException("Can not proceed request: " + FIND_TOKEN_EXPIRES_DATE, e);
+		}
+		return result;
 	}
 
 	
