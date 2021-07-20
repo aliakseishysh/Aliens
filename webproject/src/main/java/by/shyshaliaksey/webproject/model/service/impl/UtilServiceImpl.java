@@ -29,6 +29,7 @@ import by.shyshaliaksey.webproject.model.email.EmailPropertiesReader;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.TimeService;
 import by.shyshaliaksey.webproject.model.service.UtilService;
+import by.shyshaliaksey.webproject.model.util.RandomHexStringCreator;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -43,68 +44,61 @@ import jakarta.xml.bind.DatatypeConverter;
 public class UtilServiceImpl implements UtilService {
 
 	private static final UserDao userDao = DaoProvider.getInstance().getUserDao();
-	private static final String ALIEN_IMAGE_PREFIX = "alien_image_";
-	private static final String USER_IMAGE_PREFIX = "user_profile_image_";
-//	// TODO refactor
+	private static final String ALIEN_IMAGE_PREFIX = "alien_image";
+	private static final String USER_IMAGE_PREFIX = "user_profile_image";
+	private static final String UNDERSCORE = "_";
+	private static final String POINT = ".";
+	
 	@Override
-	public Optional<String> uploadAlienImage(String rootFolder, String serverDeploymentPath, Part part) throws ServiceException {
-		Optional<String> result = Optional.empty();
-		try (InputStream inputStream1 = part.getInputStream(); InputStream inputStream2 = part.getInputStream();) {
-			String submittedFileName = part.getSubmittedFileName();
-			// TODO error will occured if file_name with wrong type, need validation
-			String fileExtension = FilenameUtils.getExtension(submittedFileName);
-
-			String newFileName = ALIEN_IMAGE_PREFIX + createRandomName() + "." + fileExtension;
-			String realpath = rootFolder + FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
-			Path imageRealPath = Paths.get(realpath);
-			Path imageServerDeploymentPath = Paths.get(serverDeploymentPath + newFileName);
-			long bytes1 = createFile(inputStream1, imageRealPath);
-			long bytes2 = createFile(inputStream2, imageServerDeploymentPath);
-			if (bytes1 > 0 && bytes2 > 0) {
-				String url = FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
-				result = Optional.of(url);
-			}
-		} catch (IOException e) {
+	public boolean uploadImage(String folderToUpload, String imageFolder, String fileName, Part part) throws ServiceException {
+		try(InputStream inputStream = part.getInputStream()) {
+			String rootFolderString = folderToUpload + imageFolder + fileName;
+			Path rootFolderPath = Paths.get(rootFolderString);
+			long writedBytes = createFile(inputStream, rootFolderPath);
+			return writedBytes > 0;
+		} catch(IOException e) {
 			throw new ServiceException(
 					"Error occured when uploading image to server" + ": " + e.getMessage(), e);
 		}
-		return result;
 	}
-
-	//user_profile_image_
+	
 	@Override
-	public Optional<String> uploadUserImage(int userId, String fileExtension, String rootFolder, String serverDeploymentPath, Part part) throws ServiceException {
-		try (InputStream inputStream1 = part.getInputStream(); InputStream inputStream2 = part.getInputStream();) {
-			Optional<String> result = Optional.empty();
-			String newFileName = USER_IMAGE_PREFIX + createRandomName() + "." + fileExtension;
-			String realpath = rootFolder + FolderPath.PROFILE_IMAGE_FOLDER.getValue() + newFileName;
-			Path imageRealPath = Paths.get(realpath);
-			Path imageServerDeploymentPath = Paths.get(serverDeploymentPath + newFileName);
-			long bytes = createFile(inputStream1, imageRealPath);
-			if (bytes > 0) {
-				String url = FolderPath.PROFILE_IMAGE_FOLDER.getValue() + newFileName;
-				boolean imageUpdateResult = userDao.updateProfileImage(url, userId);
-				if (imageUpdateResult) {
-					result = Optional.of(url);
-				}
-				bytes = createFile(inputStream2, imageServerDeploymentPath);
-			}
-			return result;
-		} catch (ServiceException | IOException | DaoException e) {
-			throw new ServiceException("Can not upload image", e);
-		}
+	public String prepareUserProfileImageName(String submittedFileName) {
+		String fileExtension = FilenameUtils.getExtension(submittedFileName);
+		StringBuilder resultFileName = new StringBuilder();
+		resultFileName.append(USER_IMAGE_PREFIX);
+		resultFileName.append(UNDERSCORE);
+		resultFileName.append(RandomHexStringCreator.createRandomName());
+		resultFileName.append(POINT);
+		resultFileName.append(fileExtension);
+		return resultFileName.toString();
+	}
+	
+	@Override
+	public String prepareAlienImageName(String submittedFileName) {
+		String fileExtension = FilenameUtils.getExtension(submittedFileName);
+		StringBuilder resultFileName = new StringBuilder();
+		resultFileName.append(ALIEN_IMAGE_PREFIX);
+		resultFileName.append(UNDERSCORE);
+		resultFileName.append(RandomHexStringCreator.createRandomName());
+		resultFileName.append(POINT);
+		resultFileName.append(fileExtension);
+		return resultFileName.toString();
 	}
 
 	@Override
 	public long createFile(InputStream inputStream, Path imagePath) throws ServiceException {
 		try {
-			Files.deleteIfExists(imagePath);
-			imagePath = Files.createFile(imagePath);
-			long bytes = Files.copy(inputStream, imagePath, StandardCopyOption.REPLACE_EXISTING);
-			return bytes;
+			boolean isExist = Files.exists(imagePath);
+			if (!isExist) {
+				imagePath = Files.createFile(imagePath);
+				long bytes = Files.copy(inputStream, imagePath, StandardCopyOption.REPLACE_EXISTING);
+				return bytes;
+			} else {
+				throw new ServiceException("Error occured when creating file by path: " + imagePath);
+			}
 		} catch (IOException e) {
-			throw new ServiceException("Error occured when creating file by path: " + imagePath + " :" + e.getMessage(),
-					e);
+			throw new ServiceException("Error occured when creating file by path: " + imagePath + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -198,14 +192,6 @@ public class UtilServiceImpl implements UtilService {
 		} catch (DaoException e) {
 			throw new ServiceException("Can not activate user account", e);
 		}
-	}
-	
-	private String createRandomName() {
-		Random random = new Random(Long.MAX_VALUE);
-		Long long1 = random.nextLong();
-		Long long2 = random.nextLong();
-		String result = long1.toString() + Long.toHexString(long2);
-		return result;
 	}
 
 }

@@ -9,9 +9,18 @@
 <!-- 
 <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
  -->
+ <script>
+	var PROJECT_NAME = `${PROJECT_NAME}`;
+	var CONTROLLER = `${CONTROLLER}`;
+	var COMMAND = `${COMMAND}`;
+
+	var OPEN_HOME_PAGE = `${OPEN_HOME_PAGE}`;
+	var PAGINATION_PAGE_TO_GO = OPEN_HOME_PAGE;
+	var PAGE = `${PAGE}`;
+</script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-<script type="text/javascript" src="<c:url value='${JS_HOME}'/>"></script>
+<script type="text/javascript" src="<c:url value='${JS_PAGINATION}'/>"></script>
 
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
 <body>
@@ -26,7 +35,7 @@
 						<c:set var="alien" value="${entry}" scope="request" />
 						<jsp:include page="${TEMPLATE_POST_JSP}" />
 					</c:forEach>
-					<jsp:include page="${TEMPLATE_PAGE_HOME_PAGINATION}"/>
+					<jsp:include page="${TEMPLATE_PAGINATION}"/>
 				</div>
 			</div>
 			<div class="col-md-4">

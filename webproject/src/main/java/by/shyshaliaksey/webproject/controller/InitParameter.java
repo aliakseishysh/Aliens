@@ -4,7 +4,7 @@ public enum InitParameter implements EnumValue  {
 
 	// from web.xml
 	WEB_APP_ROOT_FOLDER_PARAMETER("web-app-root-folder"),
-	WEB_SITE_NAME("web-site-name");
+	WEB_SITE_URL("web-site-url");
 	
 	private String value;
 	

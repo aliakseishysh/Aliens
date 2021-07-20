@@ -1,4 +1,4 @@
-package by.shyshaliaksey.webproject.model.localization;
+package by.shyshaliaksey.webproject.model.util.localization;
 
 import java.util.Locale;
 import java.util.MissingResourceException;

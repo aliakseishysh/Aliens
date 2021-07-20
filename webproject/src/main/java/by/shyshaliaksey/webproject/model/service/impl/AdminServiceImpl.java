@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
 
+import by.shyshaliaksey.webproject.controller.FolderPath;
 import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
@@ -20,7 +21,7 @@ import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.TimeService;
 import by.shyshaliaksey.webproject.model.service.UtilService;
 import by.shyshaliaksey.webproject.model.service.ValidationService;
-import by.shyshaliaksey.webproject.model.localization.LocaleKey;
+import by.shyshaliaksey.webproject.model.util.localization.LocaleKey;
 import jakarta.servlet.http.Part;
 
 public class AdminServiceImpl implements AdminService {
@@ -200,28 +201,23 @@ public class AdminServiceImpl implements AdminService {
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
 				if (!alienInDatabase.isPresent()) {
-					Optional<String> urlResult = utilService.uploadAlienImage(rootFolder, serverDeploymentPath, alienImage);
-					if (urlResult.isPresent()) {
-						int alienId = alienDao.addNewAlien(alienName, alienSmallDescription, alienFullDescription,
-								urlResult.get());
-						boolean addToGaleryResult = alienDao.addNewImageToGalery(alienId, urlResult.get());
-						if (addToGaleryResult) {
-							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-						} else {
-							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
-							result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-						}
+					
+					String fileName = alienImage.getSubmittedFileName();
+					String newFileName = utilService.prepareAlienImageName(fileName);
+					String imageUrl = FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
+					boolean uploadToRoot = utilService.uploadImage(rootFolder, FolderPath.ALIEN_IMAGE_FOLDER.getValue(),
+							newFileName, alienImage);
+					boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
+							FolderPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
+					int alienId = alienDao.addNewAlien(alienName, alienSmallDescription, alienFullDescription,
+							imageUrl);
+					boolean addToGaleryResult = alienDao.addNewImageToGalery(alienId, imageUrl);
+					if (uploadToRoot && addToGaleryResult && uploadToDeployment) {
+						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
+						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 					} else {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 						result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
@@ -233,6 +229,7 @@ public class AdminServiceImpl implements AdminService {
 						result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
 						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
 					}
+					
 				} else {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 					result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
@@ -264,29 +261,23 @@ public class AdminServiceImpl implements AdminService {
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
 				if (alienInDatabase.isPresent()) {
-					// TODO images
-					Optional<String> urlResult = utilService.uploadAlienImage(rootFolder, serverDeploymentPath, alienImage);
-					if (urlResult.isPresent()) {
-						boolean addResult = alienDao.updateAlien(alienId, alienName, alienSmallDescription,
-								alienFullDescription, urlResult.get());
-						boolean addToGaleryResult = alienDao.addNewImageToGalery(alienId, urlResult.get());
-						if (addResult && addToGaleryResult) {
-							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-						} else {
-							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
-							result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-						}
+					
+					String fileName = alienImage.getSubmittedFileName();
+					String newFileName = utilService.prepareAlienImageName(fileName);
+					String imageUrl = FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
+					boolean uploadToRoot = utilService.uploadImage(rootFolder, FolderPath.ALIEN_IMAGE_FOLDER.getValue(),
+							newFileName, alienImage);
+					boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
+							FolderPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
+					boolean addResult = alienDao.updateAlien(alienId, alienName, alienSmallDescription,
+							alienFullDescription, imageUrl);
+					boolean addToGaleryResult = alienDao.addNewImageToGalery(alienId, imageUrl);
+					if (uploadToRoot && uploadToDeployment && addResult && addToGaleryResult) {
+						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
+						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 					} else {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 						result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);

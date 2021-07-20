@@ -55,9 +55,28 @@ public class AlienDaoImpl implements AlienDao {
 	private static final String UPDATE_ALIEN_STATUS = "UPDATE aliens SET _status = ? WHERE alien_id = ?";
 	private static final String CHANGE_PROFILE_IMAGE_STATUS = "UPDATE aliens_images SET _status = ? WHERE alien_id = ? AND _status = ? LIMIT 1";
 	private static final String CHANGE_IMAGE_STATUS = "UPDATE aliens_images SET _status = ? WHERE _status = ? AND image_url = ? LIMIT 1";
+	private static final String MAX_ALIEN_ID = "SELECT MAX(alien_id) FROM aliens";
 	
 	public static AlienDaoImpl getInstance() {
 		return instance;
+	}
+	
+	@Override
+	public int findMaxAlienId() throws DaoException {
+		try (Connection connection = ConnectionPool.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement(MAX_ALIEN_ID)) {
+			ResultSet resultSet = statement.executeQuery();
+			int maxAlienId = -1;
+			if (resultSet.next()) {
+				maxAlienId = resultSet.getInt(ALIEN_ID);
+				return maxAlienId;
+			} else {
+				throw new DaoException("Can not proceed request: " + MAX_ALIEN_ID);
+			}
+		} catch (SQLException e) {
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", MAX_ALIEN_ID, e.getMessage());
+			throw new DaoException("Can not proceed request: " + MAX_ALIEN_ID, e);
+		}
 	}
 	
 	@Override
@@ -166,11 +185,12 @@ public class AlienDaoImpl implements AlienDao {
 			int affectedRows = statement.executeUpdate();
 			if (affectedRows != 0) {
 				ResultSet generatedKeys = statement.getGeneratedKeys();
-				int id = -1;
 				if (generatedKeys.next()) {
-					id = generatedKeys.getInt(1);	
+					int id = generatedKeys.getInt(1);	
+					return id;			
+				} else {
+					throw new DaoException("Can not proceed request: " + ADD_NEW);
 				}
-				return id;			
 			} else {				
 				throw new DaoException("Can not proceed request: " + ADD_NEW);
 			}

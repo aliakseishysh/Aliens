@@ -48,12 +48,17 @@
 	var STANDARD_COMMENT_FEEDBACK = `${STANDARD_COMMENT_FEEDBACK}`;
 	var COMMENT_STATUS = `${COMMENT_STATUS}`;
 	var COMMENT_FEEDBACK = `${COMMENT_FEEDBACK}`;
+
+	var OPEN_ALIEN_PROFILE_PAGE = `${OPEN_ALIEN_PROFILE_PAGE}`;
+	var PAGINATION_PAGE_TO_GO = OPEN_ALIEN_PROFILE_PAGE;
+	var PAGE = `${PAGE}`;
 	
 </script>
 
 
 <script type="text/javascript" src="<c:url value='${JS_RAITING}'/>"></script>
 <script type="text/javascript" src="<c:url value='${JS_ALIEN_PROFILE}'/>"></script>
+<script type="text/javascript" src="<c:url value='${JS_PAGINATION}'/>"></script>
 
 </head>
 <body>
@@ -61,6 +66,7 @@
 		<jsp:include page="${TEMPLATE_NAV_JSP}"/>
 		<h1>${TEXT[PAGE_ALIEN_PROFILE_H1]}</h1>
 		<div class="content-section">
+		    <p id="alien-id-hidden" hidden>${alien.id}</p>
 			<jsp:include page="${TEMPLATE_ALIEN_JSP}"/>	
 			<jsp:include page="${TEMPLATE_CAROUSEL}"/>	
 			<c:choose>
@@ -96,7 +102,7 @@
 								<jsp:include page="${TEMPLATE_COMMENT_JSP}"/>
 							</c:forEach>
 						</div>
-						<jsp:include page="${TEMPLATE_ALIEN_PROFILE_PAGINATION}"/>
+						<jsp:include page="${TEMPLATE_PAGINATION}"/>
 					</div>
 				</c:otherwise>
 			</c:choose>

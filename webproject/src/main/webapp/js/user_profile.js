@@ -146,6 +146,19 @@ function updateUserImage(image) {
                 formUpdateImageImage.classList.remove("is-invalid");
                 formUpdateImageImage.classList.add("is-valid");
                 formUpdateImage.classList.add("was-validated");
+
+                let imageContainer = document.getElementById("account-image");
+                let newImagePath = jqXHR.responseJSON[IMAGE_PATH];
+                imageContainer.src = newImagePath;
+
+
+                // let files;
+                // downloadImage(newImagePath, "account_image").then(downloaded => {
+                //     files = downloaded;
+                // });
+                // imageContainer.files = files;
+
+
             }
 
         },

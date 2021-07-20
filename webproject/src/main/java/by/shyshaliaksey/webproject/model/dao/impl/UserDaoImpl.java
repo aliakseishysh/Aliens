@@ -49,9 +49,9 @@ public class UserDaoImpl implements UserDao {
 	private static final String FIND_BY_ID = String.join(SPACE, FIND_ALL, "WHERE users.user_id=?");
 	private static final String FIND_BY_LOGIN = String.join(SPACE, FIND_ALL, "WHERE users.login_name=?");
 	private static final String FIND_BY_EMAIL = String.join(SPACE, FIND_ALL, "WHERE users.email=?");
-	private static final String FIND_USER_LOGIN_DATA = "SELECT password_hash, salt FROM users WHERE email=? AND _status=?";
-	private static final String FIND_USER_LOGIN_DATA_BY_ID = "SELECT password_hash, salt FROM users WHERE user_id=?";
-	private static final String LOGIN_AND_PASSWORD_CHECK = "SELECT count(*) as usersCount FROM users WHERE email=? AND password_hash=?";
+	private static final String FIND_USER_LOGIN_DATA = "SELECT password_hash, salt FROM users WHERE email=? AND _status=? OR _status=?";
+	private static final String FIND_USER_LOGIN_DATA_BY_ID = "SELECT password_hash, salt FROM users WHERE user_id=? AND _status=? OR _status=?";
+	private static final String LOGIN_AND_PASSWORD_CHECK = "SELECT count(*) as usersCount FROM users WHERE email=? AND password_hash=? AND _status=? OR _status=?";
 	private static final String REGISTER = "INSERT INTO users (email, login_name, password_hash, salt, image_url, role_type, _status) VALUES (?, ?, ?, ?, ?, ?, ?)";
 	private static final String UPDATE_EMAIL = "UPDATE users SET email = ? WHERE user_id = ?";
 	private static final String UPDATE_LOGIN = "UPDATE users SET login_name = ? WHERE user_id = ?";
@@ -174,6 +174,7 @@ public class UserDaoImpl implements UserDao {
 				PreparedStatement statement = connection.prepareStatement(FIND_USER_LOGIN_DATA)) {
 			statement.setString(1, userEmail);
 			statement.setString(2, User.UserStatus.NORMAL.name());
+			statement.setString(3, User.UserStatus.BANNED.name());
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
 				result.put(Feedback.Key.PASSWORD, Optional.of(resultSet.getString(USER_PASSWORD_HASH)));
@@ -193,6 +194,8 @@ public class UserDaoImpl implements UserDao {
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(FIND_USER_LOGIN_DATA_BY_ID)) {
 			statement.setInt(1, userId);
+			statement.setString(2, User.UserStatus.NORMAL.name());
+			statement.setString(3, User.UserStatus.BANNED.name());
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
 				result.put(Feedback.Key.SALT, Optional.of(resultSet.getString(USER_SALT)));
@@ -232,6 +235,8 @@ public class UserDaoImpl implements UserDao {
 				PreparedStatement statement = connection.prepareStatement(LOGIN_AND_PASSWORD_CHECK)) {
 			statement.setString(1, email);
 			statement.setString(2, passwordHash);
+			statement.setString(3, User.UserStatus.NORMAL.name());
+			statement.setString(4, User.UserStatus.BANNED.name());
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
 				usersCount = resultSet.getInt(USERS_COUNT);

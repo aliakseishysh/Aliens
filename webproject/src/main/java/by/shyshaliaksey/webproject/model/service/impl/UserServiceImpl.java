@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
 
+import by.shyshaliaksey.webproject.controller.FolderPath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.exception.DaoException;
@@ -18,12 +19,12 @@ import by.shyshaliaksey.webproject.model.dao.UserDao;
 import by.shyshaliaksey.webproject.model.entity.Alien;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
-import by.shyshaliaksey.webproject.model.localization.LocaleKey;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.TimeService;
 import by.shyshaliaksey.webproject.model.service.UserService;
 import by.shyshaliaksey.webproject.model.service.UtilService;
 import by.shyshaliaksey.webproject.model.service.ValidationService;
+import by.shyshaliaksey.webproject.model.util.localization.LocaleKey;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import jakarta.xml.bind.DatatypeConverter;
@@ -130,15 +131,14 @@ public class UserServiceImpl implements UserService {
 							TimeService timeService = ServiceProvider.getInstance().getTimeService();
 							final int minutesToExpriration = 5;
 							String expirationTime = timeService.prepareTokenExpirationDate(minutesToExpriration);
-							final String emailMessage = "http://localhost:8080/webproject/controller?command=login-page&token=" + token + "&email=" + email;
+							final String emailMessage = "http://localhost:8080/webproject/controller?command=login-page&token="
+									+ token + "&email=" + email;
 							userDao.addNewToken(email, token, expirationTime);
 							// send message
 							utilService.sendEmail(email, emailMessage);
-							
-							
-							
+
 							// TODO start demon thread
-							
+
 							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 							result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 							result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -247,7 +247,7 @@ public class UserServiceImpl implements UserService {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 			validationService.validateLoginFormInput(result, newLogin);
-			
+
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.LOGIN_STATUS))) {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				Optional<User> userOld = userDao.findByLogin(newLogin);
@@ -293,7 +293,7 @@ public class UserServiceImpl implements UserService {
 			validationService.validatePasswordFormInput(result, password);
 			validationService.validatePasswordConfirmationFormInput(result, passwordConfirm);
 			validationService.validatePasswordEquality(result, password, passwordConfirm);
-			
+
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.PASSWORD_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.PASSWORD_CONFIRMATION_STATUS))) {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
@@ -315,7 +315,8 @@ public class UserServiceImpl implements UserService {
 							result.put(Feedback.Key.PASSWORD_STATUS, Boolean.FALSE);
 							result.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS, Boolean.FALSE);
 							result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+							result.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK,
+									LocaleKey.INTERNAL_SERVER_ERROR.getValue());
 						}
 					} else {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
@@ -344,30 +345,32 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Map<Feedback.Key, Object> updateImage(String serverDeploymentPath, String rootFolder, Part part, int userId)
+	public Map<Feedback.Key, Object> updateImage(String serverDeploymentPath, String rootFolder, Part userImage, int userId, String webSiteName)
 			throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
-			String fileExtension = FilenameUtils.getExtension(part.getSubmittedFileName());
-			validationService.validateImageFormInput(result, fileExtension, part.getSize());
-			
+			result.put(Feedback.Key.IMAGE_PATH, LocaleKey.EMPTY_MESSAGE.getValue());
+			String fileExtension = FilenameUtils.getExtension(userImage.getSubmittedFileName());
+			validationService.validateImageFormInput(result, fileExtension, userImage.getSize());
+
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
-				
+
 				UtilService utilService = ServiceProvider.getInstance().getUtilService();
-				Optional<String> urlResult = utilService.uploadUserImage(userId, fileExtension, rootFolder,
-						serverDeploymentPath, part);
-				if (urlResult.isPresent()) {
-					UserDao userDao = DaoProvider.getInstance().getUserDao();
-					boolean updateImageResult = userDao.updateProfileImage(urlResult.get(), userId);
-					if (updateImageResult) {
-						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-					} else {
-						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
-						result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
-						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-					}
+				
+				String fileName = userImage.getSubmittedFileName();
+				String newFileName = utilService.prepareAlienImageName(fileName);
+				String imageUrl = FolderPath.PROFILE_IMAGE_FOLDER.getValue() + newFileName;
+				boolean uploadToRoot = utilService.uploadImage(rootFolder, FolderPath.PROFILE_IMAGE_FOLDER.getValue(),
+						newFileName, userImage);
+				boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
+						FolderPath.PROFILE_IMAGE_FOLDER.getValue(), newFileName, userImage);
+				UserDao userDao = DaoProvider.getInstance().getUserDao();
+				boolean updateImageResult = userDao.updateProfileImage(imageUrl, userId);
+				if (uploadToRoot && uploadToDeployment && updateImageResult) {
+					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
+					result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+					result.put(Feedback.Key.IMAGE_PATH, webSiteName + imageUrl);
 				} else {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 					result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
@@ -399,7 +402,7 @@ public class UserServiceImpl implements UserService {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 			validationService.validateCommentFormInput(result, newComment);
-			
+
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.COMMENT_STATUS))) {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				boolean addResult = userDao.addNewComment(userId, alienId, newComment);
@@ -416,7 +419,8 @@ public class UserServiceImpl implements UserService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured while adding comment for user " + userId + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occured while adding comment for user " + userId + " :" + e.getMessage(),
+					e);
 		}
 	}
 
@@ -431,7 +435,7 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException("Error occured while deleting comment " + commentId + " :" + e.getMessage(), e);
 		}
 	}
-	
+
 	@Override
 	public Map<Feedback.Key, Object> suggestNewAlien(String alienName, String alienSmallDescription,
 			String alienFullDescription, Part alienImage, String rootFolder, String serverDeploymentPath)
@@ -441,35 +445,31 @@ public class UserServiceImpl implements UserService {
 			UtilService utilService = ServiceProvider.getInstance().getUtilService();
 			AlienDao alienDao = DaoProvider.getInstance().getAlienDao();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
-			validationService.validateAlienFormInput(result, alienName, alienSmallDescription, alienFullDescription, alienImage);
+			validationService.validateAlienFormInput(result, alienName, alienSmallDescription, alienFullDescription,
+					alienImage);
 
-			if (Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_NAME_STATUS)) 
+			if (Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_NAME_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
 				if (!alienInDatabase.isPresent()) {
-					Optional<String> urlResult = utilService.uploadAlienImage(rootFolder, serverDeploymentPath, alienImage);
-					if (urlResult.isPresent()) {
-						int alienId = alienDao.suggestNewAlien(alienName, alienSmallDescription, alienFullDescription, urlResult.get());
-						boolean suggestImageResult = alienDao.suggestNewAlienImage(alienId, urlResult.get());
-						if (suggestImageResult) {
-							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-						} else {
-							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
-							result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-						}
+					String fileName = alienImage.getSubmittedFileName();
+					String newFileName = utilService.prepareAlienImageName(fileName);
+					String imageUrl = FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
+					int alienId = alienDao.suggestNewAlien(alienName, alienSmallDescription, alienFullDescription,
+							imageUrl);
+					boolean uploadToRoot = utilService.uploadImage(rootFolder, FolderPath.ALIEN_IMAGE_FOLDER.getValue(),
+							newFileName, alienImage);
+					boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
+							FolderPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
+					boolean suggestImageResult = alienDao.suggestNewAlienImage(alienId, imageUrl);
+					if (suggestImageResult && uploadToRoot && uploadToDeployment) {
+						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
+						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 					} else {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 						result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
@@ -477,27 +477,31 @@ public class UserServiceImpl implements UserService {
 						result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS, Boolean.FALSE);
 						result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
 						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-						result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-						result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+						result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK,
+								LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+						result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK,
+								LocaleKey.INTERNAL_SERVER_ERROR.getValue());
 						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
 					}
 				} else {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 					result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
-					result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.ALIEN_NAME_FEEDBACK_INVALID_ALREADY_EXISTS.getValue());
+					result.put(Feedback.Key.ALIEN_NAME_FEEDBACK,
+							LocaleKey.ALIEN_NAME_FEEDBACK_INVALID_ALREADY_EXISTS.getValue());
 				}
 			} else {
 				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when suggesting new alien " + alienName + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occured when suggesting new alien " + alienName + " :" + e.getMessage(),
+					e);
 		}
 	}
-	
+
 	@Override
-	public Map<Feedback.Key, Object> suggestNewAlienImage(String alienName, Part alienImage, String rootFolder, String serverDeploymentPath)
-			throws ServiceException {
+	public Map<Feedback.Key, Object> suggestNewAlienImage(String alienName, Part alienImage, String rootFolder,
+			String serverDeploymentPath) throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
 			UtilService utilService = ServiceProvider.getInstance().getUtilService();
@@ -507,24 +511,24 @@ public class UserServiceImpl implements UserService {
 			String fileExtension = FilenameUtils.getExtension(alienImage.getSubmittedFileName());
 			validationService.validateImageFormInput(result, fileExtension, alienImage.getSize());
 
-			if (Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_NAME_STATUS)) 
+			if (Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_NAME_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
 				if (alienInDatabase.isPresent()) {
-					Optional<String> urlResult = utilService.uploadAlienImage(rootFolder, serverDeploymentPath, alienImage);
-					if (urlResult.isPresent()) {
-						boolean addResult = alienDao.suggestNewAlienImage(alienInDatabase.get().getId(), urlResult.get());
-						if (addResult) {
-							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-						} else {
-							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
-							result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-						}
+
+					String fileName = alienImage.getSubmittedFileName();
+					String newFileName = utilService.prepareAlienImageName(fileName);
+					String imageUrl = FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
+					int alienId = alienInDatabase.get().getId();
+					boolean uploadToRoot = utilService.uploadImage(rootFolder, FolderPath.ALIEN_IMAGE_FOLDER.getValue(),
+							newFileName, alienImage);
+					boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
+							FolderPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
+					boolean suggestImageResult = alienDao.suggestNewAlienImage(alienId, imageUrl);
+					if (uploadToRoot && uploadToDeployment && suggestImageResult) {
+						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
+						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 					} else {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 						result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
@@ -535,17 +539,19 @@ public class UserServiceImpl implements UserService {
 				} else {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 					result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
-					result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.ALIEN_NAME_FEEDBACK_INVALID_DOES_NOT_EXIST.getValue());
+					result.put(Feedback.Key.ALIEN_NAME_FEEDBACK,
+							LocaleKey.ALIEN_NAME_FEEDBACK_INVALID_DOES_NOT_EXIST.getValue());
 				}
 			} else {
 				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 			}
 			return result;
-		} catch (DaoException e) {
-			throw new ServiceException("Error occured when suggesting new alien image " + alienName + " :" + e.getMessage(), e);
+		} catch (
+
+		DaoException e) {
+			throw new ServiceException(
+					"Error occured when suggesting new alien image " + alienName + " :" + e.getMessage(), e);
 		}
 	}
-	
-	
 
 }

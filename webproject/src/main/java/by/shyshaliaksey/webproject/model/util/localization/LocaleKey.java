@@ -1,4 +1,4 @@
-package by.shyshaliaksey.webproject.model.localization;
+package by.shyshaliaksey.webproject.model.util.localization;
 
 import by.shyshaliaksey.webproject.controller.EnumValue;
 
@@ -35,6 +35,17 @@ public enum LocaleKey implements EnumValue {
 	// Register page
 	PAGE_REGISTER_TITLE("page_register_title"),
 	PAGE_REGISTER_H1("page_register_h1"),
+	// Admin page
+	PAGE_ADMIN("page_admin_title"),
+	PAGE_ADMIN_H1("page_admin_h1"),
+	// admin page suggested aliens
+	PAGE_ADMIN_SUGGESTED_ALIENS_TITLE("page_admin_suggested_aliens_title"),
+	PAGE_ADMIN_SUGGESTED_ALIENS_H1("page_admin_suggested_aliens_h1"),
+	PAGE_ADMIN_SUGGESTED_APPROVE_BUTTON("page_admin_suggested_approve_button"),
+	PAGE_ADMIN_SUGGESTED_DECLINE_BUTTON("page_admin_suggested_decline_button"),
+	// admin page suggested images
+	PAGE_ADMIN_SUGGESTED_ALIENS_IMAGES_TITLE("page_admin_suggested_aliens_images_title"),
+	PAGE_ADMIN_SUGGESTED_ALIENS_IMAGES_H1("page_admin_suggested_aliens_images_h1"),
 	// Template admin profile
 	TEMPLATE_ADMIN_PROFILE("template_admin_profile"),
 	// Template alien rating
@@ -48,6 +59,9 @@ public enum LocaleKey implements EnumValue {
 	TEMPLATE_NAV_LOGIN("template_nav_login"),
 	TEMPLATE_NAV_REGISTER("template_nav_register"),
 	TEMPLATE_NAV_PROFILE("template_nav_profile"),
+	TEMPLATE_NAV_ADMIN_PAGE("tamplate_nav_admin_page"),
+	TEMPLATE_NAV_SUGGESTED_ALIENS("template_nav_suggested_aliens"),
+	TEMPLATE_NAV_SUGGESTED_IMAGES("template_nav_suggested_images"),
 	TEMPLATE_NAV_LOGOUT("template_nav_logout"),
 	// Template post
 	TEMPLATE_POST_IMAGE_ALT("template_post_image_alt"),

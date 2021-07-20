@@ -9,8 +9,8 @@ import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.controller.command.Feedback.Key;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.FormPattern;
-import by.shyshaliaksey.webproject.model.localization.LocaleKey;
 import by.shyshaliaksey.webproject.model.service.ValidationService;
+import by.shyshaliaksey.webproject.model.util.localization.LocaleKey;
 import jakarta.servlet.http.Part;
 
 public class ValidationServiceImpl implements ValidationService {

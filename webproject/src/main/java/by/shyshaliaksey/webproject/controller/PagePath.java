@@ -28,7 +28,9 @@ public enum PagePath implements EnumValue  {
 	TEMPLATE_PAGE_HOME_PAGINATION("/WEB-INF/jsp/templates/template_page_home_pagination.jsp"),
 	TEMPLATE_USER_SUGGEST_ALIEN("/WEB-INF/jsp/templates/template_user_suggest_alien.jsp"),
 	TEMPLATE_CAROUSEL("/WEB-INF/jsp/templates/template_carousel.jsp"),
+	TEMPLATE_PAGINATION("/WEB-INF/jsp/templates/template_pagination.jsp"),
 	// Error Pages
+	ERROR_PAGE_400_JSP("/WEB-INF/jsp/error_pages/error_page_400.jsp"),
 	ERROR_PAGE_403_JSP("/WEB-INF/jsp/error_pages/error_page_403.jsp"),
 	ERROR_PAGE_404_JSP("/WEB-INF/jsp/error_pages/error_page_404.jsp"),
 	ERROR_PAGE_500_JSP("/WEB-INF/jsp/error_pages/error_page_500.jsp"),

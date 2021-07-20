@@ -18,6 +18,7 @@ public class Feedback {
 		PASSWORD_CONFIRMATION_STATUS("password_confirmation_status"),
 		PASSWORD_CONFIRMATION_FEEDBACK("password_confirmation_feedback"),
 		IMAGE_STATUS("image_status"),
+		IMAGE_PATH("image_path"),
 		IMAGE_FEEDBACK("image_feedback"),
 		DAYS_TO_BAN_STATUS("days_to_ban_status"),
 		DAYS_TO_BAN_FEEDBACK("days_to_ban_feedback"),

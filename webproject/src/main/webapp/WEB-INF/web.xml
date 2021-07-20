@@ -21,12 +21,16 @@
 		<param-value>C:/Data/Java/Workspace/WebProject/webproject/src/main/webapp</param-value>
 	</context-param>
 	<context-param>
-		<param-name>web-site-name</param-name>
-		<param-value>localhost:8080</param-value>
+		<param-name>web-site-url</param-name>
+		<param-value>http://localhost:8080/webproject</param-value>
 	</context-param>
 	
 	<filter-mapping>
 		<filter-name>BanFilter</filter-name>
+		<url-pattern />
+	</filter-mapping>
+		<filter-mapping>
+		<filter-name>PaginationFilter</filter-name>
 		<url-pattern />
 	</filter-mapping>
 </web-app>

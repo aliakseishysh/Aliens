@@ -34,10 +34,16 @@ function declineAlienImage(alienImageUrl, article) {
     });
 };
 
+function changePage(pageToRequest) {
+    var url = CONTROLLER + "?" + COMMAND + "=" + OPEN_ADMIN_SUGGESTED_ALIENS_PAGE + "&" + PAGE + "=" + pageToRequest;
+    location.assign(url);
+};
+
 
 const pageSuggestedAliens = {
     approveAlienImage: approveAlienImage,
-    declineAlienImage: declineAlienImage
+    declineAlienImage: declineAlienImage,
+    changePage: changePage
 }
 
 $(document).ready(function () {

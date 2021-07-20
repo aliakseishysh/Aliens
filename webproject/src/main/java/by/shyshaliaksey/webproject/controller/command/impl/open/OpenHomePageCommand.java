@@ -33,18 +33,7 @@ public class OpenHomePageCommand implements Command {
 		AlienService alienService = serviceProvider.getAlienService();
 		Router router;
 		try {
-			
-			int page = 1;
-			Object pageObject = request.getParameter(RequestParameter.PAGE.getValue());
-			if (pageObject != null) {
-				page = Integer.parseInt(pageObject.toString());
-			}
-			final int commentsPerPage = AlienPage.COMMENTS_PER_PAGE;
-			double aliensCount = alienService.findAlienCount();
-			int pagesCount = (int) Math.ceil(aliensCount / commentsPerPage);
-			request.setAttribute(RequestAttribute.PAGES_COUNT.getValue(), pagesCount);
-			request.setAttribute(RequestAttribute.CURRENT_HOME_PAGE.getValue(), page);
-			List<Alien> aliens = alienService.findNormalAliens(page);
+			List<Alien> aliens = alienService.findNormalAliens((int)request.getAttribute(RequestAttribute.CURRENT_PAGE.getValue()));
 			request.setAttribute(RequestAttribute.ALIEN_LIST.getValue(), aliens);
 			router = new Router(PagePath.PAGE_HOME_JSP.getValue(), null, RouterType.FORWARD);
 		} catch (ServiceException e) {

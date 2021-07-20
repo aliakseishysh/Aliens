@@ -21,10 +21,10 @@ import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.Role;
-import by.shyshaliaksey.webproject.model.localization.LocaleAttribute;
 import by.shyshaliaksey.webproject.model.service.AdminService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.UserService;
+import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -48,7 +48,7 @@ public class SuggestNewAlienCommand implements Command {
 			String rootFolder = request.getServletContext()
 					.getInitParameter(InitParameter.WEB_APP_ROOT_FOLDER_PARAMETER.getValue());
 			String serverDeploymentPath = request.getServletContext()
-					.getRealPath(FolderPath.ALIEN_IMAGE_FOLDER.getValue());
+					.getRealPath(FolderPath.ROOT_FOLDER.getValue());
 			result = userService.suggestNewAlien(alienName, alienSmallDescription, alienFullDescription,
 					alienImage, rootFolder, serverDeploymentPath);
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());

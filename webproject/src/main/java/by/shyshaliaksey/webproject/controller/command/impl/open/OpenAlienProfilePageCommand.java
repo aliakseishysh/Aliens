@@ -52,18 +52,7 @@ public class OpenAlienProfilePageCommand implements Command {
 				request.setAttribute(RequestAttribute.ALIEN.getValue(), alien);
 				double averageRating = ratingService.calculateAverageRate(alienId);
 				request.setAttribute(RequestAttribute.AVERAGE_RATING.getValue(), averageRating);
-				// paginating here
-				int page = 1;
-				Object pageObject = request.getParameter(RequestParameter.PAGE.getValue());
-				if (pageObject != null) {
-					page = Integer.parseInt(pageObject.toString());
-				}
-				final int commentsPerPage = AlienPage.COMMENTS_PER_PAGE;
-				double commentsCount = alienService.findAlienCommentsCount(alienId);
-				int pagesCount = (int) Math.ceil(commentsCount / commentsPerPage);
-				request.setAttribute(RequestAttribute.PAGES_COUNT.getValue(), pagesCount);
-				request.setAttribute(RequestAttribute.CURRENT_COMMENT_PAGE.getValue(), page);
-				List<Comment> comments = alienService.findAllCommentsInPage(alienId, page);
+				List<Comment> comments = alienService.findAllCommentsInPage(alienId, (int) request.getAttribute(RequestAttribute.CURRENT_PAGE.getValue()));
 				request.setAttribute(RequestAttribute.ALIEN_COMMENTS.getValue(), comments);
 				// carousel images
 				List<String> imagesUrls = alienService.findImages(alienId);

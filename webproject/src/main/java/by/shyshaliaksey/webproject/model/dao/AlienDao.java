@@ -35,5 +35,6 @@ public interface AlienDao {
 	boolean approveProfileImage(int alienId) throws DaoException;
 	boolean approveSuggestedImage(String alienImageUrl) throws DaoException;
 	boolean declineSuggestedImage(String alienImageUrl) throws DaoException;
+	int findMaxAlienId() throws DaoException;
 	
 }
