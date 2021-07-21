@@ -445,8 +445,9 @@ public class UserServiceImpl implements UserService {
 			UtilService utilService = ServiceProvider.getInstance().getUtilService();
 			AlienDao alienDao = DaoProvider.getInstance().getAlienDao();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
-			validationService.validateAlienFormInput(result, alienName, alienSmallDescription, alienFullDescription,
-					alienImage);
+			validationService.validateAlienInfoFormInput(result, alienName, alienSmallDescription, alienFullDescription);
+			String fileName = alienImage.getSubmittedFileName();			
+			validationService.validateImageFormInput(result, FilenameUtils.getExtension(fileName), alienImage.getSize());
 
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_NAME_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS))
@@ -454,7 +455,6 @@ public class UserServiceImpl implements UserService {
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
 				if (!alienInDatabase.isPresent()) {
-					String fileName = alienImage.getSubmittedFileName();
 					String newFileName = utilService.prepareAlienImageName(fileName);
 					String imageUrl = FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
 					int alienId = alienDao.suggestNewAlien(alienName, alienSmallDescription, alienFullDescription,
@@ -463,8 +463,7 @@ public class UserServiceImpl implements UserService {
 							newFileName, alienImage);
 					boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
 							FolderPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
-					boolean suggestImageResult = alienDao.suggestNewAlienImage(alienId, imageUrl);
-					if (suggestImageResult && uploadToRoot && uploadToDeployment) {
+					if (uploadToRoot && uploadToDeployment) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 						result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());

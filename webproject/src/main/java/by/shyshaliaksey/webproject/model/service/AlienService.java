@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.Alien;
+import by.shyshaliaksey.webproject.model.entity.Alien.Status;
 import by.shyshaliaksey.webproject.model.entity.Comment;
 import jakarta.servlet.http.Part;
 
@@ -22,5 +23,6 @@ public interface AlienService {
 	int findUnapprovedAlienCount() throws ServiceException;
 	int findUnapprovedAliensImagesCount() throws ServiceException;
 	List<Alien> findUnapprovedAliensImages(int page) throws ServiceException;
+	Optional<Alien> findAlienByIdAndStatus(int alienId, Status status) throws ServiceException;
 	
 }

@@ -3,7 +3,7 @@
 <form id="form-login" class="needs-validation" novalidate>
 	<fieldset class="form-group">
 		<legend class="border-bottom mb-4">${TEXT[FORM_LOGIN_LEGEND]}</legend>
-		<label class="control-label col-sm-2" for="form-login-email">${TEXT[FORM_LOGIN_EMAIL]}</label>
+		<label class="control-label col-sm-10" for="form-login-email">${TEXT[FORM_LOGIN_EMAIL]}</label>
 		<div class="col-sm-10">
   				<input type="email" class="form-control" id="form-login-email" name="form-login-email" 
   					   placeholder="${TEXT[FORM_LOGIN_PLACEHOLDER]}" 
@@ -13,7 +13,7 @@
         			${STANDARD_EMAIL_FEEDBACK}
       			</div>
   			</div>
-  			<label class="control-label col-sm-2" for="form-login-password">${TEXT[FORM_LOGIN_PASSWORD]}</label>
+  			<label class="control-label col-sm-10" for="form-login-password">${TEXT[FORM_LOGIN_PASSWORD]}</label>
   			<div class="col-sm-10">
   				<input type="password" class="form-control" id="form-login-password" name="form-login-password" 
   					   placeholder="${TEXT[FORM_LOGIN_PASSWORD_PLACEHOLDER]}" 

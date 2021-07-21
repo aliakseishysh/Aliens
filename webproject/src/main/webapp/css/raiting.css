@@ -1,5 +1,5 @@
 div.stars {
-	width: 350px;
+	min-width: 299.983;
 }
 
 input.star {
@@ -36,4 +36,9 @@ label.star:hover {
 label.star:before {
 	content: '\f006';
 	font-family: FontAwesome
+}
+
+.row-margin-average-rating h3 {
+	text-align: center;
+	width: 100%;
 }

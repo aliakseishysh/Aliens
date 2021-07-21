@@ -4,12 +4,11 @@
 <html>
 <head>
 <title>${TEXT[PAGE_PROFILE_TITLE]}</title>
-<!-- 
-<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
- -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
-<link href="<c:url value="${CSS_USER_PROFILE}"/>" rel="stylesheet">
+<link href="<c:url value="${CSS_CUSTOM_FILE}"/>" rel="stylesheet">
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
+
 </head>
 <body>
 <main role="main" class="container">

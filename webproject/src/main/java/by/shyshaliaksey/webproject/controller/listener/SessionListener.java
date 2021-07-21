@@ -32,6 +32,8 @@ public class SessionListener implements HttpSessionListener {
 		session.setAttribute(SessionAttribute.CURRENT_LOCALIZATION_NAME.name(), LocaleAttribute.LOCALIZATION_EN.getValue());
 		session.setAttribute(SessionAttribute.TEXT.name(), LocaleAttribute.LOCALIZATION_EN.getResourceBundle());
 		session.setAttribute(SessionAttribute.CURRENT_LOCALE.name(), LocaleAttribute.LOCALIZATION_EN);
+		session.setAttribute(SessionAttribute.CURRENT_LOCALE_ABBREVIATION.name(), LocaleAttribute.LOCALIZATION_EN.getLocale().toString());
+		
 		
 		session.setAttribute(LocaleKey.STANDARD_EMAIL_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_EMAIL_FEEDBACK.getValue()));
 		session.setAttribute(LocaleKey.STANDARD_LOGIN_FEEDBACK.name(), LocaleAttribute.LOCALIZATION_EN.getLocalizedMessage(LocaleKey.STANDARD_LOGIN_FEEDBACK.getValue()));

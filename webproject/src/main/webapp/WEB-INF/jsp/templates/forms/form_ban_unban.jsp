@@ -2,7 +2,7 @@
 	<form id="form-user-ban-unban" class="needs-validation" novalidate>
 		<fieldset class="form-group">
 			<legend class="border-bottom mb-4">${TEXT[FORM_USER_BAN_UNBAN_LEGEND]}</legend>
-			<label class="control-label col-sm-2" for="form-user-ban-unban-login">${TEXT[FORM_USER_BAN_UNBAN_LOGIN]}</label>
+			<label class="control-label col-sm-10" for="form-user-ban-unban-login">${TEXT[FORM_USER_BAN_UNBAN_LOGIN]}</label>
 			<div class="col-sm-10">
   				<input type="text" class="form-control" id="form-user-ban-unban-login" name="form-user-ban-unban-login" 
   				placeholder="${TEXT[FORM_USER_BAN_UNBAN_LOGIN_PLACEHOLDER]}"
@@ -12,11 +12,11 @@
         			${STANDARD_LOGIN_FEEDBACK}
       			</div>
   			</div>
-  			<label class="control-label col-sm-2" for="form-user-ban-unban-days-in-ban">${TEXT[FORM_USER_BAN_UNBAN_DAYS_IN_BAN]}</label>
+  			<label class="control-label col-sm-10" for="form-user-ban-unban-days-in-ban">${TEXT[FORM_USER_BAN_UNBAN_DAYS_IN_BAN]}</label>
 			<div class="col-sm-10">
   				<input type="text" class="form-control" id="form-user-ban-unban-days-in-ban" name="form-user-ban-unban-days-in-ban" 
   				placeholder="${TEXT[FORM_USER_BAN_UNBAN_DAYS_IN_BAN_PLACEHOLDER]}" 
-  				pattern="${VALID_DIGIT}">
+  				pattern="${VALID_DAYS_IN_BAN}">
   				<!-- required when banning user -->
   				<!-- integer greater then 0 (check in js)-->
   				<div id="form-user-ban-unban-days-in-ban-invalid-feedback" class="invalid-feedback">

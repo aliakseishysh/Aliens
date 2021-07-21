@@ -63,7 +63,7 @@ public class PaginationFilter implements Filter {
 				setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
 				break;
 			default:
-				setAttributesOrForward(request, response, chain, requestedPage, requestedPage);
+				setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
 
 			}
 		} catch (NumberFormatException | ServiceException e) {
@@ -73,7 +73,7 @@ public class PaginationFilter implements Filter {
 	}
 
 	private void setAttributesOrForward(ServletRequest request, ServletResponse response, FilterChain chain, int pagesCount, int requestedPage) throws ServletException, IOException {
-		if (requestedPage > 0 && requestedPage <= pagesCount) {
+		if (requestedPage > 0 && requestedPage <= pagesCount || pagesCount == 0 && requestedPage == 1) {
 			request.setAttribute(RequestAttribute.PAGES_COUNT.getValue(), pagesCount);
 			request.setAttribute(RequestAttribute.CURRENT_PAGE.getValue(), requestedPage);
 			chain.doFilter(request, response);

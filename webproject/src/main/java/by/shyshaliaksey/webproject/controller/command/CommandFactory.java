@@ -42,7 +42,8 @@ public class CommandFactory {
 		case UNBAN_USER -> CommandValue.UNBAN_USER.getCommand();
 		case PROMOTE_USER -> CommandValue.PROMOTE_USER.getCommand();
 		case DEMOTE_ADMIN -> CommandValue.DEMOTE_ADMIN.getCommand();
-		case UPDATE_ALIEN -> CommandValue.UPDATE_ALIEN.getCommand();
+		case UPDATE_ALIEN_INFO -> CommandValue.UPDATE_ALIEN_INFO.getCommand();
+		case UPDATE_ALIEN_IMAGE -> CommandValue.UPDATE_ALIEN_IMAGE.getCommand();
 		case ADD_NEW_ALIEN -> CommandValue.ADD_NEW_ALIEN.getCommand();
 		case ADD_NEW_COMMENT -> CommandValue.ADD_NEW_COMMENT.getCommand();
 		case DELETE_COMMENT -> CommandValue.DELETE_COMMENT.getCommand();

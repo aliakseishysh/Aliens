@@ -7,11 +7,3 @@
     min-height: calc(1.5em + .75rem + 2px);
     margin-bottom: 0;
 }
-
-.custom-file-input:lang(ru_RU)~.custom-file-label::after {
-    content: "Выбрать";
-}
-
-.custom-file-input:lang(en_GB)~.custom-file-label::after {
-    content: "Browse";
-}

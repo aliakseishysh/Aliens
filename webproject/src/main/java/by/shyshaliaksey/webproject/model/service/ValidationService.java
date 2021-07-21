@@ -8,8 +8,8 @@ import jakarta.servlet.http.Part;
 
 public interface ValidationService {
 
-	void validateAlienFormInput(Map<Key, Object> result, String alienName, String alienSmallDescription,
-			String alienFullDescription, Part alienImage) throws ServiceException;
+	void validateAlienInfoFormInput(Map<Key, Object> result, String alienName, String alienSmallDescription,
+			String alienFullDescription) throws ServiceException;
 	void validateBanFormInput(Map<Key, Object> result, String userLogin, String daysToBan) throws ServiceException;
 	void validateLoginFormInput(Map<Key, Object> result, String login) throws ServiceException;
 	void validateEmailFormInput(Map<Key, Object> result, String email) throws ServiceException;

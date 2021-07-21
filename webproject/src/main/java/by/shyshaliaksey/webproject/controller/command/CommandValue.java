@@ -10,7 +10,8 @@ import by.shyshaliaksey.webproject.controller.command.impl.admin.BanUserCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.admin.DemoteAdminCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.admin.PromoteUserCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.admin.UnbanUserCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.admin.UpdateAlienCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.admin.UpdateAlienInfoCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.admin.UpdateAlienImageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.locale.ChangeLocaleCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.Open404ErrorPageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenAboutPageCommand;
@@ -75,7 +76,8 @@ public enum CommandValue implements EnumValue {
 	UNBAN_USER("unban-user", new UnbanUserCommand()),
 	PROMOTE_USER("pronote-user", new PromoteUserCommand()),
 	DEMOTE_ADMIN("denote-admin", new DemoteAdminCommand()),
-	UPDATE_ALIEN("update-alien", new UpdateAlienCommand()),
+	UPDATE_ALIEN_INFO("update-alien-info", new UpdateAlienInfoCommand()),
+	UPDATE_ALIEN_IMAGE("update-alien-image", new UpdateAlienImageCommand()),
 	ADD_NEW_ALIEN("add-new-alien", new AddNewAlienCommand()),
 	ADD_NEW_COMMENT("add-new-comment", new AddNewCommentCommand()),
 	DELETE_COMMENT("delete-comment", new DeleteCommentCommand());

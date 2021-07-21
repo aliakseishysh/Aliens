@@ -2,7 +2,7 @@
 	<form id="form-new-comment" class="needs-validation" novalidate>
 		<fieldset class="form-group">
 			<legend class="border-bottom mb-4">${TEXT[FORM_NEW_COMMENT_LEGEND]}</legend>
-   			<label class="control-label col-sm-2" for="form-new-comment-comment">${TEXT[FORM_NEW_COMMENT_LABEL]}</label>
+   			<label class="control-label col-sm-10" for="form-new-comment-comment">${TEXT[FORM_NEW_COMMENT_LABEL]}</label>
 			<div class="col-sm-10">
      			<textarea class="form-control" id="form-new-comment-comment" name="form-new-comment-comment" 
      					  placeholder="${TEXT[FORM_NEW_COMMENT_PLACEHOLDER]}"

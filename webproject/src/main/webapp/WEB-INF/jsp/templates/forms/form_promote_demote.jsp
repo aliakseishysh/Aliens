@@ -2,7 +2,7 @@
 	<form id="form-promote-demote-user" class="needs-validation" novalidate>
 		<fieldset class="form-group">
 			<legend class="border-bottom mb-4">${TEXT[FORM_PROMOTE_DEMOTE_LEGEND]}</legend>
-			<label class="control-label col-sm-2" for="form-promote-demote-user-login">${TEXT[FORM_PROMOTE_DEMOTE_LOGIN_LABEL]}</label>
+			<label class="control-label col-sm-10" for="form-promote-demote-user-login">${TEXT[FORM_PROMOTE_DEMOTE_LOGIN_LABEL]}</label>
 			<div class="col-sm-10">
   				<input type="text" class="form-control" id="form-promote-demote-user-login" name="form-promote-demote-user-login" 
   				placeholder="${TEXT[FORM_PROMOTE_DEMOTE_LOGIN_PLACEHOLDER]}" 

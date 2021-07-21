@@ -2,7 +2,7 @@
 	<form id="form-alien-suggest-suggest-image" enctype="multipart/form-data"  class="needs-validation" novalidate>
 		<fieldset class="form-group">
 			<legend class="border-bottom mb-4">${TEXT[FORM_ALIEN_SUGGEST_IMAGE_LEGEND]}</legend>
-			<label class="control-label col-sm-2" for="form-alien-suggest-suggest-image-name">${TEXT[FORM_ALIEN_CREATE_NAME]}</label>
+			<label class="control-label col-sm-10" for="form-alien-suggest-suggest-image-name">${TEXT[FORM_ALIEN_CREATE_NAME]}</label>
 			<div class="col-sm-10">
      			<input type="text" class="form-control" id="form-alien-suggest-suggest-image-name" name="form-alien-suggest-suggest-image-name" 
      			placeholder="${TEXT[FORM_ALIEN_CREATE_NAME_PLACEHOLDER]}"
@@ -12,10 +12,10 @@
         			${STANDARD_ALIEN_NAME_FEEDBACK}
       			</div>
    			</div>
-   			<label class="control-label col-sm-2" for="form-alien-suggest-suggest-image-image">${TEXT[FORM_IMAGE_UPDATE_IMAGE]}</label>
+   			<label class="control-label col-sm-10" for="form-alien-suggest-suggest-image-image">${TEXT[FORM_IMAGE_UPDATE_IMAGE]}</label>
    			<div class ="col-sm-10">
 	   			<div class="custom-file">
-	  				<input type="file" class="custom-file-input form-control-file" id="form-alien-suggest-suggest-image-image" required>
+	  				<input type="file" class="custom-file-input form-control-file" id="form-alien-suggest-suggest-image-image" lang="${CURRENT_LOCALE_ABBREVIATION}" required>
 					<div id="form-alien-suggest-suggest-image-image-invalid-feedback" class="invalid-feedback">
 	       				${STANDARD_IMAGE_FEEDBACK}
 	   				</div>

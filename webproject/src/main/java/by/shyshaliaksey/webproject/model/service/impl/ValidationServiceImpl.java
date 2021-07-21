@@ -13,11 +13,11 @@ import by.shyshaliaksey.webproject.model.service.ValidationService;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleKey;
 import jakarta.servlet.http.Part;
 
-public class ValidationServiceImpl implements ValidationService {
+public final class ValidationServiceImpl implements ValidationService {
 
 	@Override
-	public void validateAlienFormInput(Map<Feedback.Key, Object> result, String alienName, String alienSmallDescription,
-			String alienFullDescription, Part alienImage) throws ServiceException {
+	public void validateAlienInfoFormInput(Map<Feedback.Key, Object> result, String alienName, String alienSmallDescription,
+			String alienFullDescription) throws ServiceException {
 		if (validateAlienName(alienName)) {
 			result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.TRUE);
 			result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -42,15 +42,6 @@ public class ValidationServiceImpl implements ValidationService {
 			result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS, Boolean.FALSE);
 			result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK,
 					LocaleKey.ALIEN_FULL_DESCRIPTION_FEEDBACK_INVALID.getValue());
-			result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-		}
-		if (alienImage != null && validateImageExtension(FilenameUtils.getExtension(alienImage.getSubmittedFileName()))
-				&& validateImageSize(alienImage.getSize())) {
-			result.put(Feedback.Key.IMAGE_STATUS, Boolean.TRUE);
-			result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-		} else {
-			result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
-			result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.IMAGE_FEEDBACK_INVALID.getValue());
 			result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 		}
 	}
@@ -197,52 +188,52 @@ public class ValidationServiceImpl implements ValidationService {
 		}
 	}
 	
-	private boolean validateEmail(String email) throws ServiceException {
+	private static boolean validateEmail(String email) {
 		boolean result = Pattern.matches(FormPattern.VALID_EMAIL.getValue(), email);
 		return result;
 	}
 
-	private boolean validateLogin(String login) throws ServiceException {
+	private static boolean validateLogin(String login) {
 		boolean result = Pattern.matches(FormPattern.VALID_LOGIN.getValue(), login);
 		return result;
 	}
 
-	public boolean validatePassword(String password) throws ServiceException {
+	private static boolean validatePassword(String password) {
 		boolean result = Pattern.matches(FormPattern.VALID_PASSWORD.getValue(), password);
 		return result;
 	}
 
-	private boolean validateImageExtension(String imageExtension) throws ServiceException {
+	private static boolean validateImageExtension(String imageExtension) {
 		boolean result = Pattern.matches(FormPattern.VALID_IMAGE_EXTENSION.getValue(), imageExtension);
 		return result;
 	}
 
-	private boolean validateImageSize(long imageSize) throws ServiceException {
+	private static boolean validateImageSize(long imageSize) {
 		boolean result = imageSize <= Long.parseLong(FormPattern.VALID_IMAGE_SIZE.getValue());
 		return result;
 	}
 
-	public boolean validateDaysToBan(int daysToBan) throws ServiceException {
+	private static boolean validateDaysToBan(int daysToBan) {
 		boolean result = daysToBan > 0;
 		return result;
 	}
 
-	private boolean validateAlienName(String alienName) throws ServiceException {
+	private static boolean validateAlienName(String alienName) {
 		boolean result = Pattern.matches(FormPattern.VALID_ALIEN_NAME.getValue(), alienName);
 		return result;
 	}
 
-	private boolean validateAlienSmallDescription(String alienSmallDescription) throws ServiceException {
+	private static boolean validateAlienSmallDescription(String alienSmallDescription) {
 		boolean result = Pattern.matches(FormPattern.VALID_ALIEN_SMALL_DESCRIPTION.getValue(), alienSmallDescription);
 		return result;
 	}
 
-	private boolean validateAlienFullDescription(String alienFullDescription) throws ServiceException {
+	private static boolean validateAlienFullDescription(String alienFullDescription) {
 		boolean result = Pattern.matches(FormPattern.VALID_ALIEN_FULL_DESCRIPTION.getValue(), alienFullDescription);
 		return result;
 	}
 
-	private boolean validateComment(String comment) throws ServiceException {
+	private static boolean validateComment(String comment) {
 		boolean result = Pattern.matches(FormPattern.VALID_COMMENT.getValue(), comment);
 		return result;
 	}

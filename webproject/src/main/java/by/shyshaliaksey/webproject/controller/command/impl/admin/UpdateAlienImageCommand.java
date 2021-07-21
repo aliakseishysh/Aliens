@@ -32,7 +32,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
-public class UpdateAlienCommand implements Command {
+public class UpdateAlienImageCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
 	private static final AdminService adminService = ServiceProvider.getInstance().getAdminService();
@@ -44,32 +44,17 @@ public class UpdateAlienCommand implements Command {
 		Map<Feedback.Key, Object> result;
 		try {
 			int alienId = Integer.parseInt(request.getParameter(RequestParameter.ALIEN_ID.getValue()));
-			String alienName = request.getParameter(RequestParameter.ALIEN_NAME.getValue());
-			String alienSmallDescription = request.getParameter(RequestParameter.ALIEN_SMALL_DESCRIPTION.getValue());
-			String alienFullDescription = request.getParameter(RequestParameter.ALIEN_FULL_DESCRIPTION.getValue());
 			Part alienImage = request.getPart(RequestParameter.ALIEN_NEW_IMAGE.getValue());
 			String rootFolder = request.getServletContext()
 					.getInitParameter(InitParameter.WEB_APP_ROOT_FOLDER_PARAMETER.getValue());
 			String serverDeploymentPath = request.getServletContext()
 					.getRealPath(FolderPath.ROOT_FOLDER.getValue());
-			result = adminService.updateAlien(alienId, alienName, alienSmallDescription, alienFullDescription, alienImage, rootFolder, serverDeploymentPath);
+			result = adminService.updateAlienImage(alienId, alienImage, rootFolder, serverDeploymentPath);
 			
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			String jsonResponse = new JSONObject()
-					.put(Feedback.Key.ALIEN_NAME_STATUS.getValue(),
-							result.get(Feedback.Key.ALIEN_NAME_STATUS))
-					.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS.getValue(),
-							result.get(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS))
-					.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS.getValue(),
-							result.get(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS))
 					.put(Feedback.Key.IMAGE_STATUS.getValue(),
 							result.get(Feedback.Key.IMAGE_STATUS))
-					.put(Feedback.Key.ALIEN_NAME_FEEDBACK.getValue(),
-							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.ALIEN_NAME_FEEDBACK).toString()))
-					.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK.getValue(),
-							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK).toString()))
-					.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK.getValue(),
-							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK).toString()))
 					.put(Feedback.Key.IMAGE_FEEDBACK.getValue(),
 							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.IMAGE_FEEDBACK).toString()))
 					.toString();
@@ -77,7 +62,7 @@ public class UpdateAlienCommand implements Command {
 			router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
 		} catch (ServiceException | IOException | ServletException e) {
 			response.setStatus(500);
-			logger.log(Level.ERROR, "Exception occured while alien adding: {} {} {}", e.getMessage(), e.getStackTrace(),
+			logger.log(Level.ERROR, "Exception occured while alien image updating: {} {} {}", e.getMessage(), e.getStackTrace(),
 					e);
 			router = new Router(PagePath.ERROR_PAGE_500_JSP.getValue(), null, RouterType.FORWARD);
 		}

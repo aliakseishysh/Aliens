@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.model.entity.Alien;
+import by.shyshaliaksey.webproject.model.entity.Alien.Status;
 import by.shyshaliaksey.webproject.model.entity.Comment;
 
 public interface AlienDao {
@@ -13,9 +14,6 @@ public interface AlienDao {
 	Optional<Alien> findById(int userId) throws DaoException;
 	Optional<Alien> findByName(String alienName) throws DaoException;
 	int addNewAlien(String alienName, String alienSmallDescription, String alienFullDescription, String imageUrl) throws DaoException;
-	// boolean removeAlien(int alienId) throws DaoException;
-	boolean updateAlien(int alienId, String alienName, String alienSmallDescription, String alienFullDescription,
-			String imageUrl) throws DaoException;
 	List<Comment> findAllComments(int alienId) throws DaoException;
 	int findAlienCount() throws DaoException;
 	int findAlienCommentsCount(int alienId) throws DaoException;
@@ -36,5 +34,9 @@ public interface AlienDao {
 	boolean approveSuggestedImage(String alienImageUrl) throws DaoException;
 	boolean declineSuggestedImage(String alienImageUrl) throws DaoException;
 	int findMaxAlienId() throws DaoException;
+	boolean updateAlienInfo(int alienId, String alienName, String alienSmallDescription, String alienFullDescription)
+			throws DaoException;
+	boolean updateAlienImage(int alienId, String imageUrl) throws DaoException;
+	Optional<Alien> findByIdAndStatus(int alienId, Status status) throws DaoException;
 	
 }

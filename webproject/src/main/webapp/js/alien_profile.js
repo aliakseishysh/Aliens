@@ -1,33 +1,26 @@
-function updateAlien() {
+function updateAlienInfo() {
 
-    let formAlienUpdate = document.getElementById("form-alien-update")
-    let name = document.getElementById("form-alien-update-name")
-    let descriptionSmall = document.getElementById("form-alien-update-description-small")
-    let descriptionFull = document.getElementById("form-alien-update-description-full")
-    let image = document.getElementById("form-alien-update-image")
+    let formAlienUpdateInfo = document.getElementById("form-alien-update-info")
+    let name = document.getElementById("form-alien-update-info-name")
+    let descriptionSmall = document.getElementById("form-alien-update-info-description-small")
+    let descriptionFull = document.getElementById("form-alien-update-info-description-full")
     
-    let nameInvalidFeedback = document.getElementById("form-alien-update-name-invalid-feedback");
-    let descriptionSmallInvalidFeedback = document.getElementById("form-alien-update-description-small-invalid-feedback")
-    let descriptionFullInvalidFeedback = document.getElementById("form-alien-update-description-full-invalid-feedback")
-    let imageInvalidFeedback = document.getElementById("form-alien-update-image-invalid-feedback")
-    let imageLabel = document.getElementById("form-alien-update-image-label")
+    let nameInvalidFeedback = document.getElementById("form-alien-update-info-name-invalid-feedback");
+    let descriptionSmallInvalidFeedback = document.getElementById("form-alien-update-info-description-small-invalid-feedback")
+    let descriptionFullInvalidFeedback = document.getElementById("form-alien-update-info-description-full-invalid-feedback")
 
-    let alienId = document.getElementById("form-alien-update-alien-id-parameter-current-alien-id").innerHTML
+    let alienId = document.getElementById("alien-id-hidden").innerHTML;
 
-    let formData = new FormData();
-    formData.append(ALIEN_ID, alienId);
-    formData.append(ALIEN_NAME, name.value);
-    formData.append(ALIEN_SMALL_DESCRIPTION, descriptionSmall.value);
-    formData.append(ALIEN_FULL_DESCRIPTION, descriptionFull.value);
-    formData.append(ALIEN_NEW_IMAGE, image.files[0]);
-    let url = CONTROLLER + "?" + COMMAND + "=" + UPDATE_ALIEN + "&" + ALIEN_ID + "=" + alienId;
+    let data = {};
+    data[ALIEN_ID] = alienId;
+    data[ALIEN_NAME] = name.value;
+    data[ALIEN_SMALL_DESCRIPTION] = descriptionSmall.value;
+    data[ALIEN_FULL_DESCRIPTION] = descriptionFull.value;
+    let url = CONTROLLER + "?" + COMMAND + "=" + UPDATE_ALIEN_INFO + "&" + ALIEN_ID + "=" + alienId;
     $.ajax({
         url: url,
         type: "POST",
-        data: formData,
-        cache: false,
-        contentType: false,
-        processData: false,
+        data: data,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
             name.classList.add("is-valid")
@@ -36,12 +29,7 @@ function updateAlien() {
             descriptionSmall.classList.remove("is-invalid")
             descriptionFull.classList.add("is-valid")
             descriptionFull.classList.remove("is-invalid")
-            image.classList.add("is-valid")
-            image.classList.remove("is-invalid")
             formAlienUpdate.classList.add("was-validated")
-            // document.getElementById("form-update-login-parameter-current-user-login").innerHTML = enteredLogin;
-            // document.getElementById("form-update-LOGIN").classList.remove('was-validated');
-            // document.getElementById("form-update-LOGIN-LOGIN").classList.remove("is-invalid");
         },
         error: function (jqXHR, textStatus, errorThrown) {
             formAlienUpdate.classList.remove("was-validated");
@@ -69,6 +57,40 @@ function updateAlien() {
                 descriptionFull.classList.add("is-valid");
                 descriptionFullInvalidFeedback.innerHTML = jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK];
             }
+            // formAlienUpdateInfo.classList.add("was-validated");
+        }
+    });
+};
+
+function updateAlienImage() {
+
+    let formAlienUpdateImage = document.getElementById("form-alien-update-image")
+    let image = document.getElementById("form-alien-update-image-image")
+    
+    let imageInvalidFeedback = document.getElementById("form-alien-update-image-image-invalid-feedback")
+    let imageLabel = document.getElementById("form-alien-update-image-image-label")
+
+    let alienId = document.getElementById("alien-id-hidden").innerHTML;
+
+    let formData = new FormData();
+    formData.append(ALIEN_ID, alienId);
+    formData.append(ALIEN_NEW_IMAGE, image.files[0]);
+    let url = CONTROLLER + "?" + COMMAND + "=" + UPDATE_ALIEN_IMAGE + "&" + ALIEN_ID + "=" + alienId;
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            image.classList.add("is-valid")
+            image.classList.remove("is-invalid")
+            formAlienUpdateImage.classList.add("was-validated")
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            formAlienUpdateImage.classList.remove("was-validated");
             if (jqXHR.responseJSON[IMAGE_STATUS] == false) {
                 image.classList.add("is-invalid");
                 image.classList.remove("is-valid");
@@ -77,7 +99,7 @@ function updateAlien() {
                 image.classList.add("is-valid");
                 imageInvalidFeedback.innerHTML = jqXHR.responseJSON[IMAGE_FEEDBACK];
             }
-            formAlienCreate.classList.add("was-validated");
+            // formAlienUpdateImage.classList.add("was-validated");
         }
     });
 };
@@ -156,7 +178,8 @@ function nextCommentPage(alienId, pageToRequest) {
 };
 
 const alienProfile = {
-    updateAlien: updateAlien,
+    updateAlienInfo: updateAlienInfo,
+    updateAlienImage: updateAlienImage,
     addNewComment: addNewComment,
     deleteComment: deleteComment,
     previousCommentPage: previousCommentPage,
@@ -164,71 +187,43 @@ const alienProfile = {
 }
 
 $(document).ready(function () {
-    let formAlienUpdate = document.getElementById("form-alien-update")
-    let name = document.getElementById("form-alien-update-name")
-    let descriptionSmall = document.getElementById("form-alien-update-description-small")
-    let descriptionFull = document.getElementById("form-alien-update-description-full")
-    let image = document.getElementById("form-alien-update-image")
-    let imageLabel = document.getElementById("form-alien-update-image-label")
-    if (formAlienUpdate != null) {
+    let formAlienUpdateInfo = document.getElementById("form-alien-update-info");
+    if (formAlienUpdateInfo != null) {
+        let name = document.getElementById("form-alien-update-info-name");
+        let descriptionSmall = document.getElementById("form-alien-update-info-description-small");
+        let descriptionFull = document.getElementById("form-alien-update-info-description-full");
         name.value = document.getElementById("alien-name").innerHTML;
         descriptionSmall.value = document.getElementById("alien-small-description").innerHTML;
         descriptionFull.value = document.getElementById("alien-big-description").innerHTML;
-
-        let alienProfile = document.getElementById("alien-image").src
-        let splitted = alienProfile.split(".")
-        let imgExtension = splitted[splitted.length - 1]
-
-        fetch(alienProfile)
-            .then(res => res.blob())
-            .then(blob => {
-                const file = new File([blob], 'alien_profile_image.' + imgExtension, blob);
-                var dataTransfer = new DataTransfer()
-                dataTransfer.items.add(file)
-                image.files = dataTransfer.files
-                imageLabel.innerHTML = file.name
-            })
-
     }
-
-    // TODO set file to input alien-image
-    //document.getElementById("alien-update-form-image").files;
 });
 
-
+// form-alien-update-info
 $(document).ready(function () {
-    let formAlienUpdate = document.getElementById("form-alien-update");
-    if (formAlienUpdate != null) {
+    let formAlienUpdateInfo = document.getElementById("form-alien-update-info");
+    if (formAlienUpdateInfo != null) {
 
-        let name = document.getElementById("form-alien-update-name");
-        let descriptionSmall = document.getElementById("form-alien-update-description-small");
-        let descriptionFull = document.getElementById("form-alien-update-description-full");
-        let image = document.getElementById("form-alien-update-image");
-        
-        let nameInvalidFeedback = document.getElementById("form-alien-update-name-invalid-feedback");
-        let descriptionSmallInvalidFeedback = document.getElementById("form-alien-update-description-small-invalid-feedback");
-        let descriptionFullInvalidFeedback = document.getElementById("form-alien-update-description-full-invalid-feedback");
-        let imageInvalidFeedback = document.getElementById("form-alien-update-image-invalid-feedback");
-        let imageLabel = document.getElementById("form-alien-update-image-label");
+        let name = document.getElementById("form-alien-update-info-name");
+        let descriptionSmall = document.getElementById("form-alien-update-info-description-small");
+        let descriptionFull = document.getElementById("form-alien-update-info-description-full");
+
+        let nameInvalidFeedback = document.getElementById("form-alien-update-info-name-invalid-feedback");
+        let descriptionSmallInvalidFeedback = document.getElementById("form-alien-update-info-description-small-invalid-feedback");
+        let descriptionFullInvalidFeedback = document.getElementById("form-alien-update-info-description-full-invalid-feedback");
     
-        formAlienUpdate.addEventListener('submit', function(event) {
+        formAlienUpdateInfo.addEventListener('submit', function(event) {
             name.classList.remove("is-invalid");
             name.classList.remove("is-valid");
             descriptionSmall.classList.remove("is-invalid");
             descriptionSmall.classList.remove("is-valid");
             descriptionFull.classList.remove("is-invalid");
             descriptionFull.classList.remove("is-valid");
-            image.classList.remove("is-invalid");
-            image.classList.remove("is-valid");
     
-            formAlienUpdate.classList.remove("was-validated");
+            formAlienUpdateInfo.classList.remove("was-validated");
     
-            let files = image.files;
             let nameCheckResult = false;
             let descriptionSmallCheckResult = false;
             let descriptionFullCheckResult = false;
-            let imageCheckResult = false;
-            let validExtensions = ["image/jpg", "image/jpeg", "image/png"];
     
             if (name.value != "" && name.value.match(name.getAttribute("pattern"))) {
                 nameCheckResult = true
@@ -242,6 +237,64 @@ $(document).ready(function () {
                 descriptionFullCheckResult = true
                 descriptionFull.classList.add("is-valid")
             }
+            if (!nameCheckResult || !descriptionSmallCheckResult || !descriptionFullCheckResult) {
+                if (!nameCheckResult) {
+                    nameInvalidFeedback.innerHTML = STANDARD_ALIEN_NAME_FEEDBACK;
+                    name.classList.add("is-invalid");
+                }
+                if (!descriptionSmallCheckResult) {
+                    descriptionSmallInvalidFeedback.innerHTML = STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK;
+                    descriptionSmall.classList.add("is-invalid");
+                }
+                if (!descriptionFullCheckResult) {
+                    descriptionFullInvalidFeedback.innerHTML = STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK;
+                    descriptionFull.classList.add("is-invalid");
+                }
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                event.preventDefault();
+                alienProfile.updateAlienInfo()
+            }
+          }, false);
+          name.addEventListener('input', function(event) {
+            formAlienUpdateInfo.classList.remove('was-validated');
+            name.classList.remove("is-invalid");
+            name.classList.remove("is-valid");
+          })
+          descriptionSmall.addEventListener('input', function(event) {
+            formAlienUpdateInfo.classList.remove('was-validated');
+            descriptionSmall.classList.remove("is-invalid");
+            descriptionSmall.classList.remove("is-valid");
+          })
+          descriptionFull.addEventListener('input', function(event) {
+            formAlienUpdateInfo.classList.remove('was-validated');
+            descriptionFull.classList.remove("is-invalid");
+            descriptionFull.classList.remove("is-valid");
+          })
+    }
+});
+
+// form-alien-update-image
+$(document).ready(function () {
+    let formAlienUpdateImage = document.getElementById("form-alien-update-image");
+    if (formAlienUpdateImage != null) {
+
+        let image = document.getElementById("form-alien-update-image-image");
+        
+        let imageInvalidFeedback = document.getElementById("form-alien-update-image-image-invalid-feedback");
+        let imageLabel = document.getElementById("form-alien-update-image-image-label");
+    
+        formAlienUpdateImage.addEventListener('submit', function(event) {
+            image.classList.remove("is-invalid");
+            image.classList.remove("is-valid");
+    
+            formAlienUpdateImage.classList.remove("was-validated");
+    
+            let files = image.files;
+            let imageCheckResult = false;
+            let validExtensions = ["image/jpg", "image/jpeg", "image/png"];
+    
             if (files.length == 1) {
                 let file = files[0];
                 
@@ -256,56 +309,26 @@ $(document).ready(function () {
                 }
             }
     
-            if (!nameCheckResult || !descriptionSmallCheckResult || !descriptionFullCheckResult || !imageCheckResult) {
-                if (!nameCheckResult) {
-                    nameInvalidFeedback.innerHTML = STANDARD_ALIEN_NAME_FEEDBACK;
-                    name.classList.add("is-invalid");
-                }
-                if (!descriptionSmallCheckResult) {
-                    descriptionSmallInvalidFeedback.innerHTML = STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK;
-                    descriptionSmall.classList.add("is-invalid");
-                }
-                if (!descriptionFullCheckResult) {
-                    descriptionFullInvalidFeedback.innerHTML = STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK;
-                    descriptionFull.classList.add("is-invalid");
-                }
-                if (!imageCheckResult) {
-                    imageInvalidFeedback.innerHTML = STANDARD_IMAGE_FEEDBACK;
-                    image.classList.add("is-invalid");
-                }
-            // formAlienCreate.classList.add('was-validated');
-               // document.getElementById("form-alien-update-image").setCustomValidity(IMAGE_FEEDBACK_INVALID);
+            if (!imageCheckResult) {
+                imageInvalidFeedback.innerHTML = STANDARD_IMAGE_FEEDBACK;
+                image.classList.add("is-invalid");
                 event.preventDefault();
                 event.stopPropagation();
             } else {
                 event.preventDefault();
-                document.getElementById("form-alien-update-image-label").innerHTML = files[0].name;
-                alienProfile.updateAlien()
+                document.getElementById("form-alien-update-image-image-label").innerHTML = files[0].name;
+                alienProfile.updateAlienImage()
             }
           }, false);
-          name.addEventListener('input', function(event) {
-            formAlienUpdate.classList.remove('was-validated');
-            name.classList.remove("is-invalid");
-            name.classList.remove("is-valid");
-          })
-          descriptionSmall.addEventListener('input', function(event) {
-            formAlienUpdate.classList.remove('was-validated');
-            descriptionSmall.classList.remove("is-invalid");
-            descriptionSmall.classList.remove("is-valid");
-          })
-          descriptionFull.addEventListener('input', function(event) {
-            formAlienUpdate.classList.remove('was-validated');
-            descriptionFull.classList.remove("is-invalid");
-            descriptionFull.classList.remove("is-valid");
-          })
           image.addEventListener('input', function(event) {
             imageLabel.innerHTML = image.files[0].name;
-            formAlienUpdate.classList.remove('was-validated');
+            formAlienUpdateImage.classList.remove('was-validated');
             image.classList.remove("is-invalid");
             image.classList.remove("is-valid");
           })
     }
 });
+
 
 $(document).ready(function () {
     let formNewComment = document.getElementById("form-new-comment");

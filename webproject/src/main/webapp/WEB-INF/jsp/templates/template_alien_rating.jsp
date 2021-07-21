@@ -18,14 +18,13 @@
 	var RATING_VALUE = `${RATING_VALUE}`;
 	var UPDATE_RATING = `${UPDATE_RATING}`;
 	var COMMAND = `${COMMAND}`;
-	var COMMAND = `${COMMAND}`;
 </script>
 <script type="text/javascript" src="<c:url value='${JS_RAITING}'/>"></script>
 </head>
 
 <div class="justify-content-end">
-	<div class="row">
-		<p class="" id="average-rating">${TEXT[TEMPLATE_ALIEN_RATING_AVERAGE_RATING]}"${averageRating}"</p>	
+	<div class="row row-margin-average-rating">
+		<h3>${TEXT[TEMPLATE_ALIEN_RATING_AVERAGE_RATING]}<span id="average-rating">${averageRating}</span></h3>	
 	</div>
 	<div class="flex-row-reverse">
      	<div class="stars" id="ratingStars">

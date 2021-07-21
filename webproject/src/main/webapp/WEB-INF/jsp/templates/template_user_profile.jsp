@@ -1,5 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
 <script>
 	var WEB_SITE_NAME = `${WEB_SITE_NAME}`;
 	var PROJECT_NAME = `${PROJECT_NAME}`;

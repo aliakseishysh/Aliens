@@ -13,13 +13,14 @@
 
 <link href="<c:url value="${CSS_RAITING}"/>" rel="stylesheet">
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
-<link href="<c:url value="${CSS_USER_PROFILE}"/>" rel="stylesheet">
+<link href="<c:url value="${CSS_CUSTOM_FILE}"/>" rel="stylesheet">
 
 <script>
 	var PROJECT_NAME = `${PROJECT_NAME}`;
 	var CONTROLLER = `${CONTROLLER}`;
 	var COMMAND = `${COMMAND}`;
-	var UPDATE_ALIEN = `${UPDATE_ALIEN}`;
+	var UPDATE_ALIEN_INFO = `${UPDATE_ALIEN_INFO}`;
+	var UPDATE_ALIEN_IMAGE = `${UPDATE_ALIEN_IMAGE}`;
 	var ALIEN_NAME = `${ALIEN_NAME}`;
 	var ALIEN_SMALL_DESCRIPTION = `${ALIEN_SMALL_DESCRIPTION}`;
 	var ALIEN_FULL_DESCRIPTION = `${ALIEN_FULL_DESCRIPTION}`;
@@ -71,7 +72,8 @@
 			<jsp:include page="${TEMPLATE_CAROUSEL}"/>	
 			<c:choose>
 				<c:when test="${currentUser.role == ADMIN}">
-					<jsp:include page="${FORM_ALIEN_UPDATE_JSP}"></jsp:include>
+					<jsp:include page="${FORM_ALIEN_UPDATE_INFO_JSP}"/>
+					<jsp:include page="${FORM_ALIEN_UPDATE_IMAGE_JSP}"/>
 				</c:when>
 			</c:choose>
 			<c:choose>
@@ -102,7 +104,7 @@
 								<jsp:include page="${TEMPLATE_COMMENT_JSP}"/>
 							</c:forEach>
 						</div>
-						<jsp:include page="${TEMPLATE_PAGINATION}"/>
+						<jsp:include page="${TEMPLATE_PAGINATION_JSP}"/>
 					</div>
 				</c:otherwise>
 			</c:choose>

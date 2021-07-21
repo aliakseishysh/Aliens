@@ -3,7 +3,7 @@
 	<form id="form-register" class="needs-validation" novalidate>
 		<fieldset class="form-group">
 			<legend class="border-bottom mb-4">${TEXT[FORM_REGISTER_LEGEND]}</legend>
-			<label class="control-label col-sm-2" for="form-register-email">${TEXT[FORM_REGISTER_EMAIL_LABEL]}</label>
+			<label class="control-label col-sm-10" for="form-register-email">${TEXT[FORM_REGISTER_EMAIL_LABEL]}</label>
 			<div class="col-sm-10">
    				<input type="email" class="form-control" id="form-register-email" name="form-register-email" 
    					   placeholder="${TEXT[FORM_REGISTER_EMAIL_PLACEHOLDER]}" 
@@ -13,7 +13,7 @@
         			${STANDARD_EMAIL_FEEDBACK}
       			</div>
    			</div>
-   			<label class="control-label col-sm-2" for="form-register-login">${TEXT[FORM_REGISTER_LOGIN_LABEL]}</label>
+   			<label class="control-label col-sm-10" for="form-register-login">${TEXT[FORM_REGISTER_LOGIN_LABEL]}</label>
 			<div class="col-sm-10">
    				<input type="text" class="form-control" id="form-register-login" name="form-register-login" 
    					   placeholder="${TEXT[FORM_REGISTER_LOGIN_PLACEHOLDER]}" 
@@ -23,7 +23,7 @@
         			${STANDARD_LOGIN_FEEDBACK}
       			</div>
    			</div>
-   			<label class="control-label col-sm-2" for="form-register-password">${TEXT[FORM_REGISTER_PASSWORD_LABEL]}</label>
+   			<label class="control-label col-sm-10" for="form-register-password">${TEXT[FORM_REGISTER_PASSWORD_LABEL]}</label>
    			<div class="col-sm-10">
    				<input type="password" class="form-control" id="form-register-password" name="form-register-password" 
    					   placeholder="${TEXT[FORM_REGISTER_PASSWORD_PLACEHOLDER]}" 
@@ -33,7 +33,7 @@
         			${STANDARD_PASSWORD_FEEDBACK}
       			</div>
    			</div>
-   			<label class="control-label col-sm-2" for="form-register-password-confirm">${TEXT[FORM_REGISTER_PASSWORD_CONFIRMATION_LABEL]}</label>
+   			<label class="control-label col-sm-10" for="form-register-password-confirm">${TEXT[FORM_REGISTER_PASSWORD_CONFIRMATION_LABEL]}</label>
    			<div class="col-sm-10">
    				<input type="password" class="form-control" id="form-register-password-confirm" name="form-register-password-confirm" 
    				       placeholder="${TEXT[FORM_REGISTER_PASSWORD_CONFIRMATION_PLACEHOLDER]}" 
@@ -44,10 +44,13 @@
       			</div>
    			</div>
 		</fieldset>
-		<div class="form-group">
-			<button class="btn btn-outline-info" type="submit">
-				${TEXT[FORM_REGISTER_PASSWORD_SUBMIT]}
-			</button>
+		<div class ="col-sm-10">
+			<div class="form-group">
+				<button class="btn btn-outline-info" 
+						type="submit">
+					${TEXT[FORM_REGISTER_PASSWORD_SUBMIT]}
+				</button>
+			</div>
 		</div>
 	</form>
 	<div class="border-top pt-3">

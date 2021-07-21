@@ -19,10 +19,12 @@ public interface AdminService {
 	Map<Feedback.Key, Object> addNewAlien(String alienName, String alienSmallDescription, String alienFullDescription,
 			Part alienImage, String rootFolder, String serverDeploymentPath) throws ServiceException;
 
-	Map<Feedback.Key, Object> updateAlien(int alienId, String alienName, String alienSmallDescription,
-			String alienFullDescription, Part alienImage, String rootFolder, String serverDeploymentPath)
-			throws ServiceException;
-	
+	Map<Feedback.Key, Object> updateAlienInfo(int alienId, String alienName, String alienSmallDescription,
+			String alienFullDescription) throws ServiceException;
+
+	Map<Feedback.Key, Object> updateAlienImage(int alienId, Part alienImage, String rootFolder,
+			String serverDeploymentPath) throws ServiceException;
+
 	boolean approveAlien(String alienId) throws ServiceException;
 
 	boolean declineAlien(String alienId) throws ServiceException;

@@ -4,7 +4,7 @@ USE aliens_web_project;
 
 CREATE TABLE aliens (
     alien_id INT AUTO_INCREMENT NOT NULL,
-    _name VARCHAR(255),
+    _name VARCHAR(255) UNIQUE,
     _status ENUM('NORMAL', 'UNDER_CONSIDERATION', 'DECLINED'),
     description_small VARCHAR(255),
     description_full VARCHAR(3000),

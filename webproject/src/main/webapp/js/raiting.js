@@ -1,13 +1,13 @@
 function setRatingValue() {
-    var ratingInput = $("input[type='radio']");
-    var data = {};
+    let ratingInput = $("input[type='radio']");
+    let data = {};
     data[ALIEN_NAME] = alienName;
     $.ajax({
         url: CONTROLLER + "?" + COMMAND + "=" + FIND_USER_RATE,
         data: data,
         success: function(userRating) {
             if (userRating > 0) {
-                var star = ratingInput[5-userRating];
+                let star = ratingInput[5-userRating];
                 star.checked = true;
             }
         },
@@ -18,14 +18,16 @@ function setRatingValue() {
 };
 
 function updateRating(ratingValue) {
-    var data = {};
+    let data = {};
     data[RATING_VALUE] = ratingValue;
     data[ALIEN_NAME] = alienName;
     $.ajax({
         url: CONTROLLER + "?" + COMMAND + "=" + UPDATE_RATING,
         data: data,
         success: function(averageRate) {
-            document.getElementById("average-rating").innerHTML = '"' + averageRate + '"';
+            // let averageRatingText = TEMPLATE_ALIEN_RATING_AVERAGE_RATING;
+            let averageRatingElement = document.getElementById("average-rating");
+            averageRatingElement.innerText = averageRate;
         },
         error: function() {
             // TODO show error
@@ -38,8 +40,3 @@ document.addEventListener("DOMContentLoaded",() => {
       setRatingValue();
     }
 });
-
-
-// $(document).ready(function() {
-	
-// });

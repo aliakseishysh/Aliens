@@ -23,6 +23,8 @@ public class ChangeLocaleCommand implements Command {
 		HttpSession session = request.getSession();
 		request.getSession().setAttribute(SessionAttribute.CURRENT_LOCALIZATION_NAME.name(), locale.getValue());
 		request.getSession().setAttribute(SessionAttribute.TEXT.name(), locale.getResourceBundle());
+		request.getSession().setAttribute(SessionAttribute.TEXT.name(), locale.getResourceBundle());
+		session.setAttribute(SessionAttribute.CURRENT_LOCALE_ABBREVIATION.name(), locale.getLocale().toString());
 		
 		session.setAttribute(LocaleKey.STANDARD_EMAIL_FEEDBACK.name(), locale.getLocalizedMessage(LocaleKey.STANDARD_EMAIL_FEEDBACK.getValue()));
 		session.setAttribute(LocaleKey.STANDARD_LOGIN_FEEDBACK.name(), locale.getLocalizedMessage(LocaleKey.STANDARD_LOGIN_FEEDBACK.getValue()));

@@ -5,11 +5,14 @@ function logoutUser() {
         type: "POST",
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            url = CONTROLLER + "?" + COMMAND + "=" + OPEN_HOME_PAGE
-            location.assign(url)
+            url = CONTROLLER + "?" + COMMAND + "=" + OPEN_HOME_PAGE;
+            location.assign(url);
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            // TODO can't logout or something
+            if (jqXHR.status == 403) {
+                url = CONTROLLER + "?" + COMMAND + "=" + OPEN_HOME_PAGE;
+                location.assign(url);
+            }
         }
     });
 }

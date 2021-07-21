@@ -3,6 +3,7 @@
     pageEncoding="UTF-8"%>
 <head>
 	<link rel="shortcut icon" type="image/png" href="/webproject/favicon.png"/>
+	<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
 </head>
 <script>
 	var CONTROLLER = `${CONTROLLER}`;
@@ -12,8 +13,8 @@
 	var LOCALE = `${LOCALE}`;
 	var LOCALIZATION_RU = `${LOCALIZATION_RU}`;
 	var LOCALIZATION_EN = `${LOCALIZATION_EN}`;
+	var OPEN_HOME_PAGE = `${OPEN_HOME_PAGE}`;
 </script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
 <script type="text/javascript" src="<c:url value='${JS_NAV}'/>"></script>
 <header class="site-header">
 	<nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">

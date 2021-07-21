@@ -46,7 +46,7 @@ public class OpenAlienProfilePageCommand implements Command {
 			ServiceProvider serviceProvider = ServiceProvider.getInstance();
 			AlienService alienService = serviceProvider.getAlienService();
 			RatingService ratingService = serviceProvider.getRatingService();
-			Optional<Alien> alienOptional = alienService.findAlienById(alienId);
+			Optional<Alien> alienOptional = alienService.findAlienByIdAndStatus(alienId, Alien.Status.NORMAL);
 			if (alienOptional.isPresent()) {
 				Alien alien = alienOptional.get();
 				request.setAttribute(RequestAttribute.ALIEN.getValue(), alien);
@@ -68,7 +68,7 @@ public class OpenAlienProfilePageCommand implements Command {
 				
 				router = new Router(PagePath.PAGE_ALIEN_PROFILE_JSP.getValue(), null, RouterType.FORWARD);
 			} else {
-				router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.REDIRECT);
+				router = new Router(PagePath.ERROR_PAGE_404_JSP.getValue(), null, RouterType.FORWARD);
 				logger.log(Level.INFO, "No alien with id: {}", alienId);
 			}
 			

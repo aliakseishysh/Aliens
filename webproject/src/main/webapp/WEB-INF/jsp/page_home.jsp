@@ -6,9 +6,6 @@
 <head>
 <meta charset="UTF-8">
 <title>${TEXT[PAGE_HOME_TITLE]}</title>
-<!-- 
-<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
- -->
  <script>
 	var PROJECT_NAME = `${PROJECT_NAME}`;
 	var CONTROLLER = `${CONTROLLER}`;
@@ -35,20 +32,10 @@
 						<c:set var="alien" value="${entry}" scope="request" />
 						<jsp:include page="${TEMPLATE_POST_JSP}" />
 					</c:forEach>
-					<jsp:include page="${TEMPLATE_PAGINATION}"/>
+					<jsp:include page="${TEMPLATE_PAGINATION_JSP}"/>
 				</div>
 			</div>
-			<div class="col-md-4">
-				<div class="content-section">
-					<h3>${TEXT[PAGE_HOME_ALIENBAR]}</h3>
-					<p class='text-muted'>${TEXT[PAGE_HOME_CONTACT_ADMIN]}
-					<ul class="list-group">
-						<li class="list-group-item list-group-item-light">${TEXT[PAGE_HOME_ADMIN_EMAIL]}</li>
-						<li class="list-group-item list-group-item-light">${TEXT[PAGE_HOME_YEAR]}</li>
-					</ul>
-					</p>
-				</div>
-			</div>
+			<jsp:include page="${TEMPLATE_ALIENBAR_JSP}" />
 		</div>
 	</main>
 
