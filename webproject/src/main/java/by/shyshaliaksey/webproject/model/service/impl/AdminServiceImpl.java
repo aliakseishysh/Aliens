@@ -198,15 +198,15 @@ public class AdminServiceImpl implements AdminService {
 			AlienDao alienDao = DaoProvider.getInstance().getAlienDao();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 			validationService.validateAlienInfoFormInput(result, alienName, alienSmallDescription, alienFullDescription);
-
+			String fileName = alienImage.getSubmittedFileName();			
+			validationService.validateImageFormInput(result, FilenameUtils.getExtension(fileName), alienImage.getSize());
+			
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_NAME_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
 				if (!alienInDatabase.isPresent()) {
-
-					String fileName = alienImage.getSubmittedFileName();
 					String newFileName = utilService.prepareAlienImageName(fileName);
 					String imageUrl = FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
 					boolean uploadToRoot = utilService.uploadImage(rootFolder, FolderPath.ALIEN_IMAGE_FOLDER.getValue(),

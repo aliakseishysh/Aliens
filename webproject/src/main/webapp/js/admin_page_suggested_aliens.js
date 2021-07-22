@@ -1,4 +1,7 @@
-function approveAlien(alienId, article) {
+const buttonsApprove = document.getElementsByName("approve-alien");
+const buttonsDecline = document.getElementsByName("decline-alien");
+
+function approveAlien(alienId) {
     let data = {};
     data[ALIEN_ID] = alienId;
     let url = CONTROLLER + "?" + COMMAND + "=" + ADMIN_APPROVE_ALIEN;
@@ -11,7 +14,7 @@ function approveAlien(alienId, article) {
             alert("success");
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            alert("error");
+            alert(jqXHR.status + " "  + textStatus + " " + errorThrown);
         }
     });
 };
@@ -29,7 +32,7 @@ function declineAlien(alienId, article) {
             alert("success");
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            alert("error");
+            alert(jqXHR.status + " "  + textStatus + " " + errorThrown);
         }
     });
 };
@@ -42,22 +45,17 @@ const pageSuggestedAliens = {
 
 $(document).ready(function () {
 
-    let buttonsApprove = document.getElementsByName("approve-alien");
-    let buttonsDecline = document.getElementsByName("decline-alien");
-
     buttonsApprove.forEach(button => 
         button.addEventListener('click', function(event) {
             let alienId = button.parentElement.firstElementChild.innerHTML;
-            let article = button.closest("article");
-            pageSuggestedAliens.approveAlien(alienId, article);
+            pageSuggestedAliens.approveAlien(alienId);
         })
-    );
+    )
 
     buttonsDecline.forEach(button => 
         button.addEventListener('click', function(event) {
             let alienId = button.parentElement.firstElementChild.innerHTML;
-            let article = button.closest("article");
-            pageSuggestedAliens.declineAlien(alienId, article);
+            pageSuggestedAliens.declineAlien(alienId);
         }
     ));
 

@@ -1,13 +1,13 @@
 function updateAlienInfo() {
 
-    let formAlienUpdateInfo = document.getElementById("form-alien-update-info")
-    let name = document.getElementById("form-alien-update-info-name")
-    let descriptionSmall = document.getElementById("form-alien-update-info-description-small")
-    let descriptionFull = document.getElementById("form-alien-update-info-description-full")
+    let formAlienUpdateInfo = document.getElementById("form-alien-update-info");
+    let name = document.getElementById("form-alien-update-info-name");
+    let descriptionSmall = document.getElementById("form-alien-update-info-description-small");
+    let descriptionFull = document.getElementById("form-alien-update-info-description-full");
     
     let nameInvalidFeedback = document.getElementById("form-alien-update-info-name-invalid-feedback");
-    let descriptionSmallInvalidFeedback = document.getElementById("form-alien-update-info-description-small-invalid-feedback")
-    let descriptionFullInvalidFeedback = document.getElementById("form-alien-update-info-description-full-invalid-feedback")
+    let descriptionSmallInvalidFeedback = document.getElementById("form-alien-update-info-description-small-invalid-feedback");
+    let descriptionFullInvalidFeedback = document.getElementById("form-alien-update-info-description-full-invalid-feedback");
 
     let alienId = document.getElementById("alien-id-hidden").innerHTML;
 
@@ -23,13 +23,13 @@ function updateAlienInfo() {
         data: data,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            name.classList.add("is-valid")
-            name.classList.remove("is-invalid")
-            descriptionSmall.classList.add("is-valid")
-            descriptionSmall.classList.remove("is-invalid")
-            descriptionFull.classList.add("is-valid")
-            descriptionFull.classList.remove("is-invalid")
-            formAlienUpdate.classList.add("was-validated")
+            name.classList.add("is-valid");
+            name.classList.remove("is-invalid");
+            descriptionSmall.classList.add("is-valid");
+            descriptionSmall.classList.remove("is-invalid");
+            descriptionFull.classList.add("is-valid");
+            descriptionFull.classList.remove("is-invalid");
+            formAlienUpdate.classList.add("was-validated");
         },
         error: function (jqXHR, textStatus, errorThrown) {
             formAlienUpdate.classList.remove("was-validated");
@@ -64,11 +64,11 @@ function updateAlienInfo() {
 
 function updateAlienImage() {
 
-    let formAlienUpdateImage = document.getElementById("form-alien-update-image")
-    let image = document.getElementById("form-alien-update-image-image")
+    let formAlienUpdateImage = document.getElementById("form-alien-update-image");
+    let image = document.getElementById("form-alien-update-image-image");
     
-    let imageInvalidFeedback = document.getElementById("form-alien-update-image-image-invalid-feedback")
-    let imageLabel = document.getElementById("form-alien-update-image-image-label")
+    let imageInvalidFeedback = document.getElementById("form-alien-update-image-image-invalid-feedback");
+    let imageLabel = document.getElementById("form-alien-update-image-image-label");
 
     let alienId = document.getElementById("alien-id-hidden").innerHTML;
 
@@ -87,7 +87,7 @@ function updateAlienImage() {
         success: function (data, textStatus, jqXHR) {
             image.classList.add("is-valid")
             image.classList.remove("is-invalid")
-            formAlienUpdateImage.classList.add("was-validated")
+            formAlienUpdateImage.classList.add("was-validated");
         },
         error: function (jqXHR, textStatus, errorThrown) {
             formAlienUpdateImage.classList.remove("was-validated");
@@ -109,24 +109,24 @@ function addNewComment() {
     let comment = document.getElementById("form-new-comment-comment");
     let commentInvalidFeedback = document.getElementById("form-new-comment-comment-invalid-feedback");
 
-    let alienId = document.getElementById("form-new-comment-parameter-current-alien-id").innerHTML
-    let userId = document.getElementById("form-new-comment-parameter-current-user-id").innerHTML
+    let alienId = document.getElementById("form-new-comment-parameter-current-alien-id").innerHTML;
+    let userId = document.getElementById("form-new-comment-parameter-current-user-id").innerHTML;
 
 
-    var data = {};
+    let data = {};
     data[NEW_COMMENT] = comment.value;
     data[ALIEN_ID] = alienId;
     data[USER_ID] = userId;
 
 
-    var url = CONTROLLER + "?" + COMMAND + "=" + ADD_NEW_COMMENT;
+    let url = CONTROLLER + "?" + COMMAND + "=" + ADD_NEW_COMMENT;
     $.ajax({
         url: url,
         type: "POST",
         data: data,
         success: function (data, textStatus, jqXHR) {
-            comment.classList.remove("is-invalid")
-            comment.classList.add("is-valid")
+            comment.classList.remove("is-invalid");
+            comment.classList.add("is-valid");
         },
         error: function (jqXHR, textStatus, errorThrown) {
             formNewComment.classList.remove("was-validated");
@@ -144,16 +144,16 @@ function addNewComment() {
 };
 
 function deleteComment(commentId) {
-    var data = {};
+    let data = {};
     data[COMMENT_ID] = commentId;
-    var url = CONTROLLER + "?" + COMMAND + "=" + DELETE_COMMENT;
+    let url = CONTROLLER + "?" + COMMAND + "=" + DELETE_COMMENT;
     $.ajax({
         url: url,
         type: "POST",
         data: data,
         success: function (updateResult) {
             if (updateResult == "true") {
-                var elementId = "comment_" + commentId;
+                let elementId = "comment_" + commentId;
                 document.getElementById(elementId).remove();
                 //$("#promote-demote-form").load("/" + PROJECT_NAME + "/" + CONTROLLER + "?" + COMMAND + "=" + DELETE_COMMENT + " #promote-demote-form");
                 //set invisible to visible validation green
@@ -167,23 +167,11 @@ function deleteComment(commentId) {
     });
 };
 
-function previousCommentPage(alienId, pageToRequest) {
-    var url = CONTROLLER + "?" + COMMAND + "=" + OPEN_ALIEN_PROFILE_PAGE + "&" + ALIEN_ID + "=" + alienId + "&" + PAGE + "=" + pageToRequest;
-    location.assign(url);
-};
-
-function nextCommentPage(alienId, pageToRequest) {
-    var url = CONTROLLER + "?" + COMMAND + "=" + OPEN_ALIEN_PROFILE_PAGE + "&" + ALIEN_ID + "=" + alienId + "&" + PAGE + "=" + pageToRequest;
-    location.assign(url);
-};
-
 const alienProfile = {
     updateAlienInfo: updateAlienInfo,
     updateAlienImage: updateAlienImage,
     addNewComment: addNewComment,
-    deleteComment: deleteComment,
-    previousCommentPage: previousCommentPage,
-    nextCommentPage: nextCommentPage
+    deleteComment: deleteComment
 }
 
 $(document).ready(function () {

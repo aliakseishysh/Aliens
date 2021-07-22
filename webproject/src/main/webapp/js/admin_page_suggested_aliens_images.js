@@ -1,4 +1,7 @@
-function approveAlienImage(alienImageUrl, article) {
+const buttonsApprove = document.getElementsByName("approve-alien-image");
+const buttonsDecline = document.getElementsByName("decline-alien-image");
+
+function approveAlienImage(alienImageUrl) {
     let data = {};
     data[IMAGE] = alienImageUrl;
     let url = CONTROLLER + "?" + COMMAND + "=" + ADMIN_APPROVE_ALIEN_IMAGE;
@@ -11,7 +14,7 @@ function approveAlienImage(alienImageUrl, article) {
             alert("success");
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            alert("error");
+            alert(jqXHR.status + " "  + textStatus + " " + errorThrown);
         }
     });
 };
@@ -29,34 +32,23 @@ function declineAlienImage(alienImageUrl, article) {
             alert("success");
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            alert("error");
+            alert(jqXHR.status + " "  + textStatus + " " + errorThrown);
         }
     });
 };
 
-function changePage(pageToRequest) {
-    var url = CONTROLLER + "?" + COMMAND + "=" + OPEN_ADMIN_SUGGESTED_ALIENS_PAGE + "&" + PAGE + "=" + pageToRequest;
-    location.assign(url);
-};
-
-
 const pageSuggestedAliens = {
     approveAlienImage: approveAlienImage,
-    declineAlienImage: declineAlienImage,
-    changePage: changePage
+    declineAlienImage: declineAlienImage
 }
 
 $(document).ready(function () {
-
-    let buttonsApprove = document.getElementsByName("approve-alien-image");
-    let buttonsDecline = document.getElementsByName("decline-alien-image");
 
     buttonsApprove.forEach(button => 
         button.addEventListener('click', function(event) {
             let alienImageUrl = button.parentElement.parentElement.children[1].children[0].children[0].getAttribute("src");
             alienImageUrl = alienImageUrl.substring(1 + PROJECT_NAME.length);
-            let article = button.closest("article"); // TODO some error message
-            pageSuggestedAliens.approveAlienImage(alienImageUrl, article);
+            pageSuggestedAliens.approveAlienImage(alienImageUrl);
         })
     );
 
@@ -64,8 +56,7 @@ $(document).ready(function () {
         button.addEventListener('click', function(event) {
             let alienImageUrl = button.parentElement.parentElement.children[1].children[0].children[0].getAttribute("src");
             alienImageUrl = alienImageUrl.substring(1 + PROJECT_NAME.length);
-            let article = button.closest("article"); // TODO some error message
-            pageSuggestedAliens.declineAlienImage(alienImageUrl, article);
+            pageSuggestedAliens.declineAlienImage(alienImageUrl);
         }
     ));
 

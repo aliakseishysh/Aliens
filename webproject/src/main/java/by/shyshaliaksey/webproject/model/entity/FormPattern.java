@@ -10,10 +10,10 @@ public enum FormPattern implements EnumValue  {
 	VALID_IMAGE_EXTENSION("^(jpg|jpeg|png)$"),
 	VALID_DAYS_IN_BAN("(?=^.{1,5}$)^[1-9][0-9]*$"), //
 	VALID_ALIEN_NAME("(?=^.{3,30}$)^[a-zA-Z0-9_ ]+$"),
-	VALID_ALIEN_SMALL_DESCRIPTION("(?=^.{6,100}$)^[\\s0-9a-zA-Zа-яА-Я!?#%*()-_\\|\\/,\\.…:;\']+$"), // p don't work in js
+	VALID_ALIEN_SMALL_DESCRIPTION("(?=^.{6,100}$)^[\\s0-9a-zA-Zа-яА-Я!?#%*()\\-_\\|\\/,\\.…:;\']+$"), // p don't work in js
 	
-	VALID_ALIEN_FULL_DESCRIPTION("(?=^.{100,3000}$)^[\\s0-9a-zA-Zа-яА-Я!?#%*()-_\\|/,\\.…:;\']+$"),
-	VALID_COMMENT("(?=^.{3,300}$)^[\\s0-9a-zA-Zа-яА-Я!?#%*()-_\\|/,\\.…:;\']+$"),
+	VALID_ALIEN_FULL_DESCRIPTION("(?=^.{100,3000}$)^[\\s0-9a-zA-Zа-яА-Я!?#%*()\\-_\\|/,\\.…:;\']+$"),
+	VALID_COMMENT("(?=^.{3,300}$)^[\\s0-9a-zA-Zа-яА-Я!?#%*()\\-_\\|/,\\.…:;\']+$"),
 	VALID_IMAGE_SIZE("1000000"); // TODO really? this needed to set maximum image size and send it to client side to js script
 	
 	private String value;
