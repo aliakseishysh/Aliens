@@ -9,6 +9,7 @@ public enum FilePath implements EnumValue  {
 	CSS_COMMENT("/css/comment.css"),
 	CSS_CAROUSEL("/css/carousel.css"),
 	CSS_SUGGESTED_IMAGE("/css/suggested_image.css"),
+	JS_BUNDLE("/js/bundle.js"),
 	JS_PAGINATION("/js/pagination.js"),
 	JS_RAITING("/js/raiting.js"),
 	JS_HOME("/js/home.js"),

@@ -4,18 +4,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
+<title>${TEXT[PAGE_BANNED_TITLE]}</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+
+<link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
 <script>
+	var BANNED_PAGE = `${OPEN_BANNED_PAGE}`;
 	var CONTROLLER = `${CONTROLLER}`;
 	var COMMAND = `${COMMAND}`;
 	var OPEN_HOME_PAGE = `${OPEN_HOME_PAGE}`;
 </script>
-<meta charset="UTF-8">
-<title>${TEXT[PAGE_BANNED_TITLE]}</title>
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
-
-<link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
+<script type="module" src="<c:url value='${JS_BUNDLE}'/>"></script>
 <body>
 <main role="main" class="container">
 	<jsp:include page="${TEMPLATE_NAV_JSP}"/>

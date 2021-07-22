@@ -9,7 +9,6 @@ public class CommandFactory {
 		CommandValue commandValue = CommandValue.fromString(commandName);
 		Command command = switch (commandValue) {
 		case OPEN_HOME_PAGE -> CommandValue.OPEN_HOME_PAGE.getCommand();
-		case OPEN_ABOUT_PAGE -> CommandValue.OPEN_ABOUT_PAGE.getCommand();
 		case OPEN_LOGIN_PAGE -> CommandValue.OPEN_LOGIN_PAGE.getCommand();
 		case OPEN_REGISTER_PAGE -> CommandValue.OPEN_REGISTER_PAGE.getCommand();
 		case OPEN_USER_PROFILE_PAGE -> CommandValue.OPEN_USER_PROFILE_PAGE.getCommand();

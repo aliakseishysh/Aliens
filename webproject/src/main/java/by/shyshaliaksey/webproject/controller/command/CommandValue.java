@@ -43,7 +43,6 @@ import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserPasswo
 public enum CommandValue implements EnumValue {
 
 	OPEN_HOME_PAGE("home-page", new OpenHomePageCommand()),
-	OPEN_ABOUT_PAGE("about-page", new OpenAboutPageCommand()),
 	OPEN_LOGIN_PAGE("login-page", new OpenLoginPageCommand()),
 	OPEN_REGISTER_PAGE("register-page", new OpenRegisterPageCommand()),
 	OPEN_USER_PROFILE_PAGE("user-profile-page", new OpenUserProfilePageCommand()),

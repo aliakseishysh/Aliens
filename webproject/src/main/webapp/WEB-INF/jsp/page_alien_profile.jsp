@@ -4,18 +4,13 @@
 <head>
 <title>${TEXT[PAGE_ALIEN_PROFILE_TITLE]}</title>
 <link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
-<!-- 
-<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
- -->
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-
-
 <link href="<c:url value="${CSS_RAITING}"/>" rel="stylesheet">
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
 <link href="<c:url value="${CSS_CUSTOM_FILE}"/>" rel="stylesheet">
 
 <script>
+	var ALIEN_PROFILE_PAGE = `${OPEN_ALIEN_PROFILE_PAGE}`;
 	var PROJECT_NAME = `${PROJECT_NAME}`;
 	var CONTROLLER = `${CONTROLLER}`;
 	var COMMAND = `${COMMAND}`;
@@ -53,17 +48,21 @@
 	var OPEN_ALIEN_PROFILE_PAGE = `${OPEN_ALIEN_PROFILE_PAGE}`;
 	var PAGINATION_PAGE_TO_GO = OPEN_ALIEN_PROFILE_PAGE;
 	var PAGE = `${PAGE}`;
-	
+
+	var ALIEN_IMAGES = `${alienImages}`;
+
+	var FIND_USER_RATE = `${FIND_USER_RATE}`;
+	var ALIEN_NAME = `${ALIEN_NAME}`;
+	var alienId = `${alien.id}`;
+	var alienName = `${alien.name}`;
+	var RATING_VALUE = `${RATING_VALUE}`;
+	var UPDATE_RATING = `${UPDATE_RATING}`;
 </script>
-
-
-<script type="text/javascript" src="<c:url value='${JS_RAITING}'/>"></script>
-<script type="text/javascript" src="<c:url value='${JS_ALIEN_PROFILE}'/>"></script>
-<script type="text/javascript" src="<c:url value='${JS_PAGINATION}'/>"></script>
-
+<script type="module" src="<c:url value='${JS_BUNDLE}'/>"></script>
 </head>
 <body>
 	<main role="main" class="container">
+		<span id="currentUserId" hidden>${currentUser.id}</span>
 		<jsp:include page="${TEMPLATE_NAV_JSP}"/>
 		<h1>${TEXT[PAGE_ALIEN_PROFILE_H1]}</h1>
 		<div class="content-section">

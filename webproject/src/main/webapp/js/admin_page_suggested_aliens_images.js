@@ -1,5 +1,10 @@
-const buttonsApprove = document.getElementsByName("approve-alien-image");
-const buttonsDecline = document.getElementsByName("decline-alien-image");
+let buttonsApprove;
+let buttonsDecline;
+
+$(document).ready(function () {
+    buttonsApprove = document.getElementsByName("approve-alien-image");
+    buttonsDecline = document.getElementsByName("decline-alien-image");
+});
 
 function approveAlienImage(alienImageUrl) {
     let data = {};

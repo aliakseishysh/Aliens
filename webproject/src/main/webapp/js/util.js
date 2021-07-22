@@ -9,3 +9,16 @@ async function downloadImage(imageSrc, newImageName) {
         });
     return fileList;
 };
+
+// $(document).ready(function () {
+//     let dropdownMenuButton = document.getElementById("dropdownMenuButton")
+//     dropdownMenuButton.addEventListener('click', function(event) {
+//         document.getElementById("nav-dropdawn-container").classList.toggle("show");
+//         document.getElementById("nav-dropdown-menu").classList.toggle("show");
+//         if (dropdownMenuButton.getAttribute("aria-expanded") == true) {
+//             dropdownMenuButton.setAttribute("aria-expanded", false);
+//         } else {
+//             dropdownMenuButton.setAttribute("aria-expanded", true);
+//         };
+//       }, false);
+// });

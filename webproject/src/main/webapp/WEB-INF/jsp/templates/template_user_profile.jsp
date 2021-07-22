@@ -50,8 +50,6 @@
 	var IMAGE_FEEDBACK = `${IMAGE_FEEDBACK}`;
 	var IMAGE_PATH = `${IMAGE_PATH}`;
 </script>
-<script type="text/javascript" src="<c:url value='${JS_UTIL}'/>"></script>
-<script type="text/javascript" src="<c:url value='${JS_USER_PROFILE}'/>"></script>
 <h1>${TEXT[TEMPLATE_USER_PROFILE_H1]}</h1>
 <div class="content-section">
 	<div class="media">

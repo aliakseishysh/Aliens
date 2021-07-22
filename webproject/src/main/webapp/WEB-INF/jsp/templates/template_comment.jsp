@@ -8,9 +8,6 @@
 	var DELETE_COMMENT = `${DELETE_COMMENT}`;
 	var COMMENT_ID = `${COMMENT_ID}`;
 </script>
-<!-- 
-<script type="text/javascript" src="<c:url value='${JS_ALIEN_PROFILE}'/>"></script>
- -->
 <article id="comment_${comment.id}" class="media content-section">
 	<img class="rounded-circle article-img" src="<c:url value="${comment.userImage}"/>" alt="${TEXT[TEMPLATE_COMMENT_IMAGE_ALT]}">
 	<div class="media-body">
@@ -20,8 +17,8 @@
 				<c:choose>
 					<c:when test="${comment.userLogin eq currentUser.login or currentUser.role eq ADMIN}">
 						<div class="justify-content-end-comment">
-							<button type="button" class="close" aria-label="Close"
-									onclick="deleteComment(`${comment.id}`)">
+							<span hidden>${comment.id}</span>
+							<button type="button" class="close" name="delete-comment-button" aria-label="Close">
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</div>

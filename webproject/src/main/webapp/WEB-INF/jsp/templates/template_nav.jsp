@@ -3,7 +3,6 @@
     pageEncoding="UTF-8"%>
 <head>
 	<link rel="shortcut icon" type="image/png" href="/webproject/favicon.png"/>
-	<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
 </head>
 <script>
 	var CONTROLLER = `${CONTROLLER}`;
@@ -15,7 +14,8 @@
 	var LOCALIZATION_EN = `${LOCALIZATION_EN}`;
 	var OPEN_HOME_PAGE = `${OPEN_HOME_PAGE}`;
 </script>
-<script type="text/javascript" src="<c:url value='${JS_NAV}'/>"></script>
+<script type="text/javascript" src="/webproject/js/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/webproject/js/bootstrap/bootstrap.bundle.min.js"></script>
 <header class="site-header">
 	<nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
 		<div class="container">
@@ -40,7 +40,7 @@
 				</div>
 				<div class="navbar-nav nav-item nav-link">
 					<div class="dropdown" id="nav-dropdawn-container">
-						  <button class="btn btn-secondary dropdown-toggle disabled" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						  		${CURRENT_LOCALIZATION_NAME}
 						  </button>
 						  <!-- TODO hrefs -->

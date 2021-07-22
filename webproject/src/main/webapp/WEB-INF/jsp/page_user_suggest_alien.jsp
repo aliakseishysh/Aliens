@@ -4,7 +4,11 @@
 <html>
 <head>
 <title>${TEXT[PAGE_SUGGEST_ALIEN_TITLE]}</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+<link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
+<link href="<c:url value="${CSS_CUSTOM_FILE}"/>" rel="stylesheet">
 <script>
+	var SUGGEST_ALIEN_PAGE = `${OPEN_USER_SUGGEST_ALIEN_PAGE}`;
 	var WEB_SITE_NAME = `${WEB_SITE_NAME}`;
 	var PROJECT_NAME = `${PROJECT_NAME}`;
 	var CONTROLLER = `${CONTROLLER}`;
@@ -32,12 +36,7 @@
 	var ALIEN_FULL_DESCRIPTION_FEEDBACK = `${ALIEN_FULL_DESCRIPTION_FEEDBACK}`;
 	var IMAGE_FEEDBACK = `${IMAGE_FEEDBACK}`;
 </script>
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-<link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
-<link href="<c:url value="${CSS_CUSTOM_FILE}"/>" rel="stylesheet">
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
-<script type="text/javascript" src="<c:url value='${JS_ALIEN_SUGGEST}'/>"></script>
+<script type="module" src="<c:url value='${JS_BUNDLE}'/>"></script>
 </head>
 <body>
 <main role="main" class="container">

@@ -4,15 +4,11 @@
 <html>
 <head>
 <title>${TEXT[PAGE_LOGIN_TITLE]}</title>
-<!-- 
-<script src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js'></script>
- -->
-<script
-	src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
 <script>
+	var LOGIN_PAGE = `${OPEN_LOGIN_PAGE}`;
 	var CONTROLLER = `${CONTROLLER}`;
 	var COMMAND = `${COMMAND}`;
 	var OPEN_REGISTER_PAGE = `${OPEN_REGISTER_PAGE}`;
@@ -29,7 +25,7 @@
 	var EMAIL_FEEDBACK = `${EMAIL_FEEDBACK}`;
 	var PASSWORD_FEEDBACK = `${PASSWORD_FEEDBACK}`;
 </script>
-<script type="text/javascript" src="<c:url value='${JS_LOGIN}'/>"></script>
+<script type="module" src="<c:url value='${JS_BUNDLE}'/>"></script>
 </head>
 <body>
 <main role="main" class="container">

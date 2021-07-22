@@ -16,6 +16,6 @@ function changePage(pageToRequest) {
     location.assign(url);
 };
 
-const pagination = {
+export const pagination = {
     changePage: changePage
 }

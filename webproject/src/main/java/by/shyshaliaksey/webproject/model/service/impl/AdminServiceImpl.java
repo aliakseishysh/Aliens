@@ -265,9 +265,8 @@ public class AdminServiceImpl implements AdminService {
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_NAME_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS))) {
-				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
+				Optional<Alien> alienInDatabase = alienDao.findById(alienId);
 				if (alienInDatabase.isPresent()) {
-
 					boolean addResult = alienDao.updateAlienInfo(alienId, alienName, alienSmallDescription,
 							alienFullDescription);
 					if (addResult) {

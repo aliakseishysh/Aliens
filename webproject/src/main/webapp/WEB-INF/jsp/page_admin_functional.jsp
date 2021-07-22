@@ -4,7 +4,11 @@
 <html>
 <head>
 <title>${TEXT[PAGE_ADMIN]}</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+<link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
+<link href="<c:url value="${CSS_CUSTOM_FILE}"/>" rel="stylesheet">
 <script>
+	var ADMIN_FUNCTIONAL_PAGE = `${OPEN_ADMIN_FUNCTIONAL_PAGE}`;
 	var WEB_SITE_NAME = `${WEB_SITE_NAME}`;
 	var PROJECT_NAME = `${PROJECT_NAME}`;
 	var CONTROLLER = `${CONTROLLER}`;
@@ -79,12 +83,7 @@
 	var ALIEN_FULL_DESCRIPTION_FEEDBACK = `${ALIEN_FULL_DESCRIPTION_FEEDBACK}`;
 	var IMAGE_FEEDBACK = `${IMAGE_FEEDBACK}`;
 </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
-<link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
-<link href="<c:url value="${CSS_CUSTOM_FILE}"/>" rel="stylesheet">
-<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>
-<script type="text/javascript" src="<c:url value='${JS_USER_PROFILE}'/>"></script>
-<script type="text/javascript" src="<c:url value='${JS_ADMIN_PROFILE}'/>"></script>
+<script type="module" src="<c:url value='${JS_BUNDLE}'/>"></script>
 </head>
 <body>
 <main role="main" class="container">

@@ -35,8 +35,8 @@ function updateRating(ratingValue) {
     });
 };
 
-document.addEventListener("DOMContentLoaded",() => {
-    if(document.getElementById("ratingStars") != null) {
-      setRatingValue();
-    }
-});
+export const rating = {
+    setRatingValue: setRatingValue,
+    updateRating: updateRating
+}
+
