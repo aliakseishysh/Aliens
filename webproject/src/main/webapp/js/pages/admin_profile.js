@@ -1,6 +1,6 @@
-import { AlienForm } from "./modules/alien.js";
-import { BanUnbanForm } from "./modules/ban_unban.js";
-import { PromoteDemoteForm } from "./modules/promote_demote.js";
+import { AlienForm } from "../modules/alien.js";
+import { BanUnbanForm } from "../modules/ban_unban.js";
+import { PromoteDemoteForm } from "../modules/promote_demote.js";
 
 let banUnbanForm;
 let banUnbanFormLogin;
@@ -52,9 +52,9 @@ $(document).ready(function () {
     alienCreateFormDescriptionFullInvalidFeedback = document.getElementById("form-alien-create-description-full-invalid-feedback");
     alienCreateFormImageInvalidFeedback = document.getElementById("form-alien-create-image-invalid-feedback");
 
-    alienForm = new AlienForm(alienCreateForm, alienCreateFormName, alienCreateFormDescriptionSmall, 
-        alienCreateFormDescriptionFull, alienCreateFormImage, alienCreateFormImageLabel, alienCreateFormNameInvalidFeedback, 
-        alienCreateFormDescriptionSmallInvalidFeedback, alienCreateFormDescriptionFullInvalidFeedback, alienCreateFormImageInvalidFeedback);
+    alienForm = new AlienForm(alienCreateForm, alienCreateFormName, alienCreateFormDescriptionSmall, alienCreateFormDescriptionFull, 
+        alienCreateFormImage, alienCreateFormImageLabel, alienCreateFormNameInvalidFeedback, alienCreateFormDescriptionSmallInvalidFeedback, 
+        alienCreateFormDescriptionFullInvalidFeedback, alienCreateFormImageInvalidFeedback, null, null, null, null);
     banUnbanFormObject = new BanUnbanForm(banUnbanForm, banUnbanFormLogin, banUnbanFormDaysInBan, banUnbanFormLoginInvalidFeedback, 
         banUnbanFormDaysInBanInvalidFeedback);
     promoteDemoteFormObject = new PromoteDemoteForm(promoteDemoteForm, promoteDemoteFormLogin, promoteDemoteFormLoginInvalidFeedback);
@@ -164,17 +164,17 @@ function addNewAlien() {
         processData: false,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            alienCreateFormObject.setFeedback(jqXHR.responseJSON[ALIEN_NAME_STATUS], qXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],
-                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_STATUS], jqXHR.responseJSON[IMAGE_STATUS],
-                jqXHR.responseJSON[ALIEN_NAME_FEEDBACK], jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK],
-                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK], jqXHR.responseJSON[IMAGE_FEEDBACK]);
+            alienForm.setFeedbackInfo(jqXHR.responseJSON[ALIEN_NAME_STATUS], qXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],
+                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_STATUS],jqXHR.responseJSON[ALIEN_NAME_FEEDBACK], jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK],
+                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK]);
+            alienForm.setFeedbackImage(jqXHR.responseJSON[IMAGE_STATUS], jqXHR.responseJSON[IMAGE_FEEDBACK]);
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            alienCreateFormObject.removeValidationClasses();
-            alienCreateFormObject.setFeedback(jqXHR.responseJSON[ALIEN_NAME_STATUS], qXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],
-                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_STATUS], jqXHR.responseJSON[IMAGE_STATUS],
-                jqXHR.responseJSON[ALIEN_NAME_FEEDBACK], jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK],
-                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK], jqXHR.responseJSON[IMAGE_FEEDBACK]);
+            alienForm.removeValidationClasses();
+            alienForm.setFeedbackInfo(jqXHR.responseJSON[ALIEN_NAME_STATUS], qXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],
+                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_STATUS],jqXHR.responseJSON[ALIEN_NAME_FEEDBACK], jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK],
+                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK]);
+            alienForm.setFeedbackImage(jqXHR.responseJSON[IMAGE_STATUS], jqXHR.responseJSON[IMAGE_FEEDBACK]);
         }
     });
 };
@@ -261,19 +261,17 @@ $(document).ready(function () {
         alienForm.removeImageValidationClasses();
         let validationInfoResult = alienForm.validateInfo();
         let validationImageResult = alienForm.validateImage();
-
-        if (!validationInfoResult[0] || !validationInfoResult[1] || !validationInfoResult[2] || !validationImageResult) {
-
-            alienForm.setFeedbackInfo(validationInfoResult[0], validationInfoResult[1], validationInfoResult[2],
-                STANDARD_ALIEN_NAME_FEEDBACK, STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK, STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK);
-            alienForm.setFeedbackImage(validationImageResult, STANDARD_IMAGE_FEEDBACK);
-            event.preventDefault();
-            event.stopPropagation();
-        } else {
+        if(!validationInfoResult.some(element => element == false) && validationImageResult) {
             event.preventDefault();
             adminPage.addNewAlien();
+        } else {
+            alienForm.setFeedbackInfo(validationInfoResult[0], validationInfoResult[1], validationInfoResult[2], "", "", "", 
+            STANDARD_ALIEN_NAME_FEEDBACK, STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK, STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK);
+            alienForm.setFeedbackImage(validationImageResult, "", STANDARD_IMAGE_FEEDBACK);
+            event.preventDefault();
+            event.stopPropagation();
         }
-    }, false);
+    });
     alienCreateFormName.addEventListener('input', function(event) {
         alienForm.removeNameValidationClasses();
     })
@@ -284,7 +282,7 @@ $(document).ready(function () {
         alienForm.removeFullDescriptionValidationClasses();
     })
     alienCreateFormImage.addEventListener('input', function(event) {
-        alienForm.setLabelText(alienCreateFormImage.files[0].name);
+        alienForm.setLabelText();
         alienForm.removeImageValidationClasses();
     })
 });

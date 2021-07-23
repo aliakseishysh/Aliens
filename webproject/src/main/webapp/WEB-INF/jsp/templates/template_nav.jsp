@@ -4,16 +4,6 @@
 <head>
 	<link rel="shortcut icon" type="image/png" href="/webproject/favicon.png"/>
 </head>
-<script>
-	var CONTROLLER = `${CONTROLLER}`;
-	var COMMAND = `${COMMAND}`;
-	var LOGOUT_USER = `${LOGOUT_USER}`;
-	var CHANGE_LOCALE = `${CHANGE_LOCALE}`;
-	var LOCALE = `${LOCALE}`;
-	var LOCALIZATION_RU = `${LOCALIZATION_RU}`;
-	var LOCALIZATION_EN = `${LOCALIZATION_EN}`;
-	var OPEN_HOME_PAGE = `${OPEN_HOME_PAGE}`;
-</script>
 <script type="text/javascript" src="/webproject/js/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="/webproject/js/bootstrap/bootstrap.bundle.min.js"></script>
 <header class="site-header">

@@ -1,30 +1,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="alien-tag" tagdir="/WEB-INF/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
+<alien-tag:variables />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
 <link href="<c:url value="${CSS_SUGGESTED_IMAGE}"/>" rel="stylesheet">
 <title>${TEXT[PAGE_ADMIN_SUGGESTED_ALIENS_IMAGES_TITLE]}</title>
-<script>
-	var SUGGESTED_ALIENS_IMAGES = `${OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE}`;
-	var PROJECT_NAME = `${PROJECT_NAME}`;
-	var CONTROLLER = `${CONTROLLER}`;
-	var COMMAND = `${COMMAND}`;
-
-	var OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE = `${OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE}`;
-	var PAGINATION_PAGE_TO_GO = OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE;
-	var PAGE = `${PAGE}`;
-	
-	var ADMIN_APPROVE_ALIEN_IMAGE = `${ADMIN_APPROVE_ALIEN_IMAGE}`;
-	var ADMIN_DECLINE_ALIEN_IMAGE = `${ADMIN_DECLINE_ALIEN_IMAGE}`;
-
-	var IMAGE = `${IMAGE}`;	
-	var ALIEN_ID = `${ALIEN_ID}`;	
-</script>
 <script type="module" src="<c:url value='${JS_BUNDLE}'/>"></script>
 <body>
 	<main role="main" class="container">

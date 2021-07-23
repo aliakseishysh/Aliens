@@ -3,14 +3,6 @@
 
 <link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
 
-<script>
-	var CONTROLLER = `${CONTROLLER}`;
-	var COMMAND = `${COMMAND}`;
-	var OPEN_ALIEN_PROFILE_PAGE = `${OPEN_ALIEN_PROFILE_PAGE}`;
-	var PAGE = `${PAGE}`;
-	var ALIEN_ID = `${ALIEN_ID}`;
-</script>
-
 <nav aria-label="Page Navigation">
 <ul class="pagination">
 <c:choose>

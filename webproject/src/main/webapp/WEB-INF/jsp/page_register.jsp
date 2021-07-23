@@ -1,34 +1,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="alien-tag" tagdir="/WEB-INF/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" %>
 <head>
 <title>${TEXT[PAGE_REGISTER_TITLE]}</title>
+<alien-tag:variables />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
-<script>
-	var REGISTER_PAGE = `${OPEN_REGISTER_PAGE}`;
-	var CONTROLLER = `${CONTROLLER}`;
-	var COMMAND = `${COMMAND}`;
-	var REGISTER_USER = `${REGISTER_USER}`;
-	var OPEN_LOGIN_PAGE = `${OPEN_LOGIN_PAGE}`;
-	var EMAIL = `${EMAIL}`;
-	var LOGIN = `${LOGIN}`;
-	var PASSWORD = `${PASSWORD}`;
-	var PASSWORD_CONFIRM = `${PASSWORD_CONFIRM}`;
-	var STANDARD_EMAIL_FEEDBACK = `${STANDARD_EMAIL_FEEDBACK}`;
-	var STANDARD_LOGIN_FEEDBACK = `${STANDARD_LOGIN_FEEDBACK}`;
-	var STANDARD_PASSWORD_FEEDBACK = `${STANDARD_PASSWORD_FEEDBACK}`;
-	var STANDARD_PASSWORD_CONFIRMATION_FEEDBACK = `${STANDARD_PASSWORD_CONFIRMATION_FEEDBACK}`;
-	var EMAIL_STATUS = `${EMAIL_STATUS}`;
-	var LOGIN_STATUS = `${LOGIN_STATUS}`;
-	var PASSWORD_STATUS = `${PASSWORD_STATUS}`;
-	var PASSWORD_CONFIRMATION_STATUS = `${PASSWORD_CONFIRMATION_STATUS}`;
-	var EMAIL_FEEDBACK = `${EMAIL_FEEDBACK}`;
-	var LOGIN_FEEDBACK = `${LOGIN_FEEDBACK}`;
-	var PASSWORD_FEEDBACK = `${PASSWORD_FEEDBACK}`;
-	var PASSWORD_CONFIRMATION_FEEDBACK = `${PASSWORD_CONFIRMATION_FEEDBACK}`;
-	var PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL = `${PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL}`;
-</script>
 <script type="module" src="<c:url value='${JS_BUNDLE}'/>"></script>
 </head>
 <body>

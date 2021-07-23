@@ -1,8 +1,8 @@
-import { AlienForm } from "./modules/alien.js";
-import { Comment } from "./modules/comment.js";
-import { initializeCarousel } from "./modules/carousel.js";
-import { pagination } from "./modules/pagination.js";
-import { rating } from "./modules/raiting.js";
+import { AlienForm } from "../modules/alien.js";
+import { Comment } from "../modules/comment.js";
+import { initializeCarousel } from "../modules/carousel.js";
+import { pagination } from "../modules/pagination.js";
+import { rating } from "../modules/raiting.js";
 window.pagination = pagination;
 window.rating = rating;
 
@@ -35,7 +35,7 @@ let alienForm;
 /** @type {Comment} */
 let commentForm;
 
-$(document).ready(function () {
+$(function() {
     formAlienUpdateInfo = document.getElementById("form-alien-update-info");
     formAlienUpdateInfoName = document.getElementById("form-alien-update-info-name");
     formAlienUpdateInfoDescriptionSmall = document.getElementById("form-alien-update-info-description-small");
@@ -80,10 +80,13 @@ function updateAlienInfo() {
         data: data,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
+            alienForm.setFeedbackInfo(jqXHR.responseJSON[ALIEN_NAME_STATUS], qXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],
+                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_STATUS], jqXHR.responseJSON[ALIEN_NAME_FEEDBACK], 
+                jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK], jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK]);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alienForm.removeInfoValidationClasses();
-            alienForm.setFeedbackInfo(jqXHR.responseJSON[ALIEN_NAME_STATUS], jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],
+            alienForm.setFeedbackInfo(jqXHR.responseJSON[ALIEN_NAME_STATUS], qXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],
                 jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_STATUS], jqXHR.responseJSON[ALIEN_NAME_FEEDBACK], 
                 jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK], jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK]);
         }
@@ -91,8 +94,6 @@ function updateAlienInfo() {
 };
 
 function updateAlienImage() {
-    let alienId = document.getElementById("alien-id-hidden").innerHTML;
-
     let formData = new FormData();
     formData.append(ALIEN_ID, alienId);
     formData.append(ALIEN_NEW_IMAGE, formAlienUpdateImageImage.files[0]);
@@ -160,7 +161,7 @@ const alienProfile = {
 /**
  * Setting values to alien info input
  */
-$(document).ready(function () {
+$(function() {
     if (formAlienUpdateInfo != null) {
         formAlienUpdateInfoName.value = document.getElementById("alien-name").innerHTML;
         formAlienUpdateInfoDescriptionSmall.value = document.getElementById("alien-small-description").innerHTML;
@@ -171,13 +172,15 @@ $(document).ready(function () {
 /**
  * Alien update info processing
  */
-$(document).ready(function () {
+$(function() {
     if (formAlienUpdateInfo != null) {
         formAlienUpdateInfo.addEventListener('submit', function(event) {
             alienForm.removeInfoValidationClasses();
             let validationResult = alienForm.validateInfo();
 
             if (!validationResult[0] || !validationResult[1] || !validationResult[2]) {
+                alienForm.setFeedbackInfo(validationInfoResult[0], validationInfoResult[1], validationInfoResult[2], "", "", "", 
+                STANDARD_ALIEN_NAME_FEEDBACK, STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK, STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK);
                 event.preventDefault();
                 event.stopPropagation();
             } else {
@@ -200,19 +203,19 @@ $(document).ready(function () {
 /**
  * Alien update image processing
  */
-$(document).ready(function () {
+$(function() {
     if (formAlienUpdateImage != null) {
         formAlienUpdateImage.addEventListener('submit', function(event) {
             alienForm.removeImageValidationClasses();
             let validationResult = alienForm.validateImage();
     
-            if (!validationResult) {
-                alienForm.setFeedbackImage(false, STANDARD_IMAGE_FEEDBACK);
-                event.preventDefault();
-                event.stopPropagation();
-            } else {
+            if (validationResult) {
                 event.preventDefault();
                 alienProfile.updateAlienImage()
+            } else {
+                alienForm.setFeedbackImage(validationResult, "", STANDARD_IMAGE_FEEDBACK);
+                event.preventDefault();
+                event.stopPropagation();
             }
         }, false);
         
@@ -226,7 +229,7 @@ $(document).ready(function () {
 /**
  * Add new comment processing
  */
-$(document).ready(function () {
+$(function() {
     if (formNewComment != null) {
         formNewComment.addEventListener('submit', function(event) {
             commentForm.removeCommentValidationClasses();
@@ -251,7 +254,7 @@ $(document).ready(function () {
 /**
  * Delete comment event listeners
  */
-$(document).ready(function() {
+$(function() {
     deleteCommentButtons.forEach(button => 
         button.addEventListener('click', function(event) {
             let commentId = button.parentElement.children[0].innerText;
@@ -263,7 +266,7 @@ $(document).ready(function() {
 /**
  * Carousel initialization
  */
- $(document).ready(function () {
+$(function() {
     initializeCarousel();
 });
 
@@ -271,7 +274,7 @@ $(document).ready(function() {
  * set rating value
  */
 
-document.addEventListener("DOMContentLoaded",() => {
+$(function() {
     if(document.getElementById("ratingStars") != null) {
         rating.setRatingValue();
     }

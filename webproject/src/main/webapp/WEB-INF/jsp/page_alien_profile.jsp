@@ -1,63 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="alien-tag" tagdir="/WEB-INF/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <html>
 <head>
 <title>${TEXT[PAGE_ALIEN_PROFILE_TITLE]}</title>
+<alien-tag:variables />
 <link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
 <link href="<c:url value="${CSS_RAITING}"/>" rel="stylesheet">
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
 <link href="<c:url value="${CSS_CUSTOM_FILE}"/>" rel="stylesheet">
-
-<script>
-	var ALIEN_PROFILE_PAGE = `${OPEN_ALIEN_PROFILE_PAGE}`;
-	var PROJECT_NAME = `${PROJECT_NAME}`;
-	var CONTROLLER = `${CONTROLLER}`;
-	var COMMAND = `${COMMAND}`;
-	var UPDATE_ALIEN_INFO = `${UPDATE_ALIEN_INFO}`;
-	var UPDATE_ALIEN_IMAGE = `${UPDATE_ALIEN_IMAGE}`;
-	var ALIEN_NAME = `${ALIEN_NAME}`;
-	var ALIEN_SMALL_DESCRIPTION = `${ALIEN_SMALL_DESCRIPTION}`;
-	var ALIEN_FULL_DESCRIPTION = `${ALIEN_FULL_DESCRIPTION}`;
-	var ALIEN_NEW_IMAGE = `${ALIEN_NEW_IMAGE}`;
-	var LOAD_ALIEN_UPDATE_FORM = `${LOAD_ALIEN_UPDATE_FORM}`;
-	var RESTORE_PASSWORD = `${RESTORE_PASSWORD}`;
-	var ADD_NEW_COMMENT = `${ADD_NEW_COMMENT}`;
-	var NEW_COMMENT = `${NEW_COMMENT}`;
-	var DELETE_COMMENT = `${DELETE_COMMENT}`;
-	var USER_ID = `${USER_ID}`;
-	var ALIEN_ID = `${ALIEN_ID}`;
-	
-	var STANDARD_ALIEN_NAME_FEEDBACK = `${STANDARD_ALIEN_NAME_FEEDBACK}`;
-	var STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK = `${STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK}`;
-	var STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK = `${STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK}`;
-	var STANDARD_IMAGE_FEEDBACK = `${STANDARD_IMAGE_FEEDBACK}`;
-	var ALIEN_NAME_STATUS = `${ALIEN_NAME_STATUS}`;
-	var ALIEN_SMALL_DESCRIPTION_STATUS = `${ALIEN_SMALL_DESCRIPTION_STATUS}`;
-	var ALIEN_FULL_DESCRIPTION_STATUS = `${ALIEN_FULL_DESCRIPTION_STATUS}`;
-	var IMAGE_STATUS = `${IMAGE_STATUS}`;
-	var ALIEN_NAME_FEEDBACK = `${ALIEN_NAME_FEEDBACK}`;
-	var ALIEN_SMALL_DESCRIPTION_FEEDBACK = `${ALIEN_SMALL_DESCRIPTION_FEEDBACK}`;
-	var ALIEN_FULL_DESCRIPTION_FEEDBACK = `${ALIEN_FULL_DESCRIPTION_FEEDBACK}`;
-	var IMAGE_FEEDBACK = `${IMAGE_FEEDBACK}`;
-
-	var STANDARD_COMMENT_FEEDBACK = `${STANDARD_COMMENT_FEEDBACK}`;
-	var COMMENT_STATUS = `${COMMENT_STATUS}`;
-	var COMMENT_FEEDBACK = `${COMMENT_FEEDBACK}`;
-
-	var OPEN_ALIEN_PROFILE_PAGE = `${OPEN_ALIEN_PROFILE_PAGE}`;
-	var PAGINATION_PAGE_TO_GO = OPEN_ALIEN_PROFILE_PAGE;
-	var PAGE = `${PAGE}`;
-
-	var ALIEN_IMAGES = `${alienImages}`;
-
-	var FIND_USER_RATE = `${FIND_USER_RATE}`;
-	var ALIEN_NAME = `${ALIEN_NAME}`;
-	var alienId = `${alien.id}`;
-	var alienName = `${alien.name}`;
-	var RATING_VALUE = `${RATING_VALUE}`;
-	var UPDATE_RATING = `${UPDATE_RATING}`;
-</script>
 <script type="module" src="<c:url value='${JS_BUNDLE}'/>"></script>
 </head>
 <body>

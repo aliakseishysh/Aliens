@@ -2,12 +2,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <link href="<c:url value="${CSS_COMMENT}"/>" rel="stylesheet">
-<script>
-	var CONTROLLER = `${CONTROLLER}`;
-	var COMMAND = `${COMMAND}`;
-	var DELETE_COMMENT = `${DELETE_COMMENT}`;
-	var COMMENT_ID = `${COMMENT_ID}`;
-</script>
 <article id="comment_${comment.id}" class="media content-section">
 	<img class="rounded-circle article-img" src="<c:url value="${comment.userImage}"/>" alt="${TEXT[TEMPLATE_COMMENT_IMAGE_ALT]}">
 	<div class="media-body">

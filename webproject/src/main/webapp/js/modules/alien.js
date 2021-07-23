@@ -1,4 +1,6 @@
-import { WAS_VALIDATED_CLASS, IS_INVALID_CLASS, IS_VALID_CLASS } from "./bootstrap_classes.js";
+import { validateInput, validateTextarea, validateImage } from "./validation.js";
+import { Validator, ValidationCleaner, Feedback } from "./util.js";
+
 
 export class AlienForm {
 
@@ -12,8 +14,13 @@ export class AlienForm {
     #descriptionSmallInvalid;
     #descriptionFullInvalid;
     #imageInvalid;
+    #nameValid;
+    #descriptionSmallValid;
+    #descriptionFullValid;
+    #imageValid;
     
-    constructor(form, name, descriptionSmall, descriptionFull, image, imageLabel, nameInvalid, descriptionSmallInvalid, descriptionFullInvalid, imageInvalid){
+    constructor(form, name, descriptionSmall, descriptionFull, image, imageLabel, nameInvalid, descriptionSmallInvalid, 
+        descriptionFullInvalid, imageInvalid, nameValid, descriptionSmallValid, descriptionFullValid, imageValid){
         this.#form = form;
         this.#name = name;
         this.#descriptionSmall = descriptionSmall;
@@ -25,193 +32,111 @@ export class AlienForm {
         this.#descriptionSmallInvalid = descriptionSmallInvalid;
         this.#descriptionFullInvalid = descriptionFullInvalid;
         this.#imageInvalid = imageInvalid;
+
+        this.#nameValid = nameValid;
+        this.#descriptionSmallValid = descriptionSmallValid;
+        this.#descriptionFullValid = descriptionFullValid;
+        this.#imageValid = imageValid;
+
     }
 
-    setFeedbackInfo(isNameCorrect, isSmallDescriptionCorrect, isFullDescriptionCorrect, nameFeedback, smallDescriptionFeedback, fullDescriptionFeedback) {
-        if (isNameCorrect) {
-            this.#setNameValid();
-            this.#setNameValidFeedback(nameFeedback);
-        } else {
-            this.#setNameInvalid();
-            this.#setNameInvalidFeedback(nameFeedback);
-        }
-        if (isSmallDescriptionCorrect) {
-            this.#setDescriptionSmallValid();
-            this.#setDescriptionSmallValidFeedback(smallDescriptionFeedback);
-        } else {
-            this.#setDescriptionSmallInvalid();
-            this.#setDescriptionSmallInvalidFeedback(smallDescriptionFeedback);
-        }
-        if (isFullDescriptionCorrect) {
-            this.#setDescriptionFullValid();
-            this.#setDescriptionFullValidFeedback(fullDescriptionFeedback);
-        } else {
-            this.#setDescriptionFullInvalid();
-            this.#setDescriptionFullInvalidFeedback(fullDescriptionFeedback);
-        }
+    setFeedbackInfo(isNameCorrect, isSmallDescriptionCorrect, isFullDescriptionCorrect, nameValidFeedback, smallDescriptionValidFeedback, 
+        fullDescriptionValidFeedback, nameInvalidFeedback, smallDescriptionInvalidFeedback, fullDescriptionInvalidFeedback) {
+            Feedback.setElementFeedback(this.#name, this.#nameValid, this.#nameInvalid, isNameCorrect, nameValidFeedback, nameInvalidFeedback);
+            Feedback.setElementFeedback(this.#descriptionSmall, this.#descriptionSmallValid, this.#descriptionSmallInvalid, 
+                isSmallDescriptionCorrect, smallDescriptionValidFeedback, smallDescriptionInvalidFeedback);
+            Feedback.setElementFeedback(this.#descriptionFull, this.#descriptionFullValid, this.#descriptionFullInvalid, 
+                isFullDescriptionCorrect, fullDescriptionValidFeedback, fullDescriptionInvalidFeedback);
     }
 
-    setFeedbackImage(isImageCorrect, imageFeedback) {
-        if (isImageCorrect) {
-            this.#setImageValid();
-            this.#setImageValidFeedback(imageFeedback);
-        } else {
-            this.#setImageInvalid();
-            this.#setImageInvalidFeedback(imageFeedback);
-        }
+    setServerFeedbackInfo(isNameCorrect, isSmallDescriptionCorrect, isFullDescriptionCorrect, nameFeedback, smallDescriptionFeedback, 
+        fullDescriptionFeedback) {
+        Feedback.setElementFeedback(this.#name, this.#nameValid, this.#nameInvalid, isNameCorrect, nameFeedback, nameFeedback);
+        Feedback.setElementFeedback(this.#descriptionSmall, this.#descriptionSmallValid, this.#descriptionSmallInvalid, 
+            isSmallDescriptionCorrect, smallDescriptionFeedback, smallDescriptionFeedback);
+        Feedback.setElementFeedback(this.#descriptionFull, this.#descriptionFullValid, this.#descriptionFullInvalid, 
+            isFullDescriptionCorrect, fullDescriptionFeedback, fullDescriptionFeedback);
+    }
+
+    setServerFeedbackName(isNameCorrect, nameFeedback) {
+        Feedback.setElementFeedback(this.#name, this.#nameValid, this.#nameInvalid, isNameCorrect, nameFeedback, nameFeedback);
+    }
+
+    setFeedbackName(isNameCorrect, nameValidFeedback, nameInvalidFeedback) {
+        Feedback.setElementFeedback(this.#name, this.#nameValid, this.#nameInvalid, isNameCorrect, nameValidFeedback, nameInvalidFeedback);
+    }
+
+    setServerFeedbackImage(isImageCorrect, imageFeedback) {
+        Feedback.setElementFeedback(this.#image, this.#imageValid, this.#imageInvalid, isImageCorrect, imageFeedback, imageFeedback);
+    }
+
+    setFeedbackImage(isImageCorrect, imageValidFeedback, imageInvalidFeedback) {
+        Feedback.setElementFeedback(this.#image, this.#imageValid, this.#imageInvalid, isImageCorrect, imageValidFeedback, imageInvalidFeedback);
     }
     
     removeValidationClasses() {
-        this.#form.classList.remove(WAS_VALIDATED_CLASS);
-        this.#name.classList.remove(IS_VALID_CLASS);
-        this.#descriptionSmall.classList.remove(IS_VALID_CLASS);
-        this.#descriptionFull.classList.remove(IS_VALID_CLASS);
-        this.#image.classList.remove(IS_VALID_CLASS);
-        this.#name.classList.remove(IS_INVALID_CLASS);
-        this.#descriptionSmall.classList.remove(IS_INVALID_CLASS);
-        this.#descriptionFull.classList.remove(IS_INVALID_CLASS);
-        this.#image.classList.remove(IS_INVALID_CLASS);
+        ValidationCleaner.removeElementValidation(this.#form);
+        ValidationCleaner.removeElementValidation(this.#name);
+        ValidationCleaner.removeElementValidation(this.#descriptionSmall);
+        ValidationCleaner.removeElementValidation(this.#descriptionFull);
+        ValidationCleaner.removeElementValidation(this.#image);
     }
 
     removeInfoValidationClasses() {
-        this.#form.classList.remove(WAS_VALIDATED_CLASS);
-        this.#name.classList.remove(IS_VALID_CLASS);
-        this.#descriptionSmall.classList.remove(IS_VALID_CLASS);
-        this.#descriptionFull.classList.remove(IS_VALID_CLASS);
-        this.#name.classList.remove(IS_INVALID_CLASS);
-        this.#descriptionSmall.classList.remove(IS_INVALID_CLASS);
-        this.#descriptionFull.classList.remove(IS_INVALID_CLASS);
+        ValidationCleaner.removeElementValidation(this.#form);
+        ValidationCleaner.removeElementValidation(this.#name);
+        ValidationCleaner.removeElementValidation(this.#descriptionSmall);
+        ValidationCleaner.removeElementValidation(this.#descriptionFull);
     }
 
     removeNameValidationClasses() {
-        this.#form.classList.remove(WAS_VALIDATED_CLASS);
-        this.#name.classList.remove(IS_VALID_CLASS);
-        this.#name.classList.remove(IS_INVALID_CLASS);
+        ValidationCleaner.removeElementValidation(this.#form);
+        ValidationCleaner.removeElementValidation(this.#name);
     }
 
     removeSmallDescriptionValidationClasses(){
-        this.#form.classList.remove(WAS_VALIDATED_CLASS);
-        this.#descriptionSmall.classList.remove(IS_VALID_CLASS);
-        this.#descriptionSmall.classList.remove(IS_INVALID_CLASS);
+        ValidationCleaner.removeElementValidation(this.#form);
+        ValidationCleaner.removeElementValidation(this.#descriptionSmall);
     }
 
     removeFullDescriptionValidationClasses(){
-        this.#form.classList.remove(WAS_VALIDATED_CLASS);
-        this.#descriptionFull.classList.remove(IS_VALID_CLASS);
-        this.#descriptionFull.classList.remove(IS_INVALID_CLASS);
+        ValidationCleaner.removeElementValidation(this.#form);
+        ValidationCleaner.removeElementValidation(this.#descriptionFull);
 
     }
 
     removeImageValidationClasses() {
-        this.#form.classList.remove(WAS_VALIDATED_CLASS);
-        this.#image.classList.remove(IS_VALID_CLASS);
-        this.#image.classList.remove(IS_INVALID_CLASS);
+        ValidationCleaner.removeElementValidation(this.#form);
+        ValidationCleaner.removeElementValidation(this.#image);
     }
 
     validateInfo() {
-        let nameCheckResult = false;
-        let descriptionSmallCheckResult = false;
-        let descriptionFullCheckResult = false;
-
-        if (this.#name.value != "" && this.#name.value.match(this.#name.getAttribute("pattern"))) {
-            nameCheckResult = true;
-            this.#setNameValid();
-        }
-        if (this.#descriptionSmall.value != "" && this.#descriptionSmall.value.match(this.#descriptionSmall.getAttribute("pattern"))) {
-            descriptionSmallCheckResult = true;
-            this.#setDescriptionSmallValid();
-        }
-        if (this.#descriptionFull.value != "" && this.#descriptionFull.value.replaceAll('\n', '\\n').match(this.#descriptionFull.getAttribute("pattern"))) {
-            descriptionFullCheckResult = true;
-            this.#setDescriptionFullValid();
-        }
+        let nameCheckResult = Validator.validateElement(this.#name, validateInput);
+        let descriptionSmallCheckResult = Validator.validateElement(this.#descriptionSmall, validateInput);
+        let descriptionFullCheckResult = Validator.validateElement(this.#descriptionFull, validateTextarea);
         return [nameCheckResult, descriptionSmallCheckResult, descriptionFullCheckResult];
     }
 
+    validateName() {
+        let nameCheckResult = Validator.validateElement(this.#name, validateInput);
+        return nameCheckResult;
+    }
+
     validateImage() {
-        let files = this.#image.files;
-        
-        let imageCheckResult = false;
-        let validExtensions = ["image/jpg", "image/jpeg", "image/png"];
-       
-        if (files.length == 1) {
-            let file = files[0];
-            
-            if (file.size <= 1000000) { // bytes
-                for (let i = 0; i < validExtensions.length; i++) {
-                    if (validExtensions[i] == file.type) {
-                        imageCheckResult = true;
-                        this.#setImageValid();
-                        break;
-                    }
-                }    
-            }
-        }
+        let imageCheckResult = Validator.validateElement(this.#image, validateImage);
         return imageCheckResult;
     }
 
-    setLabelText(text) {
-        this.#imageLabel.innerHTML = text;
+    validate() {
+        let nameCheckResult = Validator.validateElement(this.#name, validateInput);
+        let descriptionSmallCheckResult = Validator.validateElement(this.#descriptionSmall, validateInput);
+        let descriptionFullCheckResult = Validator.validateElement(this.#descriptionFull, validateTextarea);
+        let imageCheckResult = Validator.validateElement(this.#image, validateImage);
+        return [nameCheckResult, descriptionSmallCheckResult, descriptionFullCheckResult, imageCheckResult];
     }
 
-    #setNameValid() {
-        this.#name.classList.add(IS_VALID_CLASS);
-    }
-
-    #setNameInvalid() {
-        this.#name.classList.add(IS_INVALID_CLASS);
-    }
-
-    #setNameInvalidFeedback(invalidFeedback) {
-        this.#nameInvalid.innerHTML = invalidFeedback;
-    }
-
-    #setNameValidFeedback(validFeedback) {
-    }
-
-    #setDescriptionSmallValid() {
-        this.#descriptionSmall.classList.add(IS_VALID_CLASS);
-    }
-
-    #setDescriptionSmallInvalid() {
-        this.#descriptionSmall.classList.add(IS_INVALID_CLASS);
-    }
-
-    #setDescriptionSmallInvalidFeedback(invalidFeedback) {
-        this.#descriptionSmallInvalid.innerHTML = invalidFeedback;
-    }
-
-    #setDescriptionSmallValidFeedback(validFeedback) {
-    }
-
-    #setDescriptionFullValid() {
-        this.#descriptionFull.classList.add(IS_VALID_CLASS);
-    }
-
-    #setDescriptionFullInvalid() {
-        this.#descriptionFull.classList.add(IS_INVALID_CLASS);
-    }
-
-    #setDescriptionFullInvalidFeedback(invalidFeedback) {
-        this.#descriptionFullInvalid.innerHTML = invalidFeedback;
-    }
-
-    #setDescriptionFullValidFeedback(validFeedback) {
-    }
-
-    #setImageValid() {
-        this.#image.classList.add(IS_VALID_CLASS);
-    }
-
-    #setImageInvalid() {
-        this.#image.classList.add(IS_INVALID_CLASS);
-    }
-
-    #setImageInvalidFeedback(invalidFeedback) {
-        this.#imageInvalid.innerHTML = invalidFeedback;
-    }
-
-    #setImageValidFeedback(validFeedback) {
+    setLabelText() {
+        this.#imageLabel.innerHTML = this.#image.files[0].name;
     }
 
 }

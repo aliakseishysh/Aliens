@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="alien-tag" tagdir="/WEB-INF/tags" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" %>
 <!DOCTYPE html>
@@ -6,15 +7,10 @@
 <head>
 <meta charset="UTF-8">
 <title>${TEXT[PAGE_BANNED_TITLE]}</title>
+<alien-tag:variables />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
 
 <link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
-<script>
-	var BANNED_PAGE = `${OPEN_BANNED_PAGE}`;
-	var CONTROLLER = `${CONTROLLER}`;
-	var COMMAND = `${COMMAND}`;
-	var OPEN_HOME_PAGE = `${OPEN_HOME_PAGE}`;
-</script>
 <script type="module" src="<c:url value='${JS_BUNDLE}'/>"></script>
 <body>
 <main role="main" class="container">
