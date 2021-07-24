@@ -10,9 +10,9 @@ let formUpdateEmail;
 let formUpdateEmailEmail;
 let formUpdateEmailInvalidFeedback;
 
+let formUpdateLogin;
 let formUpdateLoginLogin;
 let formUpdateLoginLoginInvalidFeedback;
-let formUpdateLogin;
 
 let formUpdateImage;
 let formUpdateImageImage;
@@ -191,6 +191,16 @@ const userProfile = {
     updateUserPassword: updateUserPassword,
     updateUserImage: updateUserImage
 }
+
+/**
+ * Reset forms
+ */
+$(function() {
+    formUpdateEmail.reset();
+    formUpdateLogin.reset();
+    formUpdateImage.reset();
+    formUpdatePassword.reset();
+});
 
 /**
  * form update email form event listeners

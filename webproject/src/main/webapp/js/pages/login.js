@@ -2,12 +2,15 @@ import { LoginForm } from "../modules/user.js"
 /** @type {LoginForm} */
 let loginForm;
 
+let formLogin;
 let email;
 let password;
-let formLogin;
 let emailInvalidFeedback;
 let passwordInvalidFeedback;
 
+/**
+ * Setup
+ */
 $(function() {
     email = document.getElementById("form-login-email");
     password = document.getElementById("form-login-password");
@@ -62,6 +65,16 @@ const loginPage = {
     openRegisterPage: openRegisterPage
 };
 
+/**
+ * Reset forms
+ */
+$(function() {
+    formLogin.reset();
+});
+
+/**
+ * Login processing
+ */
 $(document).ready(function () {
     formLogin.addEventListener('submit', function(event) {
         loginForm.removeValidation();

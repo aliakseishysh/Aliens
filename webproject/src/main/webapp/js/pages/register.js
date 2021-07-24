@@ -12,6 +12,9 @@ let enteredLoginInvalidFeedback;
 let enteredPasswordInvalidFeedback;
 let enteredPasswordConfirmationInvalidFeedback;
 
+/**
+ * Setup
+ */
 $(function() {
     formRegisterElement = document.getElementById("form-register");
     enteredEmailElement = document.getElementById("form-register-email");
@@ -28,9 +31,6 @@ $(function() {
         enteredPasswordConfirmElement, null, enteredPasswordConfirmationInvalidFeedback);
 
 });
-
-
-
 
 function registerUser() {
     let data = {};
@@ -88,8 +88,17 @@ const registerPage = {
     openLoginPage: openLoginPage
 }
 
+/**
+ * Reset forms
+ */
+$(function() {
+    formRegisterElement.reset();
+});
+
+/**
+ * Register processing
+ */
 $(document).ready(function () {
-    let formRegisterElement = document.getElementById("form-register");
     formRegisterElement.addEventListener('submit', function(event) {
         registerForm.removeValidation();
         let validationResult = registerForm.validate();
@@ -110,5 +119,19 @@ $(document).ready(function () {
             event.preventDefault();
             event.stopPropagation();
         }
+    });
+    enteredEmailElement.addEventListener("submit", function(event) {
+        registerForm.removeEmailValidation();
+    });
+    enteredLoginElement.addEventListener("submit", function(event) {
+        registerForm.removeLoginValidation();
+    });
+    enteredPasswordElement.addEventListener("submit", function(event) {
+        registerForm.removePasswordValidation();
+        registerForm.removePasswordConfirmationValidation();
+    });
+    enteredPasswordConfirmElement.addEventListener("submit", function(event) {
+        registerForm.removePasswordValidation();
+        registerForm.removePasswordConfirmationValidation();
     });
 });

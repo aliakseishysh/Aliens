@@ -6,36 +6,43 @@ import { rating } from "../modules/raiting.js";
 window.pagination = pagination;
 window.rating = rating;
 
+/** @type {AlienForm} */
+let alienForm;
+/** @type {Comment} */
+let commentForm;
 let formAlienUpdateInfo;
 let formAlienUpdateInfoName;
 let formAlienUpdateInfoDescriptionSmall;
 let formAlienUpdateInfoDescriptionFull;
-
 let formAlienUpdateInfoNameInvalidFeedback;
 let formAlienUpdateInfoDescriptionSmallInvalidFeedback;
 let formAlienUpdateInfoDescriptionFullInvalidFeedback;
-
 let formAlienUpdateImage;
 let formAlienUpdateImageImage;
-    
 let formAlienUpdateImageImageInvalidFeedback;
 let formAlienUpdateImageImageLabel;
-
 let formNewComment;
 let formNewCommentComment;
 let formNewCommentCommentInvalidFeedback;
+let currentAlienName;
+let currentAlienDescriptionSmall;
+let currentAliendDescriptionFull;
+let currentAlienImage;
 
 let alienId;
 let userId;
 
 let deleteCommentButtons;
 
-/** @type {AlienForm} */
-let alienForm;
-/** @type {Comment} */
-let commentForm;
+
 
 $(function() {
+
+    currentAlienName = document.getElementById("alien-name");
+    currentAlienDescriptionSmall = document.getElementById("alien-small-description");
+    currentAliendDescriptionFull = document.getElementById("alien-big-description");
+    currentAlienImage = document.getElementById("alien-image");
+
     formAlienUpdateInfo = document.getElementById("form-alien-update-info");
     formAlienUpdateInfoName = document.getElementById("form-alien-update-info-name");
     formAlienUpdateInfoDescriptionSmall = document.getElementById("form-alien-update-info-description-small");
@@ -80,9 +87,12 @@ function updateAlienInfo() {
         data: data,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            alienForm.setFeedbackInfo(jqXHR.responseJSON[ALIEN_NAME_STATUS], qXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],
+            alienForm.setFeedbackInfo(jqXHR.responseJSON[ALIEN_NAME_STATUS], jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],
                 jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_STATUS], jqXHR.responseJSON[ALIEN_NAME_FEEDBACK], 
                 jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK], jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK]);
+            currentAlienName.innerHTML = formAlienUpdateInfoName.value;
+            currentAlienDescriptionSmall.innerHTML = formAlienUpdateInfoDescriptionSmall.value;
+            currentAliendDescriptionFull.innerHTML = formAlienUpdateInfoDescriptionFull.value;
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alienForm.removeInfoValidationClasses();
@@ -107,10 +117,18 @@ function updateAlienImage() {
         processData: false,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
+            alienForm.setFeedbackImage(jqXHR.responseJSON[IMAGE_STATUS], 
+                jqXHR.responseJSON[IMAGE_FEEDBACK], 
+                jqXHR.responseJSON[IMAGE_FEEDBACK]
+            );
+            currentAlienImage.src = jqXHR.responseJSON[IMAGE_PATH];
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alienForm.removeImageValidationClasses();
-            alienForm.setFeedbackImage(jqXHR.responseJSON[IMAGE_STATUS], jqXHR.responseJSON[IMAGE_FEEDBACK]);
+            alienForm.setFeedbackImage(jqXHR.responseJSON[IMAGE_STATUS], 
+                jqXHR.responseJSON[IMAGE_FEEDBACK], 
+                jqXHR.responseJSON[IMAGE_FEEDBACK]
+            );
         }
     });
 };
@@ -167,6 +185,14 @@ $(function() {
         formAlienUpdateInfoDescriptionSmall.value = document.getElementById("alien-small-description").innerHTML;
         formAlienUpdateInfoDescriptionFull.value = document.getElementById("alien-big-description").innerHTML;
     }
+});
+
+/**
+ * Reset forms
+ */
+$(function() {
+    formAlienUpdateImage.reset();
+    formNewComment.reset();
 });
 
 /**

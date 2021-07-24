@@ -22,6 +22,7 @@ import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.AdminService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
@@ -43,7 +44,8 @@ public class BanUserCommand implements Command {
 		try {
 			String userLogin = request.getParameter(RequestParameter.LOGIN.getValue());
 			String daysToBan = request.getParameter(RequestParameter.DAYS_TO_BAN.getValue());
-			result = adminService.banUser(userLogin, daysToBan);
+			User currentUser = (User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue());
+			result = adminService.banUser(userLogin, daysToBan, currentUser.getLogin());
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			
 			String jsonResponse = new JSONObject()

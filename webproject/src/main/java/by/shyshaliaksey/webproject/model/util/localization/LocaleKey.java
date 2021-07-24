@@ -101,6 +101,9 @@ public enum LocaleKey implements EnumValue {
 	FORM_USER_BAN_UNBAN_DAYS_IN_BAN_PLACEHOLDER("form_user_ban_unban_days_in_ban_placeholder"),
 	FORM_USER_BAN_UNBAN_SUBMIT_BAN("form_user_ban_unban_submit_ban"),
 	FORM_USER_BAN_UNBAN_SUBMIT_UNBAN("form_user_ban_unban_submit_unban"),
+	CANT_FIND_SUITABLE_USER("cant_find_suitable_user"),
+	
+	
 	// Form email update
 	FORM_EMAIL_UPDATE_LEGEND("form_email_update_legend"),
 	FORM_EMAIL_UPDATE_EMAIL("form_email_update_email"),

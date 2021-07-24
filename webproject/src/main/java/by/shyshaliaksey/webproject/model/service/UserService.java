@@ -21,7 +21,6 @@ public interface UserService {
 	Map<Feedback.Key, Object> changeEmail(String email, String newEmail, int userId) throws ServiceException;
 	Map<Feedback.Key, Object> changeLogin(String login, String newLogin, int userId) throws ServiceException;
 	Map<Feedback.Key, Object> changePassword(String password, String passwordConfirm, int userId) throws ServiceException;
-	Map<Feedback.Key, Object> updateImage(String serverDeploymentPath, String rootFolder, Part part, int userId, String webSiteName) throws ServiceException;
 	boolean isUserBanned(HttpSession session);
 	Map<Feedback.Key, Object> addNewComment(int userId, int alienId, String newComment) throws ServiceException;
 	boolean deleteComment(int commentId) throws ServiceException;
@@ -29,5 +28,7 @@ public interface UserService {
 			Part alienImage, String rootFolder, String serverDeploymentPath) throws ServiceException;
 	Map<Key, Object> suggestNewAlienImage(String alienName, Part alienImage, String rootFolder,
 			String serverDeploymentPath) throws ServiceException;
+	Map<Key, Object> updateImage(String serverDeploymentPath, String rootFolder, Part userImage, int userId, String webSiteName)
+			throws ServiceException;
 	
 }

@@ -164,17 +164,37 @@ function addNewAlien() {
         processData: false,
         dataType: "json",
         success: function (data, textStatus, jqXHR) {
-            alienForm.setFeedbackInfo(jqXHR.responseJSON[ALIEN_NAME_STATUS], qXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],
-                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_STATUS],jqXHR.responseJSON[ALIEN_NAME_FEEDBACK], jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK],
-                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK]);
-            alienForm.setFeedbackImage(jqXHR.responseJSON[IMAGE_STATUS], jqXHR.responseJSON[IMAGE_FEEDBACK]);
+            alienForm.setFeedbackInfo(jqXHR.responseJSON[ALIEN_NAME_STATUS], 
+                jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],
+                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_STATUS],
+                jqXHR.responseJSON[ALIEN_NAME_FEEDBACK], 
+                jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK],
+                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK],
+                jqXHR.responseJSON[ALIEN_NAME_FEEDBACK], 
+                jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK],
+                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK]
+            );
+            alienForm.setFeedbackImage(jqXHR.responseJSON[IMAGE_STATUS], 
+                jqXHR.responseJSON[IMAGE_FEEDBACK],
+                jqXHR.responseJSON[IMAGE_FEEDBACK]
+            );
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alienForm.removeValidationClasses();
-            alienForm.setFeedbackInfo(jqXHR.responseJSON[ALIEN_NAME_STATUS], qXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],
-                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_STATUS],jqXHR.responseJSON[ALIEN_NAME_FEEDBACK], jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK],
-                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK]);
-            alienForm.setFeedbackImage(jqXHR.responseJSON[IMAGE_STATUS], jqXHR.responseJSON[IMAGE_FEEDBACK]);
+            alienForm.setFeedbackInfo(jqXHR.responseJSON[ALIEN_NAME_STATUS], 
+                jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],
+                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_STATUS],
+                jqXHR.responseJSON[ALIEN_NAME_FEEDBACK], 
+                jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK],
+                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK],
+                jqXHR.responseJSON[ALIEN_NAME_FEEDBACK], 
+                jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK],
+                jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK]
+            );
+            alienForm.setFeedbackImage(jqXHR.responseJSON[IMAGE_STATUS], 
+                jqXHR.responseJSON[IMAGE_FEEDBACK],
+                jqXHR.responseJSON[IMAGE_FEEDBACK]
+            );
         }
     });
 };
@@ -187,6 +207,15 @@ const adminPage = {
     demoteAdmin: demoteAdmin,
     addNewAlien: addNewAlien
 }
+
+/**
+ * reset forms
+ */
+$(function() {
+    banUnbanForm.reset();
+    promoteDemoteForm.reset();
+    alienCreateForm.reset();
+});
 
 /**
  * BanUnban form processing

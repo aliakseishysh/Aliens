@@ -5,11 +5,7 @@
 <html>
 <head>
 <title>${TEXT[PAGE_LOGIN_TITLE]}</title>
-<alien-tag:variables />
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-<link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
-<script type="module" src="<c:url value='${JS_BUNDLE}'/>"></script>
+<alien-tag:css />
 </head>
 <body>
 <main role="main" class="container">
@@ -17,6 +13,8 @@
 	<h1>${TEXT[PAGE_LOGIN_H1]}</h1>
 	<jsp:include page="${FORM_LOGIN_JSP}"/>
 </main>
+<alien-tag:variables />
+<alien-tag:js />
 </body>
 </html>
 

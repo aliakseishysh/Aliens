@@ -1,11 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<head>
-	<link rel="shortcut icon" type="image/png" href="/webproject/favicon.png"/>
-</head>
-<script type="text/javascript" src="/webproject/js/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="/webproject/js/bootstrap/bootstrap.bundle.min.js"></script>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <header class="site-header">
 	<nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
 		<div class="container">
@@ -33,7 +27,6 @@
 						  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						  		${CURRENT_LOCALIZATION_NAME}
 						  </button>
-						  <!-- TODO hrefs -->
 						  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="nav-dropdown-menu">
 						    	<a class="dropdown-item" href='#' onclick="navigation.changeLocaleEn()">${LOCALIZATION_EN}</a>
 						     	<a class="dropdown-item" href='#' onclick="navigation.changeLocaleRu()">${LOCALIZATION_RU}</a>

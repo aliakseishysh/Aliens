@@ -44,26 +44,89 @@ public class UserDaoImpl implements UserDao {
 
 	private static final Logger logger = LogManager.getRootLogger();
 	private static final UserDaoImpl instance = new UserDaoImpl();
-	private static final String SPACE = " ";
-	private static final String FIND_ALL = "SELECT user_id, email, login_name, image_url, role_type, _status, banned_to_datetime FROM users";
+	private static final String SPACE = " ";	
+	private static final String FIND_ALL = """
+			SELECT user_id, email, login_name, image_url, role_type, _status, banned_to_datetime 
+			FROM users
+			""";
 	private static final String FIND_BY_ID = String.join(SPACE, FIND_ALL, "WHERE users.user_id=?");
 	private static final String FIND_BY_LOGIN = String.join(SPACE, FIND_ALL, "WHERE users.login_name=?");
 	private static final String FIND_BY_EMAIL = String.join(SPACE, FIND_ALL, "WHERE users.email=?");
-	private static final String FIND_USER_LOGIN_DATA = "SELECT password_hash, salt FROM users WHERE email=? AND _status=? OR _status=?";
-	private static final String FIND_USER_LOGIN_DATA_BY_ID = "SELECT password_hash, salt FROM users WHERE user_id=? AND _status=? OR _status=?";
-	private static final String LOGIN_AND_PASSWORD_CHECK = "SELECT count(*) as usersCount FROM users WHERE email=? AND password_hash=? AND _status=? OR _status=?";
-	private static final String REGISTER = "INSERT INTO users (email, login_name, password_hash, salt, image_url, role_type, _status) VALUES (?, ?, ?, ?, ?, ?, ?)";
-	private static final String UPDATE_EMAIL = "UPDATE users SET email = ? WHERE user_id = ?";
-	private static final String UPDATE_LOGIN = "UPDATE users SET login_name = ? WHERE user_id = ?";
-	private static final String UPDATE_PASSWORD = "UPDATE users SET password_hash = ? WHERE user_id = ?";
-	private static final String UPDATE_PROFILE_IMAGE = "UPDATE users SET image_url = ? WHERE user_id = ?";
-	private static final String BAN_UNBAN = "UPDATE users SET _status = ?, banned_to_datetime = ? WHERE login_name = ?";
-	private static final String PROMOTE_DEMOTE = "UPDATE users SET role_type = ? WHERE login_name = ?";
-	private static final String ADD_NEW_COMMENT = "INSERT INTO comments (user_id, alien_id, comment, comment_status) VALUES (?, ?, ?, ?)";
-	private static final String CHANGE_COMMENT_STATUS = "UPDATE comments SET comment_status = ? WHERE comment_id = ?";
-	private static final String ADD_NEW_TOKEN = "INSERT INTO tokens (email, token, expiration_date, _status) VALUES (?, ?, ?, ?)";
-	private static final String CHANGE_USER_STATUS = "UPDATE users SET _status = ? WHERE email = ?";
-	private static final String FIND_TOKEN_EXPIRES_DATE = "SELECT expiration_date FROM tokens WHERE email = ? AND token = ?";
+	private static final String FIND_USER_LOGIN_DATA = """
+			SELECT password_hash, salt 
+			FROM users 
+			WHERE email=? AND _status=? OR _status=?
+			""";
+	private static final String FIND_USER_LOGIN_DATA_BY_ID = """
+			SELECT password_hash, salt 
+			FROM users 
+			WHERE user_id=? AND _status=? OR _status=?
+			""";
+	private static final String LOGIN_AND_PASSWORD_CHECK = """
+			SELECT count(*) as usersCount 
+			FROM users 
+			WHERE email=? AND password_hash=? AND _status=? OR _status=?
+			""";
+	private static final String REGISTER = """
+			INSERT INTO users 
+			(email, login_name, password_hash, salt, image_url, role_type, _status) 
+			VALUES (?, ?, ?, ?, ?, ?, ?)
+			""";
+	private static final String UPDATE_EMAIL = """
+			UPDATE users 
+			SET email = ? 
+			WHERE user_id = ?
+			""";
+	private static final String UPDATE_LOGIN = """
+			UPDATE users 
+			SET login_name = ? 
+			WHERE user_id = ?
+			""";
+	private static final String UPDATE_PASSWORD = """
+			UPDATE users 
+			SET password_hash = ? 
+			WHERE user_id = ?
+			""";
+	private static final String UPDATE_PROFILE_IMAGE = """
+			UPDATE users 
+			SET image_url = ? 
+			WHERE user_id = ?
+			""";
+	private static final String BAN_UNBAN = """
+			UPDATE users 
+			SET _status = ?, banned_to_datetime = ? 
+			WHERE login_name = ? AND _status = ?
+			""";
+	private static final String PROMOTE_DEMOTE = """
+			UPDATE users 
+			SET role_type = ? 
+			WHERE login_name = ?
+			""";
+	private static final String ADD_NEW_COMMENT = """
+			INSERT INTO comments 
+			(user_id, alien_id, comment, comment_status) 
+			VALUES (?, ?, ?, ?)
+			""";
+	private static final String CHANGE_COMMENT_STATUS = """
+			UPDATE comments 
+			SET comment_status = ? 
+			WHERE comment_id = ?
+			""";
+	private static final String ADD_NEW_TOKEN = """
+			INSERT INTO tokens 
+			(email, token, expiration_date, _status) 
+			VALUES (?, ?, ?, ?)
+			""";
+	private static final String CHANGE_USER_STATUS = """
+			UPDATE users 
+			SET _status = ? 
+			WHERE email = ?
+			""";
+	private static final String FIND_TOKEN_EXPIRES_DATE = """
+			SELECT expiration_date 
+			FROM tokens 
+			WHERE email = ? AND token = ?
+			""";
 	
 	
 	
@@ -316,6 +379,7 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(1, User.UserStatus.BANNED.name());
 			statement.setString(2, banDate);
 			statement.setString(3, userLogin);
+			statement.setString(4, User.UserStatus.NORMAL.name());
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", BAN_UNBAN, e.getMessage());
@@ -332,6 +396,7 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(1, User.UserStatus.NORMAL.name());
 			statement.setString(2, unbanDate);
 			statement.setString(3, userLogin);
+			statement.setString(4, User.UserStatus.BANNED.name());
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", BAN_UNBAN, e.getMessage());

@@ -27,7 +27,7 @@ import jakarta.servlet.http.Part;
 public class AdminServiceImpl implements AdminService {
 
 	@Override
-	public Map<Feedback.Key, Object> banUser(String userLogin, String daysToBan) throws ServiceException {
+	public Map<Feedback.Key, Object> banUser(String userLogin, String daysToBan, String currentUser) throws ServiceException {
 		try {
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
@@ -36,7 +36,7 @@ public class AdminServiceImpl implements AdminService {
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.DAYS_TO_BAN_STATUS))) {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				Optional<User> user = userDao.findByLogin(userLogin);
-				if (user.isPresent()) {
+				if (user.isPresent() && !currentUser.equals(userLogin)) {
 					TimeService timeService = ServiceProvider.getInstance().getTimeService();
 					String banDate = timeService.prepareBanDate(Integer.parseInt(daysToBan));
 					boolean banUserResult = userDao.banUser(userLogin, banDate);
@@ -47,16 +47,16 @@ public class AdminServiceImpl implements AdminService {
 						result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 						result.put(Feedback.Key.DAYS_TO_BAN_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 					} else {
-						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
+						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 						result.put(Feedback.Key.LOGIN_STATUS, Boolean.FALSE);
 						result.put(Feedback.Key.DAYS_TO_BAN_STATUS, Boolean.FALSE);
-						result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-						result.put(Feedback.Key.DAYS_TO_BAN_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+						result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.CANT_FIND_SUITABLE_USER.getValue());
+						result.put(Feedback.Key.DAYS_TO_BAN_FEEDBACK, LocaleKey.CANT_FIND_SUITABLE_USER.getValue());
 					}
 				} else {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 					result.put(Feedback.Key.LOGIN_STATUS, Boolean.FALSE);
-					result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.LOGIN_FEEDBACK_INVALID_USER_NOT_EXIST.getValue());
+					result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.CANT_FIND_SUITABLE_USER.getValue());
 				}
 			} else {
 				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
@@ -68,7 +68,7 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public Map<Feedback.Key, Object> unbanUser(String userLogin) throws ServiceException {
+	public Map<Feedback.Key, Object> unbanUser(String userLogin, String currentUser) throws ServiceException {
 		try {
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 			UserDao userDao = DaoProvider.getInstance().getUserDao();
@@ -77,7 +77,7 @@ public class AdminServiceImpl implements AdminService {
 
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.LOGIN_STATUS))) {
 				Optional<User> user = userDao.findByLogin(userLogin);
-				if (user.isPresent()) {
+				if (user.isPresent() && !currentUser.equals(userLogin)) {
 					TimeService timeService = ServiceProvider.getInstance().getTimeService();
 					String unbanDate = timeService.prepareBanDate(0);
 					boolean unbanUserResult = userDao.unbanUser(userLogin, unbanDate);
@@ -86,14 +86,14 @@ public class AdminServiceImpl implements AdminService {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 						result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 					} else {
-						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
+						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 						result.put(Feedback.Key.LOGIN_STATUS, Boolean.FALSE);
-						result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+						result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.CANT_FIND_SUITABLE_USER.getValue());
 					}
 				} else {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 					result.put(Feedback.Key.LOGIN_STATUS, Boolean.FALSE);
-					result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.LOGIN_FEEDBACK_INVALID_USER_NOT_EXIST.getValue());
+					result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.CANT_FIND_SUITABLE_USER.getValue());
 				}
 			} else {
 				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
@@ -302,7 +302,7 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public Map<Feedback.Key, Object> updateAlienImage(int alienId, Part alienImage, String rootFolder,
-			String serverDeploymentPath) throws ServiceException {
+			String serverDeploymentPath, String websiteUrl) throws ServiceException {
 		try {
 			UtilService utilService = ServiceProvider.getInstance().getUtilService();
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
@@ -324,6 +324,7 @@ public class AdminServiceImpl implements AdminService {
 					if (uploadToRoot && uploadToDeployment && addResult && addToGaleryResult) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						result.put(Feedback.Key.IMAGE_PATH, websiteUrl + imageUrl);
 					} else {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 						result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);

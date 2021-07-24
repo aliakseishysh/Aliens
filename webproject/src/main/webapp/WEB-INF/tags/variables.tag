@@ -1,4 +1,4 @@
-<%@ tag description="File for passing variables to js." pageEncoding="UTF-8"%>
+<%@ tag description="Tag for passing variables to js." pageEncoding="UTF-8"%>
 <script>
 	const WEB_SITE_NAME = `${WEB_SITE_NAME}`;
 	const PROJECT_NAME = `${PROJECT_NAME}`;

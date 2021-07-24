@@ -22,6 +22,10 @@
 	</context-param>
 	<context-param>
 		<param-name>web-site-url</param-name>
+		<param-value>https://aliens.malina.keenetic.link/webproject/</param-value>
+	</context-param>
+		<context-param>
+		<param-name>web-site-url2</param-name>
 		<param-value>http://localhost:8080/webproject</param-value>
 	</context-param>
 	

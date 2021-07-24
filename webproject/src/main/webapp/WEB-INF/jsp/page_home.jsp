@@ -7,10 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <title>${TEXT[PAGE_HOME_TITLE]}</title>
-<alien-tag:variables />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-<link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
-<script type="module" src="<c:url value='${JS_BUNDLE}'/>"></script>
+<alien-tag:css />
 <body>
 	<main role="main" class="container">
 		<jsp:include page="${TEMPLATE_NAV_JSP}" />
@@ -29,6 +26,7 @@
 			<jsp:include page="${TEMPLATE_ALIENBAR_JSP}" />
 		</div>
 	</main>
-
+<alien-tag:variables />
+<alien-tag:js />
 </body>
 </html>

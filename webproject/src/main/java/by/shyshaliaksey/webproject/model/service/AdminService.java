@@ -3,14 +3,15 @@ package by.shyshaliaksey.webproject.model.service;
 import java.util.Map;
 
 import by.shyshaliaksey.webproject.controller.command.Feedback;
+import by.shyshaliaksey.webproject.controller.command.Feedback.Key;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import jakarta.servlet.http.Part;
 
 public interface AdminService {
 
-	Map<Feedback.Key, Object> banUser(String userLogin, String daysToBan) throws ServiceException;
+	Map<Feedback.Key, Object> banUser(String userLogin, String daysToBan, String currentUser) throws ServiceException;
 
-	Map<Feedback.Key, Object> unbanUser(String userLogin) throws ServiceException;
+	Map<Feedback.Key, Object> unbanUser(String userLogin, String currentUser) throws ServiceException;
 
 	Map<Feedback.Key, Object> promoteUser(String userLogin, String currentUserLogin) throws ServiceException;
 
@@ -22,9 +23,6 @@ public interface AdminService {
 	Map<Feedback.Key, Object> updateAlienInfo(int alienId, String alienName, String alienSmallDescription,
 			String alienFullDescription) throws ServiceException;
 
-	Map<Feedback.Key, Object> updateAlienImage(int alienId, Part alienImage, String rootFolder,
-			String serverDeploymentPath) throws ServiceException;
-
 	boolean approveAlien(String alienId) throws ServiceException;
 
 	boolean declineAlien(String alienId) throws ServiceException;
@@ -32,4 +30,7 @@ public interface AdminService {
 	boolean approveAlienImage(String alienId) throws ServiceException;
 
 	boolean declineAlienImage(String alienImageUrl) throws ServiceException;
+
+	Map<Key, Object> updateAlienImage(int alienId, Part alienImage, String rootFolder, String serverDeploymentPath,
+			String websiteUrl) throws ServiceException;
 }

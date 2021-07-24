@@ -6,12 +6,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<alien-tag:variables />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-<link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
-<link href="<c:url value="${CSS_SUGGESTED_IMAGE}"/>" rel="stylesheet">
+<alien-tag:css />
 <title>${TEXT[PAGE_ADMIN_SUGGESTED_ALIENS_IMAGES_TITLE]}</title>
-<script type="module" src="<c:url value='${JS_BUNDLE}'/>"></script>
 <body>
 	<main role="main" class="container">
 		<jsp:include page="${TEMPLATE_NAV_JSP}" />
@@ -68,6 +64,7 @@
 			</div>
 		</div>
 	</main>
-
+	<alien-tag:variables />
+	<alien-tag:js />
 </body>
 </html>

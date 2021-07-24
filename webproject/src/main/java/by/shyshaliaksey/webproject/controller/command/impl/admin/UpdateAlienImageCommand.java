@@ -49,7 +49,8 @@ public class UpdateAlienImageCommand implements Command {
 					.getInitParameter(InitParameter.WEB_APP_ROOT_FOLDER_PARAMETER.getValue());
 			String serverDeploymentPath = request.getServletContext()
 					.getRealPath(FolderPath.ROOT_FOLDER.getValue());
-			result = adminService.updateAlienImage(alienId, alienImage, rootFolder, serverDeploymentPath);
+			String websiteUrl = request.getServletContext().getInitParameter(InitParameter.WEB_SITE_URL.getValue());
+			result = adminService.updateAlienImage(alienId, alienImage, rootFolder, serverDeploymentPath, websiteUrl);
 			
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			String jsonResponse = new JSONObject()
@@ -57,6 +58,7 @@ public class UpdateAlienImageCommand implements Command {
 							result.get(Feedback.Key.IMAGE_STATUS))
 					.put(Feedback.Key.IMAGE_FEEDBACK.getValue(),
 							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.IMAGE_FEEDBACK).toString()))
+					.put(Feedback.Key.IMAGE_PATH.getValue(), result.get(Feedback.Key.IMAGE_PATH))
 					.toString();
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);

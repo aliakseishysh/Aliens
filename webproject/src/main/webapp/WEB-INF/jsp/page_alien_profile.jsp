@@ -4,13 +4,7 @@
 <html>
 <head>
 <title>${TEXT[PAGE_ALIEN_PROFILE_TITLE]}</title>
-<alien-tag:variables />
-<link rel="stylesheet" href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css'>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
-<link href="<c:url value="${CSS_RAITING}"/>" rel="stylesheet">
-<link href="<c:url value="${CSS_MAIN}"/>" rel="stylesheet">
-<link href="<c:url value="${CSS_CUSTOM_FILE}"/>" rel="stylesheet">
-<script type="module" src="<c:url value='${JS_BUNDLE}'/>"></script>
+<alien-tag:css />
 </head>
 <body>
 	<main role="main" class="container">
@@ -61,5 +55,7 @@
 			</c:choose>
 		</div>
 	</main>
+	<alien-tag:variables />
+	<alien-tag:js />
 </body>
 </html>

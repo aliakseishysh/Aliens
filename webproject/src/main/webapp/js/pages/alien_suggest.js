@@ -25,6 +25,9 @@ let alienSuggestForm;
 /** @type {AlienForm} */
 let alienImageSuggestForm;
 
+/**
+ * setup
+ */
 $(function () {
     formAlienSuggest = document.getElementById("form-alien-suggest");
     formAlienSuggestName = document.getElementById("form-alien-suggest-name");
@@ -56,8 +59,6 @@ $(function () {
 
 
 });
-
-
 
 function suggestNewAlien() {
     let formData = new FormData();
@@ -154,6 +155,17 @@ const suggestAlienPage = {
     suggestNewAlienImage: suggestNewAlienImage
 }
 
+/**
+ * Reset forms
+ */
+$(function() {
+    formAlienSuggest.reset();
+    formImageSuggest.reset();
+});
+
+/**
+ * Suggest Alien Processing
+ */
 $(function () {
     formAlienSuggest.addEventListener('submit', function(event) {
         alienSuggestForm.removeValidationClasses();
@@ -191,6 +203,9 @@ $(function () {
     });
 });
 
+/**
+ * Suggest Alien Image Processing
+ */
 $(document).ready(function () {
     formImageSuggest.addEventListener('submit', function(event) {
         alienImageSuggestForm.removeNameValidationClasses();
@@ -203,7 +218,7 @@ $(document).ready(function () {
             alienImageSuggestForm.setLabelText();
             suggestAlienPage.suggestNewAlienImage();
         } else {
-            alienImageSuggestForm.setFeedbackName(nameValidationResult, "", STANDARD_ALIEN_NAME_FEEDBACK)
+            alienImageSuggestForm.setFeedbackName(nameValidationResult, "", STANDARD_ALIEN_NAME_FEEDBACK);
             alienImageSuggestForm.setFeedbackImage(imageValidationResult, "", STANDARD_IMAGE_FEEDBACK);
             event.preventDefault();
             event.stopPropagation();

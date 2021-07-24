@@ -55,7 +55,7 @@ public class AddNewAlienCommand implements Command {
 			String jsonResponse = new JSONObject()
 					.put(Feedback.Key.ALIEN_NAME_STATUS.getValue(),
 							result.get(Feedback.Key.ALIEN_NAME_STATUS))
-					.put(Feedback.Key.PASSWORD_STATUS.getValue(),
+					.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS.getValue(),
 							result.get(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS))
 					.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS.getValue(),
 							result.get(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS))

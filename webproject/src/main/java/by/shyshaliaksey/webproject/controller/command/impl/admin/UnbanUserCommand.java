@@ -19,6 +19,7 @@ import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.AdminService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
@@ -37,7 +38,8 @@ public class UnbanUserCommand implements Command {
 		Map<Feedback.Key, Object> result;
 		try {
 			String userLogin = request.getParameter(RequestParameter.LOGIN.getValue());
-			result = adminService.unbanUser(userLogin);
+			User currentUser = (User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue());
+			result = adminService.unbanUser(userLogin, currentUser.getLogin());
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			String jsonResponse = new JSONObject()
 					.put(Feedback.Key.LOGIN_STATUS.getValue(),

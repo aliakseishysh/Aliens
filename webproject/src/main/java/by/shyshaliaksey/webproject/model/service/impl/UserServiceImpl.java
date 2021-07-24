@@ -10,6 +10,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import by.shyshaliaksey.webproject.controller.FolderPath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
+import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
@@ -345,7 +346,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Map<Feedback.Key, Object> updateImage(String serverDeploymentPath, String rootFolder, Part userImage, int userId, String webSiteName)
+	public Map<Feedback.Key, Object> updateImage(String serverDeploymentPath, String rootFolder, Part userImage, int userId, String websiteUrl)
 			throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
@@ -370,7 +371,7 @@ public class UserServiceImpl implements UserService {
 				if (uploadToRoot && uploadToDeployment && updateImageResult) {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 					result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-					result.put(Feedback.Key.IMAGE_PATH, webSiteName + imageUrl);
+					result.put(Feedback.Key.IMAGE_PATH, websiteUrl + imageUrl);
 				} else {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 					result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
