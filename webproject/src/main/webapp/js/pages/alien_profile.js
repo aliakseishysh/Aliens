@@ -137,7 +137,6 @@ function addNewComment() {
     let data = {};
     data[NEW_COMMENT] = formNewCommentComment.value;
     data[ALIEN_ID] = alienId;
-    data[USER_ID] = userId;
     let url = CONTROLLER + "?" + COMMAND + "=" + ADD_NEW_COMMENT;
     $.ajax({
         url: url,
@@ -284,7 +283,7 @@ $(function() {
     deleteCommentButtons.forEach(button => 
         button.addEventListener('click', function(event) {
             let commentId = button.parentElement.children[0].innerText;
-            alienProfile.deleteComment(commentId);
+            alienProfile.deleteComment(commentId, userId);
         })
     );
 });

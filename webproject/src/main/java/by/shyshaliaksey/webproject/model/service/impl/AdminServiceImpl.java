@@ -366,8 +366,7 @@ public class AdminServiceImpl implements AdminService {
 		try {
 			AlienDao adminDao = DaoProvider.getInstance().getAlienDao();
 			boolean approvingResult = adminDao.declineAlien(alienId);
-			boolean changeProfileStatus = adminDao.declineProfileImage(alienId);
-			return approvingResult && changeProfileStatus;
+			return approvingResult;
 		} catch (DaoException e) {
 			throw new ServiceException("Error occured when declining alien " + alienIdString + " :" + e.getMessage(),
 					e);

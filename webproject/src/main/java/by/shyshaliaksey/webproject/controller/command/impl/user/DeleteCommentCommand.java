@@ -1,7 +1,5 @@
 package by.shyshaliaksey.webproject.controller.command.impl.user;
 
-import java.util.Optional;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,12 +26,13 @@ public class DeleteCommentCommand implements Command {
 	@AllowedRoles({Role.USER, Role.ADMIN})
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		int commentId = Integer.parseInt(request.getParameter(RequestParameter.COMMENT_ID.getValue()));
-		ServiceProvider serviceProvider = ServiceProvider.getInstance();
-		UserService userService = serviceProvider.getUserService();
 		Router router;
 		try {
-			Boolean deleteCommentResult = userService.deleteComment(commentId);
+			User currentUser = (User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue());
+			String commentId = request.getParameter(RequestParameter.COMMENT_ID.getValue());
+			ServiceProvider serviceProvider = ServiceProvider.getInstance();
+			UserService userService = serviceProvider.getUserService();
+			Boolean deleteCommentResult = userService.deleteComment(commentId, currentUser);
 			router = new Router(null, deleteCommentResult.toString(), RouterType.AJAX_RESPONSE);
 		} catch (ServiceException e) {
 			logger.log(Level.ERROR, "Exception occured while email updating: {}", e.getMessage());

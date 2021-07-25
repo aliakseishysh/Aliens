@@ -33,5 +33,6 @@ public interface UserDao {
 	boolean addNewToken(String email, String token, String expirationDate) throws DaoException;
 	boolean changeUserStatus(String email) throws DaoException;
 	Optional<String> findTokenExpiresDate(String email, String token) throws DaoException;
+	boolean deleteComment(int commentId, int userId) throws DaoException;
 	
 }

@@ -107,10 +107,15 @@ public class UserDaoImpl implements UserDao {
 			(user_id, alien_id, comment, comment_status) 
 			VALUES (?, ?, ?, ?)
 			""";
-	private static final String CHANGE_COMMENT_STATUS = """
+	private static final String CHANGE_COMMENT_STATUS_ADMIN = """
 			UPDATE comments 
 			SET comment_status = ? 
 			WHERE comment_id = ?
+			""";
+	private static final String CHANGE_COMMENT_STATUS_USER = """
+			UPDATE comments 
+			SET comment_status = ? 
+			WHERE comment_id = ? AND user_id = ?
 			""";
 	private static final String ADD_NEW_TOKEN = """
 			INSERT INTO tokens 
@@ -456,13 +461,29 @@ public class UserDaoImpl implements UserDao {
 	public boolean deleteComment(int commentId) throws DaoException {
 		int result = 0;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement(CHANGE_COMMENT_STATUS)) {
+				PreparedStatement statement = connection.prepareStatement(CHANGE_COMMENT_STATUS_ADMIN)) {
 			statement.setString(1, Comment.CommentStatus.DELETED.name());
 			statement.setInt(2, commentId);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", CHANGE_COMMENT_STATUS, e.getMessage());
-			throw new DaoException("Can not proceed request: " + CHANGE_COMMENT_STATUS, e);
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", CHANGE_COMMENT_STATUS_ADMIN, e.getMessage());
+			throw new DaoException("Can not proceed request: " + CHANGE_COMMENT_STATUS_ADMIN, e);
+		}
+		return result == 1;
+	}
+	
+	@Override
+	public boolean deleteComment(int commentId, int userId) throws DaoException {
+		int result = 0;
+		try (Connection connection = ConnectionPool.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement(CHANGE_COMMENT_STATUS_USER)) {
+			statement.setString(1, Comment.CommentStatus.DELETED.name());
+			statement.setInt(2, commentId);
+			statement.setInt(3, userId);
+			result = statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", CHANGE_COMMENT_STATUS_USER, e.getMessage());
+			throw new DaoException("Can not proceed request: " + CHANGE_COMMENT_STATUS_USER, e);
 		}
 		return result == 1;
 	}

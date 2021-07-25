@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import by.shyshaliaksey.webproject.controller.PagePath;
+import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.SessionAttribute;
 import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
@@ -17,6 +18,7 @@ import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.UserService;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
@@ -34,10 +36,12 @@ public class AddNewCommentCommand implements Command {
 		Router router;
 		Map<Feedback.Key, Object> result;
 		try {
-			int userId = Integer.parseInt(request.getParameter(RequestParameter.USER_ID.getValue()));
-			int alienId = Integer.parseInt(request.getParameter(RequestParameter.ALIEN_ID.getValue()));
+			User currentUser = (User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue());
+			int currentUserId = currentUser.getId();
+			String alienId = request.getParameter(RequestParameter.ALIEN_ID.getValue());
+			
 			String newComment = request.getParameter(RequestParameter.NEW_COMMENT.getValue());
-			result = userService.addNewComment(userId, alienId, newComment);
+			result = userService.addNewComment(currentUserId, alienId, newComment);
 			
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			String jsonResponse = new JSONObject()

@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
 	// TODO do something with dao register
 	@Override
 	public Map<Feedback.Key, Object> registerUser(String email, String login, String password, String passwordRepeat,
-			String imagePath, Role role) throws ServiceException {
+			String imagePath, Role role, String websiteUrl) throws ServiceException {
 		Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 		ValidationService validationService = ServiceProvider.getInstance().getValidationService();
 		validationService.validateEmailFormInput(result, email);
@@ -132,11 +132,11 @@ public class UserServiceImpl implements UserService {
 							TimeService timeService = ServiceProvider.getInstance().getTimeService();
 							final int minutesToExpriration = 5;
 							String expirationTime = timeService.prepareTokenExpirationDate(minutesToExpriration);
-							final String emailMessage = "http://localhost:8080/webproject/controller?command=login-page&token="
+							final String address = websiteUrl + "controller?command=login-page&token="
 									+ token + "&email=" + email;
 							userDao.addNewToken(email, token, expirationTime);
 							// send message
-							utilService.sendEmail(email, emailMessage);
+							utilService.sendEmail(email, address);
 
 							// TODO start demon thread
 
@@ -398,15 +398,15 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Map<Feedback.Key, Object> addNewComment(int userId, int alienId, String newComment) throws ServiceException {
+	public Map<Feedback.Key, Object> addNewComment(int currentUserId, String alienIdString, String newComment) throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 			validationService.validateCommentFormInput(result, newComment);
-
+			int alienId = Integer.parseInt(alienIdString);
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.COMMENT_STATUS))) {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
-				boolean addResult = userDao.addNewComment(userId, alienId, newComment);
+				boolean addResult = userDao.addNewComment(currentUserId, alienId, newComment);
 				if (addResult) {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 					result.put(Feedback.Key.COMMENT_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -420,20 +420,25 @@ public class UserServiceImpl implements UserService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured while adding comment for user " + userId + " :" + e.getMessage(),
+			throw new ServiceException("Error occured while adding comment for user " + currentUserId + " :" + e.getMessage(),
 					e);
 		}
 	}
 
 	@Override
-	public boolean deleteComment(int commentId) throws ServiceException {
-		boolean result = false;
+	public boolean deleteComment(String commentIdString, User currentUser) throws ServiceException {
 		try {
+			boolean result = false;
 			UserDao userDao = DaoProvider.getInstance().getUserDao();
-			result = userDao.deleteComment(commentId);
+			int commentId = Integer.parseInt(commentIdString);
+			if (currentUser.getRole() == Role.USER) {
+				result = userDao.deleteComment(commentId, currentUser.getId());
+			} else if (currentUser.getRole() == Role.ADMIN) {
+				result = userDao.deleteComment(commentId);
+			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured while deleting comment " + commentId + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occured while deleting comment " + commentIdString + " :" + e.getMessage(), e);
 		}
 	}
 

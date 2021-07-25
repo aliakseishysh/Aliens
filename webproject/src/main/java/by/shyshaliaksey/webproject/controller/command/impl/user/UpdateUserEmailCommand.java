@@ -40,7 +40,7 @@ public class UpdateUserEmailCommand implements Command {
 		try {
 			String email = request.getParameter(RequestParameter.EMAIL.getValue());
 			String newEmail = request.getParameter(RequestParameter.NEW_EMAIL.getValue());
-			int userId = Integer.parseInt(request.getParameter(RequestParameter.USER_ID.getValue()));
+			int userId = ((User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue())).getId();
 			result = userService.changeEmail(email, newEmail, userId);
 			
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());

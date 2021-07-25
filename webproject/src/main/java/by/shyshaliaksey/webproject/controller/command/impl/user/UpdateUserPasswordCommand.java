@@ -38,7 +38,7 @@ public class UpdateUserPasswordCommand implements Command {
 		try {
 			String password = request.getParameter(RequestParameter.PASSWORD.getValue());
 			String passwordConfirm = request.getParameter(RequestParameter.PASSWORD_CONFIRM.getValue());
-			int userId = Integer.parseInt(request.getParameter(RequestParameter.USER_ID.getValue()));
+			int userId = ((User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue())).getId();
 			result =  userService.changePassword(password, passwordConfirm, userId);
 			
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());

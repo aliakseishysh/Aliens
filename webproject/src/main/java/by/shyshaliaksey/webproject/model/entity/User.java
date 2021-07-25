@@ -22,6 +22,12 @@ public class User {
 		this.bannedToDate = bannedToDate;
 	}
 	
+	public User(int id, String login, String imageUrl) {
+		this.id = id;
+		this.login = login;
+		this.imageUrl = imageUrl;
+	}
+	
 	public User(Role role) {
 		this.role = role;
 	}

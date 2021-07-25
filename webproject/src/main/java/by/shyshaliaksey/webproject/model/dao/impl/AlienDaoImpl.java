@@ -12,6 +12,7 @@ import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_IMAGE_STATU
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_IMAGE_IMAGE_URL;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.COMMENT;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.COMMENT_ID;
+import static by.shyshaliaksey.webproject.model.dao.ColumnName.USER_ID;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.USER_LOGIN_NAME;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.USER_IMAGE_URL;
 import java.sql.Connection;
@@ -32,6 +33,7 @@ import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
 import by.shyshaliaksey.webproject.model.dao.AlienDao;
 import by.shyshaliaksey.webproject.model.entity.Alien;
 import by.shyshaliaksey.webproject.model.entity.Comment;
+import by.shyshaliaksey.webproject.model.entity.User;
 
 public class AlienDaoImpl implements AlienDao {
 
@@ -40,7 +42,13 @@ public class AlienDaoImpl implements AlienDao {
 	private static final String SPACE = " ";
 	private static final String FIND_ALL = "SELECT * FROM aliens";
 	private static final String FIND_LIMIT = "SELECT * FROM aliens WHERE _status=? LIMIT ?, ?";
-	private static final String FIND_ALL_COMMENTS_BY_ID = "SELECT comments.comment_id, comments.alien_id, comments.comment, comments.comment_status, users.login_name, users.image_url FROM comments INNER JOIN users ON comments.user_id=users.user_id WHERE alien_id=? AND comment_status=?";
+	private static final String FIND_ALL_COMMENTS_BY_ID = """
+			SELECT comments.comment_id, comments.alien_id, comments.comment, comments.comment_status,
+				user_id, users.login_name, users.image_url
+			FROM comments
+			INNER JOIN users ON comments.user_id = users.user_id
+			WHERE alien_id=? AND comment_status=?
+			""";
 	private static final String FIND_BY_ID = String.join(SPACE, FIND_ALL, "WHERE alien_id=?");
 	private static final String FIND_BY_ID_AND_STATUS = String.join(SPACE, FIND_ALL, "WHERE alien_id = ? AND _status = ?");
 	private static final String FIND_BY_NAME = String.join(SPACE, FIND_ALL, "WHERE _name=?");
@@ -49,7 +57,14 @@ public class AlienDaoImpl implements AlienDao {
 	private static final String UPDATE = "UPDATE aliens SET _name = ?, description_small = ?, description_full = ?, image_url = ? WHERE alien_id = ?";
 	private static final String FIND_ALIEN_COUNT = "SELECT count(*) as alienCount FROM aliens WHERE _status=?";
 	private static final String FIND_ALIEN_COMMENTS_COUNT = "SELECT count(*) as alienCommentsCount FROM comments WHERE alien_id=?";
-	private static final String FIND_COMMENTS_LIMIT = "SELECT comments.comment_id, comments.alien_id, comments.comment, comments.comment_status, users.login_name, users.image_url FROM comments INNER JOIN users ON comments.user_id=users.user_id WHERE alien_id=? AND comment_status=? LIMIT ?, ?";
+	private static final String FIND_COMMENTS_LIMIT = """
+			SELECT comments.comment_id, comments.alien_id, comments.comment, comments.comment_status, 
+				users.user_id, users.login_name, users.image_url 
+			FROM comments 
+			INNER JOIN users ON comments.user_id = users.user_id 
+			WHERE alien_id=? AND comment_status=? 
+			LIMIT ?, ?
+			""";
 	private static final String FIND_IMAGES_BY_ID = "SELECT image_url FROM aliens_images WHERE alien_id=? and _status=?";
 	private static final String FIND_ALIENS_IMAGES_COUNT = "SELECT count(*) as alienCount FROM aliens_images WHERE _status=?";
 	private static final String FIND_IMAGES = "SELECT aliens_images.alien_id, aliens._name, aliens_images.image_url, aliens_images._status FROM aliens_images INNER JOIN aliens ON aliens_images.alien_id = aliens.alien_id WHERE aliens_images._status=? LIMIT ?, ?";
@@ -302,9 +317,10 @@ public class AlienDaoImpl implements AlienDao {
 			while (resultSet.next()) {
 				int commentId = resultSet.getInt(COMMENT_ID);
 				String commentValue = resultSet.getString(COMMENT);
+				int userId = resultSet.getInt(USER_ID);
 				String userLogin = resultSet.getString(USER_LOGIN_NAME);
 				String userImageUrl = resultSet.getString(USER_IMAGE_URL);
-				Comment comment = new Comment(commentId, commentValue, userLogin, userImageUrl);
+				Comment comment = new Comment(commentId, commentValue, new User(userId, userLogin, userImageUrl));
 				comments.add(comment);
 			}
 		} catch (SQLException e) {
@@ -361,9 +377,10 @@ public class AlienDaoImpl implements AlienDao {
 			while (resultSet.next()) {
 				int commentId = resultSet.getInt(COMMENT_ID);
 				String commentValue = resultSet.getString(COMMENT);
+				int userId = resultSet.getInt(USER_ID);
 				String userLogin = resultSet.getString(USER_LOGIN_NAME);
 				String userImageUrl = resultSet.getString(USER_IMAGE_URL);
-				Comment comment = new Comment(commentId, commentValue, userLogin, userImageUrl);
+				Comment comment = new Comment(commentId, commentValue, new User(userId, userLogin, userImageUrl));
 				comments.add(comment);
 			}
 		return comments;

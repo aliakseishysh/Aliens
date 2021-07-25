@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
+import by.shyshaliaksey.webproject.controller.InitParameter;
 import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.SessionAttribute;
@@ -41,7 +42,8 @@ public class RegisterUserCommand implements Command {
 			String login = request.getParameter(RequestParameter.LOGIN.getValue());
 			String password = request.getParameter(RequestParameter.PASSWORD.getValue());
 			String passwordRepeat = request.getParameter(RequestParameter.PASSWORD_CONFIRM.getValue());
-			result = userService.registerUser(email, login, password, passwordRepeat, IMAGE_DEFAULT.getValue(), Role.USER);
+			String websiteUrl = request.getServletContext().getInitParameter(InitParameter.WEB_SITE_URL.getValue());
+			result = userService.registerUser(email, login, password, passwordRepeat, IMAGE_DEFAULT.getValue(), Role.USER, websiteUrl);
 			
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			String jsonResponse = new JSONObject()

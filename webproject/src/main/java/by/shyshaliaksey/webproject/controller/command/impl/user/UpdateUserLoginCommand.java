@@ -43,7 +43,7 @@ public class UpdateUserLoginCommand implements Command {
 		try {
 			String login = request.getParameter(RequestParameter.LOGIN.getValue());
 			String newLogin = request.getParameter(RequestParameter.NEW_LOGIN.getValue());
-			int userId = Integer.parseInt(request.getParameter(RequestParameter.USER_ID.getValue()));
+			int userId = ((User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue())).getId();
 			result =  userService.changeLogin(login, newLogin, userId);
 			
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
