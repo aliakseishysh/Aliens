@@ -62,6 +62,7 @@ CREATE TABLE tokens (
     token VARCHAR(255),
     _status ENUM('NORMAL', 'EXPIRED'),
     expiration_date DATETIME,
+    new_email VARCHAR(255),
     PRIMARY KEY (token_id)
 );
 
@@ -169,6 +170,36 @@ INSERT INTO ratings (alien_id, user_id, rate_value) values (5, 1, 5);
 INSERT INTO comments (alien_id, user_id, comment, comment_status) values (1, 3, 'First comment', 'NORMAL');
 INSERT INTO comments (alien_id, user_id, comment, comment_status) values (1, 3, 'Second comment', 'NORMAL');
 INSERT INTO comments (alien_id, user_id, comment, comment_status) values (1, 3, 'Third comment - should be deleted', 'DELETED');
+
+-- EVENTS
+
+SET GLOBAL event_scheduler = ON;
+
+CREATE EVENT `set_status_to_expired_tokens`
+ON SCHEDULE
+EVERY 1 MINUTE
+STARTS DATE(NOW()) + INTERVAL 1 MINUTE
+DO
+UPDATE `tokens` SET `_status` = 'EXPIRED' WHERE `expiration_date` <= NOW();
+
+CREATE EVENT `set_normal_status_to_baned_users`
+ON SCHEDULE
+EVERY 1 MINUTE
+STARTS DATE(NOW()) + INTERVAL 1 MINUTE
+DO
+UPDATE `users` SET `_status` = 'NORMAL' WHERE `banned_to_datetime` <= NOW();
+
+-- TRIGERS
+
+
+
+
+
+
+
+
+
+
 
 
 
