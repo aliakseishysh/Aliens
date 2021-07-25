@@ -249,10 +249,10 @@ $(document).ready(function () {
         }
     })
     banUnbanFormLogin.addEventListener('input', function(event) {
-        banUnbanForm.removeLoginValidationClasses();
-    })
+        banUnbanFormObject.removeLoginValidationClasses();
+    });
     banUnbanFormDaysInBan.addEventListener('input', function(event) {
-        banUnbanForm.removeDaysInBanValidationClasses();
+        banUnbanFormObject.removeDaysInBanValidationClasses();
     })
 });
 

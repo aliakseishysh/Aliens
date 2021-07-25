@@ -8,6 +8,8 @@
   					   placeholder="${TEXT[FORM_EMAIL_UPDATE_EMAIL_PLACEHOLDER]}" 
   					   pattern="${VALID_EMAIL}"
   					   required>
+  				<div id="form-update-email-email-valid-feedback" class="valid-feedback">
+      			</div>	
   				<div id="form-update-email-email-invalid-feedback" class="invalid-feedback">
         			${STANDARD_EMAIL_FEEDBACK}
       			</div>		   

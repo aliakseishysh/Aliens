@@ -9,6 +9,8 @@ import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.Token;
+import by.shyshaliaksey.webproject.model.entity.Token.Status;
 
 public interface UserDao {
 
@@ -32,7 +34,18 @@ public interface UserDao {
 	boolean deleteComment(int commentId) throws DaoException;
 	boolean addNewToken(String email, String token, String expirationDate) throws DaoException;
 	boolean changeUserStatus(String email) throws DaoException;
-	Optional<String> findTokenExpiresDate(String email, String token) throws DaoException;
 	boolean deleteComment(int commentId, int userId) throws DaoException;
+	Optional<Token> findToken(String tokenRequestedContent, Status status) throws DaoException;
+	/**
+	 * Method for adding new token for user email updating
+	 * @param email
+	 * @param token
+	 * @param expirationDate
+	 * @param newEmail
+	 * @return
+	 * @throws DaoException
+	 */
+	boolean addNewToken(String email, String token, String expirationDate, String newEmail) throws DaoException;
+	boolean updateUserEmail(String email, String newEmail) throws DaoException;
 	
 }

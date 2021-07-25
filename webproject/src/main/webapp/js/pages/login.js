@@ -66,13 +66,6 @@ const loginPage = {
 };
 
 /**
- * Reset forms
- */
-$(function() {
-    formLogin.reset();
-});
-
-/**
  * Login processing
  */
 $(document).ready(function () {

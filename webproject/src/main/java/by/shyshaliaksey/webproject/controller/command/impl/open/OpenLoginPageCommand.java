@@ -19,13 +19,13 @@ public class OpenLoginPageCommand implements Command {
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		String token = request.getParameter(RequestParameter.TOKEN.getValue());
-		String email = request.getParameter(RequestParameter.EMAIL.getValue());
 		Router router;
-		if (token != null && email != null) {
+		if (token != null) {
 			UtilService utilService = ServiceProvider.getInstance().getUtilService();
 			try {
-				utilService.activateAccount(email, token);
+				utilService.activateAccount(token);
 			} catch (ServiceException e) {
+				// TODO sdf
 				// router = new Router(PagePath.PAGE_LOGIN_JSP.getValue(), null, RouterType.FORWARD);
 			}
 		}

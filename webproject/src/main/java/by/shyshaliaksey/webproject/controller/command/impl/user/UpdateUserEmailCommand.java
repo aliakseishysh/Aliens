@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
+import by.shyshaliaksey.webproject.controller.InitParameter;
 import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
@@ -41,9 +42,10 @@ public class UpdateUserEmailCommand implements Command {
 			String email = request.getParameter(RequestParameter.EMAIL.getValue());
 			String newEmail = request.getParameter(RequestParameter.NEW_EMAIL.getValue());
 			int userId = ((User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue())).getId();
-			result = userService.changeEmail(email, newEmail, userId);
-			
+			String websiteUrl = request.getServletContext().getInitParameter(InitParameter.WEB_SITE_URL.getValue());
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
+			result = userService.changeEmail(email, newEmail, userId, websiteUrl, localeAttribute);
+			
 			String jsonResponse = new JSONObject()
 					.put(Feedback.Key.EMAIL_STATUS.getValue(),
 							result.get(Feedback.Key.EMAIL_STATUS))

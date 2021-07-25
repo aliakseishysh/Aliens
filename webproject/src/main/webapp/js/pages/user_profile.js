@@ -8,6 +8,7 @@ let userProfileAccountEmail;
 
 let formUpdateEmail;
 let formUpdateEmailEmail;
+let formUpdateEmailValidFeedback;
 let formUpdateEmailInvalidFeedback;
 
 let formUpdateLogin;
@@ -34,6 +35,15 @@ let passwordUpdateForm;
 /** @type {ImageUpdateForm} */
 let imageUpdateForm;
 
+$(function(){
+    let urlParameters = new URLSearchParams(window.location.search);
+    if (urlParameters.has("token")) {
+        urlParameters.delete("token");
+        let newUrl = urlParameters.toString();
+        window.history.replaceState({}, document.title, "?" + newUrl);
+    }
+});
+
 $(document).ready(function () {
 
     userId = document.getElementById("form-update-email-parameter-current-user-id");
@@ -43,8 +53,9 @@ $(document).ready(function () {
     
     formUpdateEmail =  document.getElementById("form-update-email");
     formUpdateEmailEmail = document.getElementById("form-update-email-email");
+    formUpdateEmailValidFeedback = document.getElementById("form-update-email-email-valid-feedback");      
     formUpdateEmailInvalidFeedback = document.getElementById("form-update-email-email-invalid-feedback");
-    emailUpdateForm = new EmailUpdateForm(formUpdateEmail, formUpdateEmailEmail, formUpdateEmailInvalidFeedback, null);
+    emailUpdateForm = new EmailUpdateForm(formUpdateEmail, formUpdateEmailEmail, formUpdateEmailInvalidFeedback, formUpdateEmailValidFeedback);
 
     formUpdateLogin = document.getElementById("form-update-login");
     formUpdateLoginLogin = document.getElementById("form-update-login-login");
@@ -84,8 +95,8 @@ function updateUserEmail() {
                 jqXHR.responseJSON[EMAIL_FEEDBACK],
                 jqXHR.responseJSON[EMAIL_FEEDBACK]
             );
-            userProfileAccountEmail.innerHTML = emailUpdateForm.getEmail();
-            userEmail.innerHTML = emailUpdateForm.getEmail();
+            // userProfileAccountEmail.innerHTML = emailUpdateForm.getEmail();
+            // userEmail.innerHTML = emailUpdateForm.getEmail();
         },
         error: function (jqXHR, textStatus, errorThrown) {
             emailUpdateForm.removeValidation();

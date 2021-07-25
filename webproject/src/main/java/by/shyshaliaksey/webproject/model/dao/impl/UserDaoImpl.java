@@ -10,7 +10,13 @@ import static by.shyshaliaksey.webproject.model.dao.ColumnName.USER_BANNED_TO_DA
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.USER_IMAGE_URL;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.USER_ROLE_TYPE;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.USERS_COUNT;
+import static by.shyshaliaksey.webproject.model.dao.ColumnName.TOKEN_ID;
+import static by.shyshaliaksey.webproject.model.dao.ColumnName.TOKEN_EMAIL;
+import static by.shyshaliaksey.webproject.model.dao.ColumnName.TOKEN;
+import static by.shyshaliaksey.webproject.model.dao.ColumnName.TOKEN_STATUS;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.TOKEN_EXPIRATION;
+import static by.shyshaliaksey.webproject.model.dao.ColumnName.TOKEN_NEW_EMAIL;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -77,6 +83,11 @@ public class UserDaoImpl implements UserDao {
 			SET email = ? 
 			WHERE user_id = ?
 			""";
+	private static final String UPDATE_EMAIL_BY_EMAIL = """
+			UPDATE users 
+			SET email = ? 
+			WHERE email = ?
+			""";
 	private static final String UPDATE_LOGIN = """
 			UPDATE users 
 			SET login_name = ? 
@@ -122,15 +133,20 @@ public class UserDaoImpl implements UserDao {
 			(email, token, expiration_date, _status) 
 			VALUES (?, ?, ?, ?)
 			""";
+	private static final String ADD_NEW_UPDATE_EMAIL_TOKEN = """
+			INSERT INTO tokens 
+			(email, token, expiration_date, _status, new_email) 
+			VALUES (?, ?, ?, ?, ?)
+			""";
 	private static final String CHANGE_USER_STATUS = """
 			UPDATE users 
 			SET _status = ? 
 			WHERE email = ?
 			""";
-	private static final String FIND_TOKEN_EXPIRES_DATE = """
-			SELECT expiration_date 
+	private static final String FIND_TOKEN = """
+			SELECT token_id, email, token, _status, expiration_date, new_email
 			FROM tokens 
-			WHERE email = ? AND token = ?
+			WHERE token = ? AND _status = ?
 			""";
 	
 	
@@ -330,6 +346,21 @@ public class UserDaoImpl implements UserDao {
 		}
 		return result == 1;
 	}
+	
+	@Override
+	public boolean updateUserEmail(String email, String newEmail) throws DaoException {
+		int result = 0;
+		try (Connection connection = ConnectionPool.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement(UPDATE_EMAIL_BY_EMAIL)) {
+			statement.setString(1, newEmail);
+			statement.setString(2, email);
+			result = statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", UPDATE_EMAIL_BY_EMAIL, e.getMessage());
+			throw new DaoException("Can not proceed request: " + UPDATE_EMAIL_BY_EMAIL, e);
+		}
+		return result == 1;
+	}
 
 	@Override
 	public boolean updateUserLogin(String login, int userId) throws DaoException {
@@ -488,6 +519,9 @@ public class UserDaoImpl implements UserDao {
 		return result == 1;
 	}
 
+	/**
+	 * Method for adding new token for user registration
+	 */
 	@Override
 	public boolean addNewToken(String email, String token, String expirationDate) throws DaoException {
 		int rowsAdded = 0;
@@ -501,6 +535,33 @@ public class UserDaoImpl implements UserDao {
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", ADD_NEW_TOKEN, e.getMessage());
 			throw new DaoException("Can not proceed request: " + ADD_NEW_TOKEN, e);
+		}
+		return rowsAdded == 1;
+	}
+	
+	/**
+	 * Method for adding new token for user email updating
+	 * @param email
+	 * @param token
+	 * @param expirationDate
+	 * @param newEmail
+	 * @return
+	 * @throws DaoException
+	 */
+	@Override
+	public boolean addNewToken(String email, String token, String expirationDate, String newEmail) throws DaoException {
+		int rowsAdded = 0;
+		try (Connection connection = ConnectionPool.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement(ADD_NEW_UPDATE_EMAIL_TOKEN)) {
+			statement.setString(1, email);
+			statement.setString(2, token);
+			statement.setString(3, expirationDate);
+			statement.setString(4, Token.Status.NORMAL.name());
+			statement.setString(5, newEmail);
+			rowsAdded = statement.executeUpdate();
+		} catch (SQLException e) {
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", ADD_NEW_UPDATE_EMAIL_TOKEN, e.getMessage());
+			throw new DaoException("Can not proceed request: " + ADD_NEW_UPDATE_EMAIL_TOKEN, e);
 		}
 		return rowsAdded == 1;
 	}
@@ -521,19 +582,25 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public Optional<String> findTokenExpiresDate(String email, String token) throws DaoException {
-		Optional<String> result = Optional.empty();
+	public Optional<Token> findToken(String tokenRequestedContent, Token.Status status) throws DaoException {
+		Optional<Token> result = Optional.empty();
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement(FIND_TOKEN_EXPIRES_DATE)) {
-			statement.setString(1, email);
-			statement.setString(2, token);
+				PreparedStatement statement = connection.prepareStatement(FIND_TOKEN)) {
+			statement.setString(1, tokenRequestedContent);
+			statement.setString(2, status.name());
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
-				result = Optional.of(resultSet.getString(TOKEN_EXPIRATION));
+				int tokenId = resultSet.getInt(TOKEN_ID);
+				String tokenEmail = resultSet.getString(TOKEN_EMAIL);
+				String tokenContent = resultSet.getString(TOKEN);
+				String tokenExpiration = resultSet.getString(TOKEN_EXPIRATION);
+				String tokenNewEmail = resultSet.getString(TOKEN_NEW_EMAIL);
+				Token token = new Token(tokenId, tokenEmail, tokenContent, status, tokenExpiration, tokenNewEmail);
+				result = Optional.of(token);
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_TOKEN_EXPIRES_DATE, e.getMessage());
-			throw new DaoException("Can not proceed request: " + FIND_TOKEN_EXPIRES_DATE, e);
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_TOKEN, e.getMessage());
+			throw new DaoException("Can not proceed request: " + FIND_TOKEN, e);
 		}
 		return result;
 	}

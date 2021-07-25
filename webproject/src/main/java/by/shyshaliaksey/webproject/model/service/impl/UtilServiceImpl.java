@@ -26,6 +26,7 @@ import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.dao.UserDao;
 import by.shyshaliaksey.webproject.model.email.EmailPropertiesReader;
+import by.shyshaliaksey.webproject.model.entity.Token;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.TimeService;
 import by.shyshaliaksey.webproject.model.service.UtilService;
@@ -143,48 +144,19 @@ public class UtilServiceImpl implements UtilService {
 		}
 	}
 	
-	@Override
-	public boolean sendEmail(String emailTo, String address) throws ServiceException {
-		Properties properties = EmailPropertiesReader.getPropeties();
-		final String userKey = "mail.smtp.user";
-		final String passwordKey = "mail.smtp.password";
-		final String user = properties.getProperty(userKey);
-		final String password = properties.getProperty(passwordKey);
-		properties.remove(userKey);
-		properties.remove(passwordKey);
-		
-		Session session = Session.getDefaultInstance(properties, new Authenticator() {
-			@Override
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(user, password);
-			}
-		});
-		try {
-			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(user));
-			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailTo));
-			final String subject = "Email Confirmation";
-			message.setSubject(subject);
-			final String content = "Click to confirm email: <a href='" + address + "'>link</a>";
-			final String contentType = "text/html";
-			message.setContent(content, contentType);
-			Transport.send(message);
-			return true;
-		} catch (MessagingException e) {
-			throw new ServiceException("Can not send message : " + e.getMessage(), e);
-		}
-	}
+
 	
 	@Override
-	public boolean activateAccount(String email, String token) throws ServiceException {
+	public boolean activateAccount(String tokenRequested) throws ServiceException {
 		try {
 			boolean result = false;
 			TimeService timeService = ServiceProvider.getInstance().getTimeService();
-			Optional<String> tokenExpires = userDao.findTokenExpiresDate(email, token);
-			if(tokenExpires.isPresent()) {
-				boolean isExpired = timeService.isExpired(tokenExpires.get());
+			Optional<Token> tokenOptional = userDao.findToken(tokenRequested, Token.Status.NORMAL);
+			if(tokenOptional.isPresent()) {
+				Token token = tokenOptional.get();
+				boolean isExpired = timeService.isExpired(token.getExpirationDate());
 				if (!isExpired) {
-					boolean activateUserAccountResult = userDao.changeUserStatus(email);
+					boolean activateUserAccountResult = userDao.changeUserStatus(token.getEmail());
 					result = activateUserAccountResult;
 				}
 			}

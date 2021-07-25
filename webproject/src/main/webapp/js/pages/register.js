@@ -89,13 +89,6 @@ const registerPage = {
 }
 
 /**
- * Reset forms
- */
-$(function() {
-    formRegisterElement.reset();
-});
-
-/**
  * Register processing
  */
 $(document).ready(function () {

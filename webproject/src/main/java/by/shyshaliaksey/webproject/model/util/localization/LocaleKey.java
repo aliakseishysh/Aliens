@@ -210,6 +210,13 @@ public enum LocaleKey implements EnumValue {
 	
 	COMMENT_FEEDBACK_INVALID("comment_feedback_invalid"),
 	
+	// email
+	EMAIL_SUBJECT_REGISTER("email_subject_register"),
+	EMAIL_SUBJECT_CHANGE_EMAIL("email_subject_change_email"),
+	EMAIL_CONTENT_REGISTER("email_content_register"),
+	EMAIL_CONTENT_CHANGE_EMAIL("email_content_change_email"),
+	CHECK_YOUR_EMAIL("check_your_email"),
+	
 	EMPTY_MESSAGE("empty_message");
 	
 	private String value;

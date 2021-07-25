@@ -8,6 +8,7 @@ import by.shyshaliaksey.webproject.controller.command.Feedback.Key;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
+import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 
@@ -18,11 +19,9 @@ public interface UserService {
 	Optional<User> findUserByEmail(String email) throws ServiceException;
 
 	Map<Feedback.Key, Object> registerUser(String email, String login, String password, String passwordRepeat,
-			String imagePath, Role role, String websiteUrl) throws ServiceException;
+			String imagePath, Role role, String websiteUrl, LocaleAttribute localeAttribute) throws ServiceException;
 
 	Optional<User> findByLogin(String login) throws ServiceException;
-
-	Map<Feedback.Key, Object> changeEmail(String email, String newEmail, int userId) throws ServiceException;
 
 	Map<Feedback.Key, Object> changeLogin(String login, String newLogin, int userId) throws ServiceException;
 
@@ -43,5 +42,10 @@ public interface UserService {
 			String webSiteName) throws ServiceException;
 
 	boolean deleteComment(String commentIdString, User currentUser) throws ServiceException;
+
+	Map<Key, Object> changeEmail(String email, String newEmail, int userId, String websiteUrl, LocaleAttribute locale)
+			throws ServiceException;
+
+	boolean setNewEmail(String tokenRequested) throws ServiceException;
 
 }

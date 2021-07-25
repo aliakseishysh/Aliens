@@ -61,6 +61,9 @@ export class Feedback {
     }
 
     static setElementValidFeedback(elementlValid, validFeedback) {
+        if (elementlValid != null) {
+            elementlValid.innerHTML = validFeedback;
+        }
     }
 
 }

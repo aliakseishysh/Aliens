@@ -19,12 +19,15 @@ import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.dao.UserDao;
 import by.shyshaliaksey.webproject.model.entity.Alien;
 import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.Token;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.TimeService;
 import by.shyshaliaksey.webproject.model.service.UserService;
 import by.shyshaliaksey.webproject.model.service.UtilService;
 import by.shyshaliaksey.webproject.model.service.ValidationService;
+import by.shyshaliaksey.webproject.model.util.EmailMessanger;
+import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleKey;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
@@ -101,7 +104,7 @@ public class UserServiceImpl implements UserService {
 	// TODO do something with dao register
 	@Override
 	public Map<Feedback.Key, Object> registerUser(String email, String login, String password, String passwordRepeat,
-			String imagePath, Role role, String websiteUrl) throws ServiceException {
+			String imagePath, Role role, String websiteUrl, LocaleAttribute locale) throws ServiceException {
 		Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 		ValidationService validationService = ServiceProvider.getInstance().getValidationService();
 		validationService.validateEmailFormInput(result, email);
@@ -132,11 +135,10 @@ public class UserServiceImpl implements UserService {
 							TimeService timeService = ServiceProvider.getInstance().getTimeService();
 							final int minutesToExpriration = 5;
 							String expirationTime = timeService.prepareTokenExpirationDate(minutesToExpriration);
-							final String address = websiteUrl + "controller?command=login-page&token="
-									+ token + "&email=" + email;
 							userDao.addNewToken(email, token, expirationTime);
 							// send message
-							utilService.sendEmail(email, address);
+							EmailMessanger.sendEmail(email, token, websiteUrl, EmailMessanger.Function.REGISTER,
+									locale);
 
 							// TODO start demon thread
 
@@ -200,33 +202,33 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Map<Feedback.Key, Object> changeEmail(String email, String newEmail, int userId) throws ServiceException {
+	public Map<Feedback.Key, Object> changeEmail(String email, String newEmail, int userId, String websiteUrl, LocaleAttribute locale) throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
+			UtilService utilService = ServiceProvider.getInstance().getUtilService();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 			validationService.validateEmailFormInput(result, newEmail);
-
+			
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.EMAIL_STATUS))) {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				Optional<User> userOld = userDao.findByEmail(newEmail);
 				if (!userOld.isPresent()) {
-					Optional<User> user = userDao.findByEmail(email);
-					if (user.isPresent() && user.get().getId() == userId) {
-						boolean updateResult = userDao.updateUserEmail(newEmail, userId);
-						if (updateResult) {
-							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-							result.put(Feedback.Key.EMAIL_STATUS, Boolean.TRUE);
-							result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-						} else {
-							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
-							result.put(Feedback.Key.EMAIL_STATUS, Boolean.FALSE);
-							result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
-						}
+					String token = utilService.createToken(email);
+					TimeService timeService = ServiceProvider.getInstance().getTimeService();
+					final int minutesToExpriration = 5;
+					String expirationTime = timeService.prepareTokenExpirationDate(minutesToExpriration);
+					userDao.addNewToken(email, token, expirationTime, newEmail);
+					// send message
+					boolean isMessageSent = EmailMessanger.sendEmail(newEmail, token, websiteUrl, EmailMessanger.Function.CHANGE_EMAIL,
+							locale);
+					if(isMessageSent) {
+						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
+						result.put(Feedback.Key.EMAIL_STATUS, Boolean.TRUE);
+						result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.CHECK_YOUR_EMAIL.getValue());
 					} else {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 						result.put(Feedback.Key.EMAIL_STATUS, Boolean.FALSE);
-						result.put(Feedback.Key.EMAIL_FEEDBACK,
-								LocaleKey.EMAIL_FEEDBACK_INVALID_AUTHORIZATION_ERROR.getValue());
+						result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
 					}
 				} else {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
@@ -346,8 +348,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Map<Feedback.Key, Object> updateImage(String serverDeploymentPath, String rootFolder, Part userImage, int userId, String websiteUrl)
-			throws ServiceException {
+	public Map<Feedback.Key, Object> updateImage(String serverDeploymentPath, String rootFolder, Part userImage,
+			int userId, String websiteUrl) throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
@@ -358,7 +360,7 @@ public class UserServiceImpl implements UserService {
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 
 				UtilService utilService = ServiceProvider.getInstance().getUtilService();
-				
+
 				String fileName = userImage.getSubmittedFileName();
 				String newFileName = utilService.prepareAlienImageName(fileName);
 				String imageUrl = FolderPath.PROFILE_IMAGE_FOLDER.getValue() + newFileName;
@@ -398,7 +400,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Map<Feedback.Key, Object> addNewComment(int currentUserId, String alienIdString, String newComment) throws ServiceException {
+	public Map<Feedback.Key, Object> addNewComment(int currentUserId, String alienIdString, String newComment)
+			throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
@@ -420,8 +423,8 @@ public class UserServiceImpl implements UserService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured while adding comment for user " + currentUserId + " :" + e.getMessage(),
-					e);
+			throw new ServiceException(
+					"Error occured while adding comment for user " + currentUserId + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -438,7 +441,8 @@ public class UserServiceImpl implements UserService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured while deleting comment " + commentIdString + " :" + e.getMessage(), e);
+			throw new ServiceException(
+					"Error occured while deleting comment " + commentIdString + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -451,9 +455,11 @@ public class UserServiceImpl implements UserService {
 			UtilService utilService = ServiceProvider.getInstance().getUtilService();
 			AlienDao alienDao = DaoProvider.getInstance().getAlienDao();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
-			validationService.validateAlienInfoFormInput(result, alienName, alienSmallDescription, alienFullDescription);
-			String fileName = alienImage.getSubmittedFileName();			
-			validationService.validateImageFormInput(result, FilenameUtils.getExtension(fileName), alienImage.getSize());
+			validationService.validateAlienInfoFormInput(result, alienName, alienSmallDescription,
+					alienFullDescription);
+			String fileName = alienImage.getSubmittedFileName();
+			validationService.validateImageFormInput(result, FilenameUtils.getExtension(fileName),
+					alienImage.getSize());
 
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_NAME_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS))
@@ -556,6 +562,27 @@ public class UserServiceImpl implements UserService {
 		DaoException e) {
 			throw new ServiceException(
 					"Error occured when suggesting new alien image " + alienName + " :" + e.getMessage(), e);
+		}
+	}
+	
+	@Override
+	public boolean setNewEmail(String tokenRequested) throws ServiceException {
+		try {
+			boolean result = false;
+			TimeService timeService = ServiceProvider.getInstance().getTimeService();
+			UserDao userDao = DaoProvider.getInstance().getUserDao();
+			Optional<Token> tokenOptional = userDao.findToken(tokenRequested, Token.Status.NORMAL);
+			if(tokenOptional.isPresent()) {
+				Token token = tokenOptional.get();
+				boolean isExpired = timeService.isExpired(token.getExpirationDate());
+				if (!isExpired) {
+					boolean updateResult = userDao.updateUserEmail(token.getEmail(), token.getNewEmail());
+					result = updateResult;
+				}
+			}
+			return result;
+		} catch (DaoException e) {
+			throw new ServiceException("Can not activate user account", e);
 		}
 	}
 

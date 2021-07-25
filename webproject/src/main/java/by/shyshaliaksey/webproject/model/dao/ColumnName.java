@@ -54,6 +54,7 @@ public class ColumnName {
 	public static final String TOKEN ="token";
 	public static final String TOKEN_STATUS ="_status";
 	public static final String TOKEN_EXPIRATION ="expiration_date";
+	public static final String TOKEN_NEW_EMAIL ="new_email";
 	
 	// operations
 	public static final String USERS_COUNT = "usersCount";
