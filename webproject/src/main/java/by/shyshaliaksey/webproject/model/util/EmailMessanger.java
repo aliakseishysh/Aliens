@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import by.shyshaliaksey.webproject.controller.RequestParameter;
-import by.shyshaliaksey.webproject.controller.command.CommandValue;
+import by.shyshaliaksey.webproject.controller.command.CommandDefiner;
 import by.shyshaliaksey.webproject.model.email.EmailPropertiesReader;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleKey;
@@ -101,7 +101,7 @@ public class EmailMessanger {
 		stringBuilder.append("?");
 		stringBuilder.append(RequestParameter.COMMAND.getValue());
 		stringBuilder.append("=");
-		stringBuilder.append(CommandValue.OPEN_LOGIN_PAGE.getValue());
+		stringBuilder.append(CommandDefiner.OPEN_LOGIN_PAGE.getValue());
 		stringBuilder.append("&");
 		stringBuilder.append(RequestParameter.TOKEN.getValue());
 		stringBuilder.append("=");
@@ -117,7 +117,7 @@ public class EmailMessanger {
 		stringBuilder.append("?");
 		stringBuilder.append(RequestParameter.COMMAND.getValue());
 		stringBuilder.append("=");
-		stringBuilder.append(CommandValue.OPEN_USER_PROFILE_PAGE.getValue());
+		stringBuilder.append(CommandDefiner.OPEN_USER_PROFILE_PAGE.getValue());
 		stringBuilder.append("&");
 		stringBuilder.append(RequestParameter.TOKEN.getValue());
 		stringBuilder.append("=");

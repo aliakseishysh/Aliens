@@ -4,7 +4,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 import by.shyshaliaksey.webproject.controller.EnumValue;
-import by.shyshaliaksey.webproject.controller.command.CommandValue;
+import by.shyshaliaksey.webproject.controller.command.CommandDefiner;
 
 public enum LocaleAttribute implements EnumValue {
 

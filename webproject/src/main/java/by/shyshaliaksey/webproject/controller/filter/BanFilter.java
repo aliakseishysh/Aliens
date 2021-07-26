@@ -2,10 +2,10 @@ package by.shyshaliaksey.webproject.controller.filter;
 
 import java.io.IOException;
 
-import by.shyshaliaksey.webproject.controller.PagePath;
+import by.shyshaliaksey.webproject.controller.StaticPath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
-import by.shyshaliaksey.webproject.controller.command.CommandValue;
+import by.shyshaliaksey.webproject.controller.command.CommandDefiner;
 import by.shyshaliaksey.webproject.model.entity.User;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -33,16 +33,16 @@ public class BanFilter implements Filter {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		String commandName = request.getParameter(RequestParameter.COMMAND.getValue());
 		User user = (User) httpRequest.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue());
-		if (user != null && user.getUserStatus() == User.UserStatus.BANNED
-				&& commandName != null && !commandName.equals(CommandValue.LOGOUT_USER.getValue())
-				&& !commandName.equals(CommandValue.CHANGE_LOCALE.getValue())) {
+		if (user != null && user.getUserStatus() == User.Status.BANNED
+				&& commandName != null && !commandName.equals(CommandDefiner.LOGOUT_USER.getValue())
+				&& !commandName.equals(CommandDefiner.CHANGE_LOCALE.getValue())) {
 			result = true;
 		}
 		return result;
 	}
 	
 	private void forwardBannedPage(ServletRequest request, ServletResponse response) throws IOException, ServletException {
-		request.getRequestDispatcher(PagePath.PAGE_BANNED_JSP.getValue()).forward(request, response);
+		request.getRequestDispatcher(StaticPath.PAGE_BANNED_JSP.getValue()).forward(request, response);
 	}
 
 }

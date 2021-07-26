@@ -1,6 +1,6 @@
 package by.shyshaliaksey.webproject.model.service.impl;
 
-import static by.shyshaliaksey.webproject.controller.FilePath.IMAGE_DEFAULT;
+import static by.shyshaliaksey.webproject.controller.StaticPath.IMAGE_DEFAULT;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
 
-import by.shyshaliaksey.webproject.controller.FolderPath;
+import by.shyshaliaksey.webproject.controller.StaticPath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Feedback;
@@ -16,9 +16,10 @@ import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.dao.AlienDao;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
+import by.shyshaliaksey.webproject.model.dao.DatabaseFeedback;
 import by.shyshaliaksey.webproject.model.dao.UserDao;
 import by.shyshaliaksey.webproject.model.entity.Alien;
-import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.entity.Token;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
@@ -46,9 +47,9 @@ public class UserServiceImpl implements UserService {
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.EMAIL_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.PASSWORD_STATUS))) {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
-				Map<Feedback.Key, Optional<String>> loginData = userDao.findUserLoginData(email);
-				Optional<String> passwordDatabaseOptional = loginData.get(Feedback.Key.PASSWORD);
-				Optional<String> saltDatabaseOptional = loginData.get(Feedback.Key.SALT);
+				Map<DatabaseFeedback.Key, Optional<String>> loginData = userDao.findUserLoginData(email);
+				Optional<String> passwordDatabaseOptional = loginData.get(DatabaseFeedback.Key.PASSWORD);
+				Optional<String> saltDatabaseOptional = loginData.get(DatabaseFeedback.Key.SALT);
 				if (passwordDatabaseOptional.isPresent() && saltDatabaseOptional.isPresent()) {
 					String passwordHash = passwordDatabaseOptional.get();
 					String saltHex = saltDatabaseOptional.get();
@@ -302,8 +303,8 @@ public class UserServiceImpl implements UserService {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				Optional<User> user = userDao.findById(userId);
 				if (user.isPresent() && user.get().getId() == userId) {
-					Map<Feedback.Key, Optional<String>> loginData = userDao.findUserLoginData(userId);
-					Optional<String> saltDatabaseOptional = loginData.get(Feedback.Key.SALT);
+					Map<DatabaseFeedback.Key, Optional<String>> loginData = userDao.findUserLoginData(userId);
+					Optional<String> saltDatabaseOptional = loginData.get(DatabaseFeedback.Key.SALT);
 					if (saltDatabaseOptional.isPresent()) {
 						String saltHex = saltDatabaseOptional.get();
 						byte[] salt = DatatypeConverter.parseHexBinary(saltHex);
@@ -363,11 +364,11 @@ public class UserServiceImpl implements UserService {
 
 				String fileName = userImage.getSubmittedFileName();
 				String newFileName = utilService.prepareAlienImageName(fileName);
-				String imageUrl = FolderPath.PROFILE_IMAGE_FOLDER.getValue() + newFileName;
-				boolean uploadToRoot = utilService.uploadImage(rootFolder, FolderPath.PROFILE_IMAGE_FOLDER.getValue(),
+				String imageUrl = StaticPath.PROFILE_IMAGE_FOLDER.getValue() + newFileName;
+				boolean uploadToRoot = utilService.uploadImage(rootFolder, StaticPath.PROFILE_IMAGE_FOLDER.getValue(),
 						newFileName, userImage);
 				boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
-						FolderPath.PROFILE_IMAGE_FOLDER.getValue(), newFileName, userImage);
+						StaticPath.PROFILE_IMAGE_FOLDER.getValue(), newFileName, userImage);
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				boolean updateImageResult = userDao.updateProfileImage(imageUrl, userId);
 				if (uploadToRoot && uploadToDeployment && updateImageResult) {
@@ -393,7 +394,7 @@ public class UserServiceImpl implements UserService {
 	public boolean isUserBanned(HttpSession session) {
 		boolean result = false;
 		User user = (User) session.getAttribute(RequestAttribute.CURRENT_USER.getValue());
-		if (user != null && user.getUserStatus() == User.UserStatus.BANNED) {
+		if (user != null && user.getUserStatus() == User.Status.BANNED) {
 			result = true;
 		}
 		return result;
@@ -468,13 +469,13 @@ public class UserServiceImpl implements UserService {
 				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
 				if (!alienInDatabase.isPresent()) {
 					String newFileName = utilService.prepareAlienImageName(fileName);
-					String imageUrl = FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
+					String imageUrl = StaticPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
 					int alienId = alienDao.suggestNewAlien(alienName, alienSmallDescription, alienFullDescription,
 							imageUrl);
-					boolean uploadToRoot = utilService.uploadImage(rootFolder, FolderPath.ALIEN_IMAGE_FOLDER.getValue(),
+					boolean uploadToRoot = utilService.uploadImage(rootFolder, StaticPath.ALIEN_IMAGE_FOLDER.getValue(),
 							newFileName, alienImage);
 					boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
-							FolderPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
+							StaticPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
 					if (uploadToRoot && uploadToDeployment) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -529,12 +530,12 @@ public class UserServiceImpl implements UserService {
 
 					String fileName = alienImage.getSubmittedFileName();
 					String newFileName = utilService.prepareAlienImageName(fileName);
-					String imageUrl = FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
+					String imageUrl = StaticPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
 					int alienId = alienInDatabase.get().getId();
-					boolean uploadToRoot = utilService.uploadImage(rootFolder, FolderPath.ALIEN_IMAGE_FOLDER.getValue(),
+					boolean uploadToRoot = utilService.uploadImage(rootFolder, StaticPath.ALIEN_IMAGE_FOLDER.getValue(),
 							newFileName, alienImage);
 					boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
-							FolderPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
+							StaticPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
 					boolean suggestImageResult = alienDao.suggestNewAlienImage(alienId, imageUrl);
 					if (uploadToRoot && uploadToDeployment && suggestImageResult) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);

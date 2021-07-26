@@ -41,7 +41,7 @@ import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserImageC
 import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserLoginCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserPasswordCommand;
 
-public enum CommandValue implements EnumValue {
+public enum CommandDefiner implements EnumValue {
 
 	OPEN_HOME_PAGE("home-page", new OpenHomePageCommand()),
 	OPEN_LOGIN_PAGE("login-page", new OpenLoginPageCommand()),
@@ -83,13 +83,11 @@ public enum CommandValue implements EnumValue {
 	ADD_NEW_ALIEN("add-new-alien", new AddNewAlienCommand()),
 	ADD_NEW_COMMENT("add-new-comment", new AddNewCommentCommand()),
 	DELETE_COMMENT("delete-comment", new DeleteCommentCommand());
-	// REQUEST_RESTORE_PASSWORD_TOKEN("request-restore-password-token"); TODO if have time
-	// OPEN_FORGOT_PASSWORD_PAGE("forgot-password"), TODO if have time
 
 	private String value;
 	private Command command;
 	
-	private CommandValue(String value, Command command) {
+	private CommandDefiner(String value, Command command) {
 		this.value = value;
 		this.command = command;
 	}
@@ -103,11 +101,21 @@ public enum CommandValue implements EnumValue {
 		return command;
 	}
 	
-	public static CommandValue fromString(String commandName) {
-		CommandValue result = OPEN_404_ERROR_PAGE;
-        for (CommandValue commandValue : CommandValue.values()) {
-            if (commandValue.getValue().equals(commandName)) {
-                result = commandValue;
+	/**
+	 * @param commandName parameter obtained from request
+	 * @return Command instance corresponding to {@code commandName}
+	 */
+	public static Command defineCommand(String commandName) {
+		CommandDefiner commandDefiner = CommandDefiner.fromString(commandName);
+		Command command = commandDefiner.getCommand();
+		return command;
+	}
+	
+	public static CommandDefiner fromString(String commandName) {
+		CommandDefiner result = OPEN_404_ERROR_PAGE;
+        for (CommandDefiner commandDefiner : CommandDefiner.values()) {
+            if (commandDefiner.getValue().equals(commandName)) {
+                result = commandDefiner;
             }
         }
         return result;

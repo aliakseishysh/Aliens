@@ -2,10 +2,10 @@ package by.shyshaliaksey.webproject.controller.filter;
 
 import java.io.IOException;
 
-import by.shyshaliaksey.webproject.controller.PagePath;
+import by.shyshaliaksey.webproject.controller.StaticPath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
-import by.shyshaliaksey.webproject.controller.command.CommandValue;
+import by.shyshaliaksey.webproject.controller.command.CommandDefiner;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.AdminPage;
 import by.shyshaliaksey.webproject.model.entity.AlienPage;
@@ -31,7 +31,7 @@ public class PaginationFilter implements Filter {
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		String requestedPageString = httpServletRequest.getParameter(RequestParameter.PAGE.getValue());
 		String commandString = httpServletRequest.getParameter(RequestParameter.COMMAND.getValue());
-		CommandValue commandValue = CommandValue.fromString(commandString);
+		CommandDefiner commandDefiner = CommandDefiner.fromString(commandString);
 		try {
 			AlienService alienService = ServiceProvider.getInstance().getAlienService();
 			int requestedPage = 1;
@@ -40,7 +40,7 @@ public class PaginationFilter implements Filter {
 			if (requestedPageString != null) {
 				requestedPage = Integer.parseInt(requestedPageString);
 			}
-			switch (commandValue) {
+			switch (commandDefiner) {
 			case OPEN_HOME_PAGE:
 				aliensCount = alienService.findAlienCount();
 				pagesCount = (int) Math.ceil(aliensCount / HomePage.ALIENS_PER_PAGE);
@@ -67,7 +67,7 @@ public class PaginationFilter implements Filter {
 
 			}
 		} catch (NumberFormatException | ServiceException e) {
-			request.getRequestDispatcher(PagePath.ERROR_PAGE_400_JSP.getValue()).forward(request, response);
+			request.getRequestDispatcher(StaticPath.ERROR_PAGE_400_JSP.getValue()).forward(request, response);
 		}
 		
 	}
@@ -78,7 +78,7 @@ public class PaginationFilter implements Filter {
 			request.setAttribute(RequestAttribute.CURRENT_PAGE.getValue(), requestedPage);
 			chain.doFilter(request, response);
 		} else {
-			request.getRequestDispatcher(PagePath.ERROR_PAGE_400_JSP.getValue()).forward(request, response);
+			request.getRequestDispatcher(StaticPath.ERROR_PAGE_400_JSP.getValue()).forward(request, response);
 		}
 	}
 	

@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import by.shyshaliaksey.webproject.controller.command.Feedback;
+import by.shyshaliaksey.webproject.model.dao.DatabaseFeedback;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
@@ -43,7 +43,7 @@ import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.TimeService;
 import by.shyshaliaksey.webproject.model.entity.Comment;
 import by.shyshaliaksey.webproject.model.entity.LoginData;
-import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.entity.Token;
 
 public class UserDaoImpl implements UserDao {
@@ -170,9 +170,9 @@ public class UserDaoImpl implements UserDao {
 				String loginName = resultSet.getString(USER_LOGIN_NAME);
 				String imageUrl = resultSet.getString(USER_IMAGE_URL);
 				Role role = Role.valueOf(resultSet.getString(USER_ROLE_TYPE));
-				User.UserStatus userStatus = User.UserStatus.valueOf(resultSet.getString(USER_STATUS));
+				User.Status status = User.Status.valueOf(resultSet.getString(USER_STATUS));
 				Date bannedToDate = resultSet.getDate(USER_BANNED_TO_DATE);
-				User user = new User(id, email, loginName, imageUrl, role, userStatus, bannedToDate);
+				User user = new User(id, email, loginName, imageUrl, role, status, bannedToDate);
 				users.add(user);
 			}
 		} catch (SQLException e) {
@@ -194,9 +194,9 @@ public class UserDaoImpl implements UserDao {
 				String loginName = resultSet.getString(USER_LOGIN_NAME);
 				String imageUrl = resultSet.getString(USER_IMAGE_URL);
 				Role role = Role.valueOf(resultSet.getString(USER_ROLE_TYPE));
-				User.UserStatus userStatus = User.UserStatus.valueOf(resultSet.getString(USER_STATUS));
+				User.Status status = User.Status.valueOf(resultSet.getString(USER_STATUS));
 				Date bannedToDate = resultSet.getDate(USER_BANNED_TO_DATE);
-				user = Optional.of(new User(userId, email, loginName, imageUrl, role, userStatus, bannedToDate));
+				user = Optional.of(new User(userId, email, loginName, imageUrl, role, status, bannedToDate));
 			}
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_BY_ID, e.getMessage());
@@ -218,9 +218,9 @@ public class UserDaoImpl implements UserDao {
 				String loginName = resultSet.getString(USER_LOGIN_NAME);
 				String imageUrl = resultSet.getString(USER_IMAGE_URL);
 				Role role = Role.valueOf(resultSet.getString(USER_ROLE_TYPE));
-				User.UserStatus userStatus = User.UserStatus.valueOf(resultSet.getString(USER_STATUS));
+				User.Status status = User.Status.valueOf(resultSet.getString(USER_STATUS));
 				Date bannedToDate = resultSet.getDate(USER_BANNED_TO_DATE);
-				user = Optional.of(new User(userId, email, loginName, imageUrl, role, userStatus, bannedToDate));
+				user = Optional.of(new User(userId, email, loginName, imageUrl, role, status, bannedToDate));
 			}
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_BY_LOGIN, e.getMessage());
@@ -241,9 +241,9 @@ public class UserDaoImpl implements UserDao {
 				String loginName = resultSet.getString(USER_LOGIN_NAME);
 				String imageUrl = resultSet.getString(USER_IMAGE_URL);
 				Role role = Role.valueOf(resultSet.getString(USER_ROLE_TYPE));
-				User.UserStatus userStatus = User.UserStatus.valueOf(resultSet.getString(USER_STATUS));
+				User.Status status = User.Status.valueOf(resultSet.getString(USER_STATUS));
 				Date bannedToDate = resultSet.getDate(USER_BANNED_TO_DATE);
-				user = Optional.of(new User(userId, email, loginName, imageUrl, role, userStatus, bannedToDate));
+				user = Optional.of(new User(userId, email, loginName, imageUrl, role, status, bannedToDate));
 			}
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_BY_EMAIL, e.getMessage());
@@ -253,19 +253,19 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public Map<Feedback.Key, Optional<String>> findUserLoginData(String userEmail) throws DaoException {
-		Map<Feedback.Key, Optional<String>> result = new EnumMap<>(Feedback.Key.class);
-		result.put(Feedback.Key.PASSWORD, Optional.empty());
-		result.put(Feedback.Key.SALT, Optional.empty());
+	public Map<DatabaseFeedback.Key, Optional<String>> findUserLoginData(String userEmail) throws DaoException {
+		Map<DatabaseFeedback.Key, Optional<String>> result = new EnumMap<>(DatabaseFeedback.Key.class);
+		result.put(DatabaseFeedback.Key.PASSWORD, Optional.empty());
+		result.put(DatabaseFeedback.Key.SALT, Optional.empty());
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(FIND_USER_LOGIN_DATA)) {
 			statement.setString(1, userEmail);
-			statement.setString(2, User.UserStatus.NORMAL.name());
-			statement.setString(3, User.UserStatus.BANNED.name());
+			statement.setString(2, User.Status.NORMAL.name());
+			statement.setString(3, User.Status.BANNED.name());
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
-				result.put(Feedback.Key.PASSWORD, Optional.of(resultSet.getString(USER_PASSWORD_HASH)));
-				result.put(Feedback.Key.SALT, Optional.of(resultSet.getString(USER_SALT)));
+				result.put(DatabaseFeedback.Key.PASSWORD, Optional.of(resultSet.getString(USER_PASSWORD_HASH)));
+				result.put(DatabaseFeedback.Key.SALT, Optional.of(resultSet.getString(USER_SALT)));
 			}
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_USER_LOGIN_DATA, e.getMessage());
@@ -275,17 +275,17 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public Map<Feedback.Key, Optional<String>> findUserLoginData(int userId) throws DaoException {
-		Map<Feedback.Key, Optional<String>> result = new EnumMap<>(Feedback.Key.class);
-		result.put(Feedback.Key.SALT, Optional.empty());
+	public Map<DatabaseFeedback.Key, Optional<String>> findUserLoginData(int userId) throws DaoException {
+		Map<DatabaseFeedback.Key, Optional<String>> result = new EnumMap<>(DatabaseFeedback.Key.class);
+		result.put(DatabaseFeedback.Key.SALT, Optional.empty());
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(FIND_USER_LOGIN_DATA_BY_ID)) {
 			statement.setInt(1, userId);
-			statement.setString(2, User.UserStatus.NORMAL.name());
-			statement.setString(3, User.UserStatus.BANNED.name());
+			statement.setString(2, User.Status.NORMAL.name());
+			statement.setString(3, User.Status.BANNED.name());
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
-				result.put(Feedback.Key.SALT, Optional.of(resultSet.getString(USER_SALT)));
+				result.put(DatabaseFeedback.Key.SALT, Optional.of(resultSet.getString(USER_SALT)));
 			}
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_USER_LOGIN_DATA, e.getMessage());
@@ -306,7 +306,7 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(4, saltHex);
 			statement.setString(5, defaultImage);
 			statement.setString(6, defaultRole.getValue());
-			statement.setString(7, User.UserStatus.CONFIRMATION_AWAITING.name());
+			statement.setString(7, User.Status.CONFIRMATION_AWAITING.name());
 			rowsAdded = statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", REGISTER, e.getMessage());
@@ -322,8 +322,8 @@ public class UserDaoImpl implements UserDao {
 				PreparedStatement statement = connection.prepareStatement(LOGIN_AND_PASSWORD_CHECK)) {
 			statement.setString(1, email);
 			statement.setString(2, passwordHash);
-			statement.setString(3, User.UserStatus.NORMAL.name());
-			statement.setString(4, User.UserStatus.BANNED.name());
+			statement.setString(3, User.Status.NORMAL.name());
+			statement.setString(4, User.Status.BANNED.name());
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
 				usersCount = resultSet.getInt(USERS_COUNT);
@@ -415,10 +415,10 @@ public class UserDaoImpl implements UserDao {
 		int result = 0;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(BAN_UNBAN)) {
-			statement.setString(1, User.UserStatus.BANNED.name());
+			statement.setString(1, User.Status.BANNED.name());
 			statement.setString(2, banDate);
 			statement.setString(3, userLogin);
-			statement.setString(4, User.UserStatus.NORMAL.name());
+			statement.setString(4, User.Status.NORMAL.name());
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", BAN_UNBAN, e.getMessage());
@@ -432,10 +432,10 @@ public class UserDaoImpl implements UserDao {
 		int result = 0;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(BAN_UNBAN)) {
-			statement.setString(1, User.UserStatus.NORMAL.name());
+			statement.setString(1, User.Status.NORMAL.name());
 			statement.setString(2, unbanDate);
 			statement.setString(3, userLogin);
-			statement.setString(4, User.UserStatus.BANNED.name());
+			statement.setString(4, User.Status.BANNED.name());
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", BAN_UNBAN, e.getMessage());
@@ -575,7 +575,7 @@ public class UserDaoImpl implements UserDao {
 		int rowsAdded = 0;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(CHANGE_USER_STATUS)) {
-			statement.setString(1, User.UserStatus.NORMAL.name());
+			statement.setString(1, User.Status.NORMAL.name());
 			statement.setString(2, email);
 			rowsAdded = statement.executeUpdate();
 		} catch (SQLException e) {

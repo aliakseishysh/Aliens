@@ -1,20 +1,18 @@
 package by.shyshaliaksey.webproject.controller.listener;
 
 import by.shyshaliaksey.webproject.controller.EnumValue;
-import by.shyshaliaksey.webproject.controller.FilePath;
-import by.shyshaliaksey.webproject.controller.PagePath;
+import by.shyshaliaksey.webproject.controller.StaticPath;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 
-import java.util.ResourceBundle;
-
-import by.shyshaliaksey.webproject.controller.command.CommandValue;
+import by.shyshaliaksey.webproject.controller.command.CommandDefiner;
 import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.email.EmailPropertiesReader;
 import by.shyshaliaksey.webproject.model.entity.FormPattern;
-import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
+import by.shyshaliaksey.webproject.model.util.DeploymentPropertiesReader;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleKey;
 import jakarta.servlet.ServletContext;
@@ -32,7 +30,7 @@ public class ApplicationListener implements ServletContextListener {
 		DaoProvider.getInstance();
 		EmailPropertiesReader.getPropeties();
         ServiceProvider.getInstance();
-        setSessionVariables(sce.getServletContext());
+        setServletContextVariables(sce.getServletContext());
         LocaleAttribute.LOCALIZATION_EN.getResourceBundle();
 	}
 
@@ -42,16 +40,16 @@ public class ApplicationListener implements ServletContextListener {
 		ConnectionPool.getInstance().destroyConnectionPool();
 	}
 	
-	private void setSessionVariables(ServletContext servletContext) {
+	private void setServletContextVariables(ServletContext servletContext) {
 		setEnumApplicationVariables(servletContext, Feedback.Key.values());
-		setEnumApplicationVariables(servletContext, CommandValue.values());
-		setEnumApplicationVariables(servletContext, FilePath.values());
-		setEnumApplicationVariables(servletContext, PagePath.values());
+		setEnumApplicationVariables(servletContext, CommandDefiner.values());
+		setEnumApplicationVariables(servletContext, StaticPath.values());
 		setEnumApplicationVariables(servletContext, RequestParameter.values());
 		setEnumApplicationVariables(servletContext, Role.values());
 		setEnumApplicationVariables(servletContext, FormPattern.values());
 		setEnumApplicationVariables(servletContext, LocaleAttribute.values());
 		setEnumApplicationVariables(servletContext, LocaleKey.values());
+		setEnumApplicationVariables(servletContext, DeploymentPropertiesReader.Deployment.values());
 	}
 
 	private <T extends Enum<?>> void setEnumApplicationVariables(ServletContext  servletContext, T[] enumValues) {

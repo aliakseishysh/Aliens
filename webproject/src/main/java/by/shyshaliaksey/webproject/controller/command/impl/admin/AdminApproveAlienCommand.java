@@ -9,9 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
-import by.shyshaliaksey.webproject.controller.FolderPath;
-import by.shyshaliaksey.webproject.controller.InitParameter;
-import by.shyshaliaksey.webproject.controller.PagePath;
+import by.shyshaliaksey.webproject.controller.StaticPath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.SessionAttribute;
@@ -19,9 +17,9 @@ import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
 import by.shyshaliaksey.webproject.controller.command.Command;
 import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.controller.command.Router;
-import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
+import by.shyshaliaksey.webproject.controller.command.Router.Type;
 import by.shyshaliaksey.webproject.exception.ServiceException;
-import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.AdminService;
 import by.shyshaliaksey.webproject.model.service.AlienService;
@@ -53,12 +51,12 @@ public class AdminApproveAlienCommand implements Command {
 			} else {
 				response.setStatus(Feedback.Code.INTERNAL_SERVER_ERROR.getStatusCode());
 			}
-			router = new Router(null, jsonResponse, RouterType.AJAX_RESPONSE);
+			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException e) {
 			response.setStatus(Feedback.Code.INTERNAL_SERVER_ERROR.getStatusCode());
 			logger.log(Level.ERROR, "Exception occured while alien approving: {} {} {}", e.getMessage(), e.getStackTrace(),
 					e);
-			router = new Router(PagePath.ERROR_PAGE_500_JSP.getValue(), null, RouterType.FORWARD);
+			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;
 	}

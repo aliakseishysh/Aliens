@@ -7,7 +7,7 @@ export function initializeCarousel() {
         div.id = "carousel-item-" + i;
         
         let img = document.createElement("img");
-        img.setAttribute("src", "http://localhost:8080/webproject" + images[i]["image_url"]);
+        img.setAttribute("src", CURRENT_DEPLOYMENT + images[i]["image_url"]);
         img.classList.add("d-block", "w-100");
 
         div.appendChild(img);

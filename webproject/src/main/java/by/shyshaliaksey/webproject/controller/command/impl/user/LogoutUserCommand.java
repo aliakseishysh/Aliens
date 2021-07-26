@@ -10,8 +10,8 @@ import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
 import by.shyshaliaksey.webproject.controller.command.Command;
 import by.shyshaliaksey.webproject.controller.command.Router;
-import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
-import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.controller.command.Router.Type;
+import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,7 +28,7 @@ public class LogoutUserCommand implements Command {
 		Router router;
 		session.removeAttribute(RequestAttribute.CURRENT_USER.getValue());
 		session.setAttribute(RequestAttribute.CURRENT_USER.getValue(), new User(Role.GUEST));
-		router = new Router(null, Boolean.TRUE.toString(), RouterType.AJAX_RESPONSE);
+		router = new Router(null, Boolean.TRUE.toString(), Type.AJAX_RESPONSE);
 		return router;
 	}
 

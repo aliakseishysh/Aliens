@@ -1,31 +1,45 @@
 package by.shyshaliaksey.webproject.controller.command;
 
+
+/**
+ *	Suitable class for storing information about `page to go`, response parameter and type of response
+ */
 public class Router {
 
-	public enum RouterType {
+	/**
+	 *	Enum defining types of response answer
+	 */
+	public enum Type {
 		AJAX_RESPONSE, FORWARD, REDIRECT;
 	}
 
-	private final String pagePath;
-	private final String responseParameter;
-	private final RouterType routerType;
+	private final String pageToGo;
+	private final String jsonResponse;
+	private final Type type;
 
-	public Router(String pagePath, String responseParameter, RouterType routerType) {
-		this.pagePath = pagePath;
-		this.responseParameter = responseParameter;
-		this.routerType = routerType;
+	/**
+	 * 
+	 * @param pageToGo contains information about url address to send response (may be null if {@link Type#AJAX_RESPONSE})
+	 * @param jsonResponse contains response to ajax request (may be null if server error occurred) 
+	 * @param type contains information about current response type 
+	 * @see Controller
+	 */
+	public Router(String pageToGo, String jsonResponse, Type type) {
+		this.pageToGo = pageToGo;
+		this.jsonResponse = jsonResponse;
+		this.type = type;
 	}
 
-	public String getPagePath() {
-		return pagePath;
+	public String getPageToGo() {
+		return pageToGo;
 	}
 
-	public String getResponseParameter() {
-		return responseParameter;
+	public String getJsonResponse() {
+		return jsonResponse;
 	}
 
-	public RouterType getRouterType() {
-		return routerType;
+	public Type getRouterType() {
+		return type;
 	}
 
 }

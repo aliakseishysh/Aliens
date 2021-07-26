@@ -2,6 +2,8 @@ package by.shyshaliaksey.webproject.model.entity;
 
 import java.util.Date;
 
+import by.shyshaliaksey.webproject.controller.EnumValue;
+
 public class User {
 
 	private int id;
@@ -9,16 +11,32 @@ public class User {
 	private String login;
 	private String imageUrl;
 	private Role role;
-	private UserStatus userStatus;
+	private Status status;
 	private Date bannedToDate;
 	
-	public User(int id, String email, String login, String imageUrl, Role role, UserStatus userStatus, Date bannedToDate) {
+	public enum Status {
+		NORMAL, BANNED, CONFIRMATION_AWAITING
+	}
+	
+	public enum Role implements EnumValue {
+		ADMIN("ADMIN"), USER("USER"), GUEST("GUEST");
+		private String value;
+		private Role(String value) {
+			this.value = value;
+		}
+		public String getValue() {
+			return value;
+		}
+		
+	}
+	
+	public User(int id, String email, String login, String imageUrl, Role role, Status status, Date bannedToDate) {
 		this.id = id;
 		this.email = email;
 		this.login = login;
 		this.imageUrl = imageUrl;
 		this.role = role;
-		this.userStatus = userStatus;
+		this.status = status;
 		this.bannedToDate = bannedToDate;
 	}
 	
@@ -33,10 +51,6 @@ public class User {
 	}
 	
 	public User() {
-	}
-	
-	public enum UserStatus {
-		NORMAL, BANNED, CONFIRMATION_AWAITING
 	}
 	
 	public int getId() {
@@ -74,12 +88,12 @@ public class User {
 		this.role = role;
 	}
 
-	public UserStatus getUserStatus() {
-		return userStatus;
+	public Status getUserStatus() {
+		return status;
 	}
 
-	public void setUserStatus(UserStatus userStatus) {
-		this.userStatus = userStatus;
+	public void setUserStatus(Status status) {
+		this.status = status;
 	}
 
 	public Date getBannedToDate() {

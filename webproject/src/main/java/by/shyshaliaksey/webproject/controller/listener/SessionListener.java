@@ -4,7 +4,7 @@ import by.shyshaliaksey.webproject.controller.EnumValue;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.SessionAttribute;
 import by.shyshaliaksey.webproject.model.dao.ColumnName;
-import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleKey;

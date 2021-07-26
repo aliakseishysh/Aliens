@@ -5,12 +5,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.User.Role;
 
+/**
+ * Provides help to restrict commands access for different roles <br>
+ * 
+ * @see CommandAccessChecker
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface AllowedRoles {
 
 	Role[] value() default Role.GUEST;
-	
+
 }

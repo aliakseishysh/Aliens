@@ -6,18 +6,18 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import by.shyshaliaksey.webproject.controller.PagePath;
+import by.shyshaliaksey.webproject.controller.StaticPath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
 import by.shyshaliaksey.webproject.controller.command.Command;
 import by.shyshaliaksey.webproject.controller.command.Router;
-import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
+import by.shyshaliaksey.webproject.controller.command.Router.Type;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.AdminPage;
 import by.shyshaliaksey.webproject.model.entity.Alien;
 import by.shyshaliaksey.webproject.model.entity.AlienPage;
-import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.service.AlienService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,10 +36,10 @@ public class OpenAdminSuggestedAliensImagesPageCommand implements Command {
 		try {
 			List<Alien> aliens = alienService.findUnapprovedAliensImages((int)request.getAttribute(RequestAttribute.CURRENT_PAGE.getValue()));
 			request.setAttribute(RequestAttribute.ALIEN_LIST.getValue(), aliens);
-			router = new Router(PagePath.PAGE_ADMIN_SUGGESTED_ALIENS_INAGES_JSP.getValue(), null, RouterType.FORWARD);
+			router = new Router(StaticPath.PAGE_ADMIN_SUGGESTED_ALIENS_INAGES_JSP.getValue(), null, Type.FORWARD);
 		} catch (ServiceException e) {
-			router = new Router(PagePath.ERROR_PAGE_500_JSP.getValue(), null, RouterType.FORWARD);
-			logger.log(Level.ERROR, "Exception occured while opening {}: {}", PagePath.PAGE_HOME_JSP, e.getMessage());
+			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
+			logger.log(Level.ERROR, "Exception occured while opening {}: {}", StaticPath.PAGE_HOME_JSP, e.getMessage());
 		}
 		return router;
 	}

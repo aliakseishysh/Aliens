@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
 
-import by.shyshaliaksey.webproject.controller.FolderPath;
+import by.shyshaliaksey.webproject.controller.StaticPath;
 import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
@@ -14,7 +14,7 @@ import by.shyshaliaksey.webproject.model.dao.AlienDao;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
 import by.shyshaliaksey.webproject.model.dao.UserDao;
 import by.shyshaliaksey.webproject.model.entity.Alien;
-import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.AdminService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
@@ -208,11 +208,11 @@ public class AdminServiceImpl implements AdminService {
 				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
 				if (!alienInDatabase.isPresent()) {
 					String newFileName = utilService.prepareAlienImageName(fileName);
-					String imageUrl = FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
-					boolean uploadToRoot = utilService.uploadImage(rootFolder, FolderPath.ALIEN_IMAGE_FOLDER.getValue(),
+					String imageUrl = StaticPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
+					boolean uploadToRoot = utilService.uploadImage(rootFolder, StaticPath.ALIEN_IMAGE_FOLDER.getValue(),
 							newFileName, alienImage);
 					boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
-							FolderPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
+							StaticPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
 					int alienId = alienDao.addNewAlien(alienName, alienSmallDescription, alienFullDescription,
 							imageUrl);
 					boolean addToGaleryResult = alienDao.addNewImageToGalery(alienId, imageUrl);
@@ -314,11 +314,11 @@ public class AdminServiceImpl implements AdminService {
 				Optional<Alien> alienInDatabase = alienDao.findById(alienId);
 				if (alienInDatabase.isPresent()) {
 					String newFileName = utilService.prepareAlienImageName(fileName);
-					String imageUrl = FolderPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
-					boolean uploadToRoot = utilService.uploadImage(rootFolder, FolderPath.ALIEN_IMAGE_FOLDER.getValue(),
+					String imageUrl = StaticPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
+					boolean uploadToRoot = utilService.uploadImage(rootFolder, StaticPath.ALIEN_IMAGE_FOLDER.getValue(),
 							newFileName, alienImage);
 					boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
-							FolderPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
+							StaticPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
 					boolean addResult = alienDao.updateAlienImage(alienId, imageUrl);
 					boolean addToGaleryResult = alienDao.addNewImageToGalery(alienId, imageUrl);
 					if (uploadToRoot && uploadToDeployment && addResult && addToGaleryResult) {

@@ -98,6 +98,7 @@
 	const LOCALIZATION_RU = `${LOCALIZATION_RU}`;
 	const LOCALIZATION_EN = `${LOCALIZATION_EN}`;
 	const IMAGE_PATH = `${IMAGE_PATH}`;
+	const CURRENT_DEPLOYMENT = `${CURRENT_DEPLOYMENT}`;
 
 	var ALIEN_IMAGES = `${alienImages}`;
 	var userId = `${currentUser.id}`;

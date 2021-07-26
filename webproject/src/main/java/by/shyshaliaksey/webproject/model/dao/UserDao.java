@@ -8,7 +8,8 @@ import java.util.Optional;
 import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.model.entity.User;
-import by.shyshaliaksey.webproject.model.entity.Role;
+import by.shyshaliaksey.webproject.model.entity.User.Role;
+import by.shyshaliaksey.webproject.model.dao.DatabaseFeedback.Key;
 import by.shyshaliaksey.webproject.model.entity.Token;
 import by.shyshaliaksey.webproject.model.entity.Token.Status;
 
@@ -18,8 +19,8 @@ public interface UserDao {
 	Optional<User> findById(int userId) throws DaoException;
 	Optional<User> findByLogin(String userLogin) throws DaoException;
 	Optional<User> findByEmail(String userEmail) throws DaoException;
-	Map<Feedback.Key, Optional<String>> findUserLoginData(String userEmail) throws DaoException;
-	Map<Feedback.Key, Optional<String>> findUserLoginData(int userId) throws DaoException;
+	Map<Key, Optional<String>> findUserLoginData(String userEmail) throws DaoException;
+	Map<Key, Optional<String>> findUserLoginData(int userId) throws DaoException;
 	boolean registerUser(String email, String login, String hashedPasswordHash, String saltHash, String defaultImage, Role defaultRole) throws DaoException;
 	boolean loginUser(String email, String passwordHash) throws DaoException;
 	boolean updateUserEmail(String email, int userId) throws DaoException;

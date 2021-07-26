@@ -20,7 +20,7 @@ import javax.crypto.spec.PBEKeySpec;
 
 import org.apache.commons.io.FilenameUtils;
 
-import by.shyshaliaksey.webproject.controller.FolderPath;
+import by.shyshaliaksey.webproject.controller.StaticPath;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
@@ -54,8 +54,8 @@ public class UtilServiceImpl implements UtilService {
 	public boolean uploadImage(String folderToUpload, String imageFolder, String fileName, Part part) throws ServiceException {
 		try(InputStream inputStream = part.getInputStream()) {
 			String rootFolderString = folderToUpload + imageFolder + fileName;
-			Path rootFolderPath = Paths.get(rootFolderString);
-			long writedBytes = createFile(inputStream, rootFolderPath);
+			Path rootStaticPath = Paths.get(rootFolderString);
+			long writedBytes = createFile(inputStream, rootStaticPath);
 			return writedBytes > 0;
 		} catch(IOException e) {
 			throw new ServiceException(

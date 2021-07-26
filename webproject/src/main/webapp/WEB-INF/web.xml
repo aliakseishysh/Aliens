@@ -16,19 +16,6 @@
 		<error-code>500</error-code>
 		<location>/WEB-INF/jsp/error_pages/error_page_500.jsp</location>
 	</error-page>
-	<context-param>
-		<param-name>web-app-root-folder</param-name>
-		<param-value>C:/Data/Java/Workspace/WebProject/webproject/src/main/webapp</param-value>
-	</context-param>
-	<context-param>
-		<param-name>web-site-url2</param-name>
-		<param-value>https://aliens.malina.keenetic.link/webproject/</param-value>
-	</context-param>
-	<context-param>
-		<param-name>web-site-url</param-name>
-		<param-value>http://localhost:8080/webproject</param-value>
-	</context-param>
-
 	<filter-mapping>
 		<filter-name>BanFilter</filter-name>
 		<url-pattern />

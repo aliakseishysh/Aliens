@@ -18,7 +18,8 @@ $(document).ready(function () {
     buttonsApprove.forEach(button => 
         button.addEventListener('click', function(event) {
             let alienImageUrl = button.parentElement.parentElement.children[1].children[0].children[0].getAttribute("src");
-            alienImageUrl = alienImageUrl.substring(1 + PROJECT_NAME.length);
+            let urlArray = alienImageUrl.split("/");
+            alienImageUrl = urlArray[urlArray.length - 1];
             let data = {};
             data[IMAGE] = alienImageUrl;
             sendPost(data, approveUrl);
@@ -28,7 +29,8 @@ $(document).ready(function () {
     buttonsDecline.forEach(button => 
         button.addEventListener('click', function(event) {
             let alienImageUrl = button.parentElement.parentElement.children[1].children[0].children[0].getAttribute("src");
-            alienImageUrl = alienImageUrl.substring(1 + PROJECT_NAME.length);
+            let urlArray = alienImageUrl.split("/");
+            alienImageUrl = urlArray[urlArray.length - 1];
             let data = {};
             data[IMAGE] = alienImageUrl;
             sendPost(data, declineUrl);
