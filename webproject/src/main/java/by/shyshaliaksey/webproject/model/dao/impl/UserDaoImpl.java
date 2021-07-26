@@ -50,107 +50,110 @@ public class UserDaoImpl implements UserDao {
 
 	private static final Logger logger = LogManager.getRootLogger();
 	private static final UserDaoImpl instance = new UserDaoImpl();
-	private static final String SPACE = " ";	
+	private static final String SPACE = " ";
 	private static final String FIND_ALL = """
-			SELECT user_id, email, login_name, image_url, role_type, _status, banned_to_datetime 
+			SELECT user_id, email, login_name, image_url, role_type, _status, banned_to_datetime
 			FROM users
 			""";
 	private static final String FIND_BY_ID = String.join(SPACE, FIND_ALL, "WHERE users.user_id=?");
 	private static final String FIND_BY_LOGIN = String.join(SPACE, FIND_ALL, "WHERE users.login_name=?");
 	private static final String FIND_BY_EMAIL = String.join(SPACE, FIND_ALL, "WHERE users.email=?");
 	private static final String FIND_USER_LOGIN_DATA = """
-			SELECT password_hash, salt 
-			FROM users 
+			SELECT password_hash, salt
+			FROM users
 			WHERE email=? AND _status=? OR _status=?
 			""";
 	private static final String FIND_USER_LOGIN_DATA_BY_ID = """
-			SELECT password_hash, salt 
-			FROM users 
+			SELECT password_hash, salt
+			FROM users
 			WHERE user_id=? AND _status=? OR _status=?
 			""";
 	private static final String LOGIN_AND_PASSWORD_CHECK = """
-			SELECT count(*) as usersCount 
-			FROM users 
+			SELECT count(*) as usersCount
+			FROM users
 			WHERE email=? AND password_hash=? AND _status=? OR _status=?
 			""";
 	private static final String REGISTER = """
-			INSERT INTO users 
-			(email, login_name, password_hash, salt, image_url, role_type, _status) 
+			INSERT INTO users
+			(email, login_name, password_hash, salt, image_url, role_type, _status)
 			VALUES (?, ?, ?, ?, ?, ?, ?)
 			""";
 	private static final String UPDATE_EMAIL = """
-			UPDATE users 
-			SET email = ? 
+			UPDATE users
+			SET email = ?
 			WHERE user_id = ?
 			""";
 	private static final String UPDATE_EMAIL_BY_EMAIL = """
-			UPDATE users 
-			SET email = ? 
+			UPDATE users
+			SET email = ?
 			WHERE email = ?
 			""";
 	private static final String UPDATE_LOGIN = """
-			UPDATE users 
-			SET login_name = ? 
+			UPDATE users
+			SET login_name = ?
 			WHERE user_id = ?
 			""";
 	private static final String UPDATE_PASSWORD = """
-			UPDATE users 
-			SET password_hash = ? 
+			UPDATE users
+			SET password_hash = ?
 			WHERE user_id = ?
 			""";
 	private static final String UPDATE_PROFILE_IMAGE = """
-			UPDATE users 
-			SET image_url = ? 
+			UPDATE users
+			SET image_url = ?
 			WHERE user_id = ?
 			""";
 	private static final String BAN_UNBAN = """
-			UPDATE users 
-			SET _status = ?, banned_to_datetime = ? 
+			UPDATE users
+			SET _status = ?, banned_to_datetime = ?
 			WHERE login_name = ? AND _status = ?
 			""";
 	private static final String PROMOTE_DEMOTE = """
-			UPDATE users 
-			SET role_type = ? 
+			UPDATE users
+			SET role_type = ?
 			WHERE login_name = ?
 			""";
 	private static final String ADD_NEW_COMMENT = """
-			INSERT INTO comments 
-			(user_id, alien_id, comment, comment_status) 
+			INSERT INTO comments
+			(user_id, alien_id, comment, comment_status)
 			VALUES (?, ?, ?, ?)
 			""";
 	private static final String CHANGE_COMMENT_STATUS_ADMIN = """
-			UPDATE comments 
-			SET comment_status = ? 
+			UPDATE comments
+			SET comment_status = ?
 			WHERE comment_id = ?
 			""";
 	private static final String CHANGE_COMMENT_STATUS_USER = """
-			UPDATE comments 
-			SET comment_status = ? 
+			UPDATE comments
+			SET comment_status = ?
 			WHERE comment_id = ? AND user_id = ?
 			""";
 	private static final String ADD_NEW_TOKEN = """
-			INSERT INTO tokens 
-			(email, token, expiration_date, _status) 
+			INSERT INTO tokens
+			(email, token, expiration_date, _status)
 			VALUES (?, ?, ?, ?)
 			""";
 	private static final String ADD_NEW_UPDATE_EMAIL_TOKEN = """
-			INSERT INTO tokens 
-			(email, token, expiration_date, _status, new_email) 
+			INSERT INTO tokens
+			(email, token, expiration_date, _status, new_email)
 			VALUES (?, ?, ?, ?, ?)
 			""";
 	private static final String CHANGE_USER_STATUS = """
-			UPDATE users 
-			SET _status = ? 
+			UPDATE users
+			SET _status = ?
 			WHERE email = ?
 			""";
 	private static final String FIND_TOKEN = """
 			SELECT token_id, email, token, _status, expiration_date, new_email
-			FROM tokens 
+			FROM tokens
 			WHERE token = ? AND _status = ?
 			""";
-	
-	
-	
+	private static final String SET_TOKEN_STATUS = """
+			UPDATE tokens
+			SET _status = ?
+			WHERE token = ? AND _status = ?
+			""";
+
 	public static UserDaoImpl getInstance() {
 		return instance;
 	}
@@ -248,7 +251,7 @@ public class UserDaoImpl implements UserDao {
 		}
 		return user;
 	}
-	
+
 	@Override
 	public Map<Feedback.Key, Optional<String>> findUserLoginData(String userEmail) throws DaoException {
 		Map<Feedback.Key, Optional<String>> result = new EnumMap<>(Feedback.Key.class);
@@ -270,7 +273,7 @@ public class UserDaoImpl implements UserDao {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public Map<Feedback.Key, Optional<String>> findUserLoginData(int userId) throws DaoException {
 		Map<Feedback.Key, Optional<String>> result = new EnumMap<>(Feedback.Key.class);
@@ -292,8 +295,8 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public boolean registerUser(String email, String login, String passwordHashHex, String saltHex, String defaultImage, Role defaultRole)
-			throws DaoException {
+	public boolean registerUser(String email, String login, String passwordHashHex, String saltHex, String defaultImage,
+			Role defaultRole) throws DaoException {
 		int rowsAdded = 0;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(REGISTER)) {
@@ -346,7 +349,7 @@ public class UserDaoImpl implements UserDao {
 		}
 		return result == 1;
 	}
-	
+
 	@Override
 	public boolean updateUserEmail(String email, String newEmail) throws DaoException {
 		int result = 0;
@@ -502,7 +505,7 @@ public class UserDaoImpl implements UserDao {
 		}
 		return result == 1;
 	}
-	
+
 	@Override
 	public boolean deleteComment(int commentId, int userId) throws DaoException {
 		int result = 0;
@@ -538,9 +541,10 @@ public class UserDaoImpl implements UserDao {
 		}
 		return rowsAdded == 1;
 	}
-	
+
 	/**
 	 * Method for adding new token for user email updating
+	 * 
 	 * @param email
 	 * @param token
 	 * @param expirationDate
@@ -605,10 +609,21 @@ public class UserDaoImpl implements UserDao {
 		return result;
 	}
 
-	
-	
-	
-	
-	
+	@Override
+	public boolean setTokenStatusExpired(String tokenRequestedContent) throws DaoException {
+		int rowsUpdated = 0;
+		try (Connection connection = ConnectionPool.getInstance().getConnection();
+				PreparedStatement statement = connection.prepareStatement(SET_TOKEN_STATUS)) {
+			statement.setString(1, Token.Status.EXPIRED.name());
+			statement.setString(2, tokenRequestedContent);
+			statement.setString(3, Token.Status.NORMAL.name());
+			rowsUpdated = statement.executeUpdate();
+			return rowsUpdated == 1;
+		} catch (
+		SQLException e) {
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", SET_TOKEN_STATUS, e.getMessage());
+			throw new DaoException("Can not proceed request: " + SET_TOKEN_STATUS, e);
+		}
+	}
 
 }

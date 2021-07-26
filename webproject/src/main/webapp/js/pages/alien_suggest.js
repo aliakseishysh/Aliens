@@ -1,4 +1,5 @@
 import { AlienForm } from "../modules/alien.js"
+import { changeLocationIfUndefined } from "../modules/util.js"
 
 let formAlienSuggest;
 let formAlienSuggestName;
@@ -92,6 +93,7 @@ function suggestNewAlien() {
             );
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             alienSuggestForm.removeValidationClasses();
             alienSuggestForm.setFeedbackInfo(jqXHR.responseJSON[ALIEN_NAME_STATUS], 
                 jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS], 
@@ -135,6 +137,7 @@ function suggestNewAlienImage() {
             );
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             alienImageSuggestForm.removeNameValidationClasses();
             alienImageSuggestForm.removeImageValidationClasses();
             alienImageSuggestForm.setFeedbackName(jqXHR.responseJSON[ALIEN_NAME_STATUS], 

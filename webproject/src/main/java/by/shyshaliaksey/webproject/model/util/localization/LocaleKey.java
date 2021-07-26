@@ -217,6 +217,18 @@ public enum LocaleKey implements EnumValue {
 	EMAIL_CONTENT_CHANGE_EMAIL("email_content_change_email"),
 	CHECK_YOUR_EMAIL("check_your_email"),
 	
+	// error pages
+	ERROR_PAGE("error_page"),
+	ERROR_PAGE_400("error_page_400"),
+	ERROR_PAGE_400_BAD_REQUEST("error_page_400_bad_request"),
+	ERROR_PAGE_403("error_page_403"),
+	ERROR_PAGE_403_FORBIDDEN("error_page_403_forbidden"),
+	ERROR_PAGE_404("error_page_404"),
+	ERROR_PAGE_404_NOT_FOUND("error_page_404_not_found"),
+	ERROR_PAGE_500("error_page_500"),
+	ERROR_PAGE_500_INTERNAL_SERVER_ERROR("error_page_500_internal_server_error"),
+	
+	
 	EMPTY_MESSAGE("empty_message");
 	
 	private String value;

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
 	<Properties>
-		<property name="pattern_console">
+	 	<Property name="logdir">C:/Data/Java/Workspace/WebProject/webproject/logs</Property>
+		<Property name="pattern_console">
 			%d{HH:mm:ss.SSS} [%t] %-5level %logger{1} - %msg%n
-		</property>
-		<property name="pattern_file">
+		</Property>
+		<Property name="pattern_file">
 			%d{HH:mm:ss.SSS} [%t] %-5level %logger{5} - %msg%n
-		</property>
+		</Property>
 	</Properties>
 
 	<Appenders>
@@ -14,7 +15,10 @@
 			<PatternLayout pattern="${pattern_console}" />
 		</Console>
 
-		<RollingFile name="LogFile" fileName="logs/logs.log" append="true" filePattern="logs/${date:yyyy-MM-dd}/%d{yyyy-MM-dd_HH-mm}_%i.log">
+		<RollingFile name="LogFile" 
+			fileName="${logdir}/aliens.log" 
+			append="true" 
+			filePattern="${logdir}/${date:yyyy-MM-dd}/%d{yyyy-MM-dd_HH}_%i.log">
 			<PatternLayout pattern="${pattern_file}" />
 			<Policies>
 				<TimeBasedTriggeringPolicy interval="1" />

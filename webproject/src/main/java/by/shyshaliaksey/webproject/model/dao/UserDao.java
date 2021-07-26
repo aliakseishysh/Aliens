@@ -47,5 +47,6 @@ public interface UserDao {
 	 */
 	boolean addNewToken(String email, String token, String expirationDate, String newEmail) throws DaoException;
 	boolean updateUserEmail(String email, String newEmail) throws DaoException;
+	boolean setTokenStatusExpired(String tokenRequestedContent) throws DaoException;
 	
 }

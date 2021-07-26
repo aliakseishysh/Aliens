@@ -1,3 +1,5 @@
+import { changeLocationIfUndefined } from "./modules/util.js"
+
 function logoutUser() {
     let url = CONTROLLER + "?" + COMMAND + "=" + LOGOUT_USER
     $.ajax({
@@ -9,10 +11,7 @@ function logoutUser() {
             location.assign(url);
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            if (jqXHR.status == 403) {
-                url = CONTROLLER + "?" + COMMAND + "=" + OPEN_HOME_PAGE;
-                location.assign(url);
-            }
+            changeLocationIfUndefined(jqXHR);
         }
     });
 }
@@ -27,7 +26,9 @@ function changeLocaleRu() {
             window.location.reload()
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
         }
+
     });
 }
 
@@ -41,6 +42,7 @@ function changeLocaleEn() {
             window.location.reload()
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
         }
     });
 }

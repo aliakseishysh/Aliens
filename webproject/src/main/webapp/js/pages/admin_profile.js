@@ -1,6 +1,7 @@
 import { AlienForm } from "../modules/alien.js";
 import { BanUnbanForm } from "../modules/ban_unban.js";
 import { PromoteDemoteForm } from "../modules/promote_demote.js";
+import { changeLocationIfUndefined } from "../modules/util.js"
 
 let banUnbanForm;
 let banUnbanFormLogin;
@@ -77,6 +78,7 @@ function banUser() {
                 jqXHR.responseJSON[LOGIN_FEEDBACK], jqXHR.responseJSON[DAYS_TO_BAN_FEEDBACK]);
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             banUnbanFormObject.removeValidationClasses();
             banUnbanFormObject.setFeedback(jqXHR.responseJSON[LOGIN_STATUS], jqXHR.responseJSON[DAYS_TO_BAN_STATUS], 
                 jqXHR.responseJSON[LOGIN_FEEDBACK], jqXHR.responseJSON[DAYS_TO_BAN_FEEDBACK]);
@@ -101,6 +103,7 @@ function unbanUser() {
                 jqXHR.responseJSON[LOGIN_FEEDBACK], null);
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             banUnbanFormObject.removeValidationClasses();
             banUnbanFormObject.setFeedback(jqXHR.responseJSON[LOGIN_STATUS], null, 
                 jqXHR.responseJSON[LOGIN_FEEDBACK], null);
@@ -122,6 +125,7 @@ function promoteUser() {
             promoteDemoteFormObject.setFeedback(jqXHR.responseJSON[LOGIN_STATUS], jqXHR.responseJSON[LOGIN_FEEDBACK]);
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             promoteDemoteFormObject.removeValidationClasses();
             promoteDemoteFormObject.setFeedback(jqXHR.responseJSON[LOGIN_STATUS], jqXHR.responseJSON[LOGIN_FEEDBACK]);
         }
@@ -142,6 +146,7 @@ function demoteAdmin() {
             promoteDemoteFormObject.setFeedback(jqXHR.responseJSON[LOGIN_STATUS], jqXHR.responseJSON[LOGIN_FEEDBACK]);
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             promoteDemoteFormObject.removeValidationClasses();
             promoteDemoteFormObject.setFeedback(jqXHR.responseJSON[LOGIN_STATUS], jqXHR.responseJSON[LOGIN_FEEDBACK]);
         }
@@ -180,6 +185,7 @@ function addNewAlien() {
             );
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             alienForm.removeValidationClasses();
             alienForm.setFeedbackInfo(jqXHR.responseJSON[ALIEN_NAME_STATUS], 
                 jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],

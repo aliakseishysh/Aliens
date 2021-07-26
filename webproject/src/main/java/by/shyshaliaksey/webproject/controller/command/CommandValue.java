@@ -13,8 +13,6 @@ import by.shyshaliaksey.webproject.controller.command.impl.admin.UnbanUserComman
 import by.shyshaliaksey.webproject.controller.command.impl.admin.UpdateAlienInfoCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.admin.UpdateAlienImageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.locale.ChangeLocaleCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.open.Open404ErrorPageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.open.OpenAboutPageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenAdminFunctionalPageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenAdminSuggestedAliensImagesPageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenAdminSuggestedAliensPageCommand;
@@ -23,9 +21,12 @@ import by.shyshaliaksey.webproject.controller.command.impl.open.OpenBannedPageCo
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenHomePageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenLoginPageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenRegisterPageCommand;
-import by.shyshaliaksey.webproject.controller.command.impl.open.OpenServerErrorPageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenSuggestAlienPageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.open.OpenUserProfilePageCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.open.error.Open400ErrorPageCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.open.error.Open403ErrorPageCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.open.error.Open404ErrorPageCommand;
+import by.shyshaliaksey.webproject.controller.command.impl.open.error.Open500ErrorPageCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.rating.FindUserRateCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.rating.UpdateRatingCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.AddNewCommentCommand;
@@ -52,8 +53,10 @@ public enum CommandValue implements EnumValue {
 	OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE("suggested-aliens-images-page", new OpenAdminSuggestedAliensImagesPageCommand()),
 	OPEN_USER_SUGGEST_ALIEN_PAGE("suggest-alien-page", new OpenSuggestAlienPageCommand()),
 	OPEN_BANNED_PAGE("banned-page", new OpenBannedPageCommand()),
-	OPEN_SERVER_ERROR_PAGE("server-error-page", new OpenServerErrorPageCommand()),
+	OPEN_400_ERROR_PAGE("400-error-page", new Open400ErrorPageCommand()),
+	OPEN_403_ERROR_PAGE("403-error-page", new Open403ErrorPageCommand()),
 	OPEN_404_ERROR_PAGE("404-error-page", new Open404ErrorPageCommand()),
+	OPEN_500_ERROR_PAGE("500-error-page", new Open500ErrorPageCommand()),
 	
 	ADMIN_APPROVE_ALIEN("admin-approve-alien", new AdminApproveAlienCommand()),
 	ADMIN_DECLINE_ALIEN("admin-decline-alien", new AdminDeclineAlienCommand()),

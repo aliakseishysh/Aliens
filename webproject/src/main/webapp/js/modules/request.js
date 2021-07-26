@@ -1,3 +1,5 @@
+import { changeLocationIfUndefined } from "./util.js"
+
 export function sendPost(data, url) {
     $.ajax({
         url: url,
@@ -8,7 +10,9 @@ export function sendPost(data, url) {
             alert("success");
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            alert(jqXHR.status + " "  + textStatus + " " + errorThrown);
+            if(!changeLocationIfUndefined(jqXHR)) {
+                alert("error");
+            }
         }
     });
 }

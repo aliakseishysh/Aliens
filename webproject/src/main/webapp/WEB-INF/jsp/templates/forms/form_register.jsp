@@ -9,6 +9,8 @@
    					   placeholder="${TEXT[FORM_REGISTER_EMAIL_PLACEHOLDER]}" 
    					   pattern="${VALID_EMAIL}"
    					   required>
+ 				<div id="form-register-email-valid-feedback" class="valid-feedback">
+      			</div>	
    				<div id="form-register-email-invalid-feedback" class="invalid-feedback">
         			${STANDARD_EMAIL_FEEDBACK}
       			</div>

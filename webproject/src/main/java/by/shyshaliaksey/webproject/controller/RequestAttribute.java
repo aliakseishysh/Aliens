@@ -1,5 +1,8 @@
 package by.shyshaliaksey.webproject.controller;
 
+/**
+ *	Enum with different request attributes
+ */
 public enum RequestAttribute implements EnumValue  {
 
 	ALIEN("alien"),
@@ -13,8 +16,6 @@ public enum RequestAttribute implements EnumValue  {
 	CURRENT_USER_LOGIN("currentUserLogin"),
 	CURRENT_USER_EMAIL("currentUserEmail"),
 	CURRENT_USER("currentUser"),
-	CURRENT_HOME_PAGE("currentHomePage"), // TODO to CURRENT_PAGE
-	CURRENT_COMMENT_PAGE("currentCommentPage"), // TODO to CURRENT_PAGE
 	CURRENT_PAGE("currentPage"),
 	PAGES_COUNT("pagesCount"),
 	ALIEN_IMAGES("alienImages");
@@ -24,10 +25,11 @@ public enum RequestAttribute implements EnumValue  {
 	private RequestAttribute(String value) {
 		this.value = value;
 	}
-	
+
 	@Override
 	public String getValue() {
 		return value;
 	}
+
 	
 }

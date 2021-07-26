@@ -1,4 +1,5 @@
 import { RegisterForm } from "../modules/user.js"
+import { changeLocationIfUndefined } from "../modules/util.js"
 /** @type {RegisterForm} */
 let registerForm;
 
@@ -8,6 +9,7 @@ let enteredLoginElement;
 let enteredPasswordElement;
 let enteredPasswordConfirmElement;
 let enteredEmailInvalidFeedback;
+let enteredEmailValidFeedback;
 let enteredLoginInvalidFeedback;
 let enteredPasswordInvalidFeedback;
 let enteredPasswordConfirmationInvalidFeedback;
@@ -22,11 +24,15 @@ $(function() {
     enteredPasswordElement = document.getElementById("form-register-password");
     enteredPasswordConfirmElement = document.getElementById("form-register-password-confirm");
     enteredEmailInvalidFeedback = document.getElementById("form-register-email-invalid-feedback");
+    enteredEmailValidFeedback = document.getElementById("form-register-email-valid-feedback");
+    
     enteredLoginInvalidFeedback = document.getElementById("form-register-login-invalid-feedback");
     enteredPasswordInvalidFeedback = document.getElementById("form-register-password-invalid-feedback");
     enteredPasswordConfirmationInvalidFeedback = document.getElementById("form-register-password-confirm-invalid-feedback");
 
-    registerForm = new RegisterForm(formRegisterElement, enteredEmailElement, null, enteredEmailInvalidFeedback, 
+
+
+    registerForm = new RegisterForm(formRegisterElement, enteredEmailElement, enteredEmailValidFeedback, enteredEmailInvalidFeedback, 
         enteredLoginElement, null, enteredLoginInvalidFeedback, enteredPasswordElement, null, enteredPasswordInvalidFeedback,
         enteredPasswordConfirmElement, null, enteredPasswordConfirmationInvalidFeedback);
 
@@ -57,10 +63,9 @@ function registerUser() {
                 jqXHR.responseJSON[PASSWORD_CONFIRMATION_FEEDBACK],
                 jqXHR.responseJSON[PASSWORD_CONFIRMATION_FEEDBACK]
             );
-            url = CONTROLLER + "?" + COMMAND + "=" + OPEN_LOGIN_PAGE;
-            location.assign(url);
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             registerForm.removeValidation();
             registerForm.setEmailFeedback(jqXHR.responseJSON[EMAIL_STATUS], jqXHR.responseJSON[EMAIL_FEEDBACK], jqXHR.responseJSON[EMAIL_FEEDBACK]);
             registerForm.setLoginFeedback(jqXHR.responseJSON[LOGIN_STATUS], jqXHR.responseJSON[LOGIN_FEEDBACK], jqXHR.responseJSON[LOGIN_FEEDBACK]);

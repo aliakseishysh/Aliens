@@ -3,6 +3,7 @@ import { Comment } from "../modules/comment.js";
 import { initializeCarousel } from "../modules/carousel.js";
 import { pagination } from "../modules/pagination.js";
 import { rating } from "../modules/raiting.js";
+import { changeLocationIfUndefined } from "../modules/util.js"
 window.pagination = pagination;
 window.rating = rating;
 
@@ -95,6 +96,7 @@ function updateAlienInfo() {
             currentAliendDescriptionFull.innerHTML = formAlienUpdateInfoDescriptionFull.value;
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             alienForm.removeInfoValidationClasses();
             alienForm.setFeedbackInfo(jqXHR.responseJSON[ALIEN_NAME_STATUS], qXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_STATUS],
                 jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_STATUS], jqXHR.responseJSON[ALIEN_NAME_FEEDBACK], 
@@ -124,6 +126,7 @@ function updateAlienImage() {
             currentAlienImage.src = jqXHR.responseJSON[IMAGE_PATH];
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             alienForm.removeImageValidationClasses();
             alienForm.setFeedbackImage(jqXHR.responseJSON[IMAGE_STATUS], 
                 jqXHR.responseJSON[IMAGE_FEEDBACK], 
@@ -145,6 +148,7 @@ function addNewComment() {
         success: function (data, textStatus, jqXHR) {
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             commentForm.removeCommentValidationClasses();
             commentForm.setCommentFeedback(jqXHR.responseJSON[ALIEN_NAME_STATUS], jqXHR.responseJSON[COMMENT_FEEDBACK]);
         }
@@ -163,7 +167,7 @@ function deleteComment(commentId) {
             alert("success");
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            alert(jqXHR.status + " "  + textStatus + " " + errorThrown);
+            changeLocationIfUndefined(jqXHR);
         }
     });
 };

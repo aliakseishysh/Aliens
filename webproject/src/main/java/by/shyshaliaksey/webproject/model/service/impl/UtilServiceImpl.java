@@ -157,7 +157,8 @@ public class UtilServiceImpl implements UtilService {
 				boolean isExpired = timeService.isExpired(token.getExpirationDate());
 				if (!isExpired) {
 					boolean activateUserAccountResult = userDao.changeUserStatus(token.getEmail());
-					result = activateUserAccountResult;
+					boolean setTokenStatusExpired = userDao.setTokenStatusExpired(tokenRequested);
+					result = activateUserAccountResult && setTokenStatusExpired;
 				}
 			}
 			return result;

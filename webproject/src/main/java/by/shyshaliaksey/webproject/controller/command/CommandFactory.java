@@ -18,8 +18,10 @@ public class CommandFactory {
 		case OPEN_USER_SUGGEST_ALIEN_PAGE -> CommandValue.OPEN_USER_SUGGEST_ALIEN_PAGE.getCommand();
 		case OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE -> CommandValue.OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE.getCommand();
 		case OPEN_BANNED_PAGE -> CommandValue.OPEN_BANNED_PAGE.getCommand();
-		case OPEN_SERVER_ERROR_PAGE -> CommandValue.OPEN_SERVER_ERROR_PAGE.getCommand();
+		case OPEN_400_ERROR_PAGE -> CommandValue.OPEN_400_ERROR_PAGE.getCommand();
+		case OPEN_403_ERROR_PAGE -> CommandValue.OPEN_403_ERROR_PAGE.getCommand();
 		case OPEN_404_ERROR_PAGE -> CommandValue.OPEN_404_ERROR_PAGE.getCommand();
+		case OPEN_500_ERROR_PAGE -> CommandValue.OPEN_500_ERROR_PAGE.getCommand();
 		
 		case ADMIN_APPROVE_ALIEN -> CommandValue.ADMIN_APPROVE_ALIEN.getCommand();
 		case ADMIN_DECLINE_ALIEN -> CommandValue.ADMIN_DECLINE_ALIEN.getCommand();

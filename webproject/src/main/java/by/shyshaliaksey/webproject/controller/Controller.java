@@ -28,8 +28,8 @@ import by.shyshaliaksey.webproject.controller.command.Router;
 @WebServlet(name="Controller", urlPatterns={"/controller"})
 public class Controller extends HttpServlet {
        
-	private static final long serialVersionUID = -6656382914151361780L;
 	private static final Logger logger = LogManager.getRootLogger();
+	private static final long serialVersionUID = -6656382914151361780L;
 	
     public Controller() {
         super();
@@ -45,15 +45,21 @@ public class Controller extends HttpServlet {
 		processRequest(request, response);
 	}
 	
+	/**
+	 * CMethod to process all requests from users. <br>
+	 * Defines command from request parameter, checks if this user has access (by role) to proceed this command. <br>
+	 * Sends response to user.
+	 * 
+	 */
 	private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String commandName = request.getParameter(RequestParameter.COMMAND.getValue());
 		Command command = CommandFactory.defineCommand(commandName);
-		Map<CommandAccessChecker.MapKey, Object> result = CommandAccessChecker.isUserHasPermission(command, request, response);
+		Map<CommandAccessChecker.MapKey, Object> isUserHasPremission = CommandAccessChecker.isUserHasPermission(command, request, response);
 		Router router;
-		if (result.get(CommandAccessChecker.MapKey.RESULT) == Boolean.TRUE) {
+		if (isUserHasPremission.get(CommandAccessChecker.MapKey.RESULT) == Boolean.TRUE) {
 			router = command.execute(request, response);
 		} else {
-			router = (Router) result.get(CommandAccessChecker.MapKey.ROUTER);
+			router = (Router) isUserHasPremission.get(CommandAccessChecker.MapKey.ROUTER);
 		}
 		switch (router.getRouterType()) {
 		case AJAX_RESPONSE:			

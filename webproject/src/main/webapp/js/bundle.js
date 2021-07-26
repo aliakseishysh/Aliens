@@ -38,7 +38,6 @@ document.addEventListener("DOMContentLoaded",() => {
             import("./pages/login.js");
             break;
         case "user-profile-page":
-            import("./util.js");
             import("./pages/user_profile.js");
             break;
     }

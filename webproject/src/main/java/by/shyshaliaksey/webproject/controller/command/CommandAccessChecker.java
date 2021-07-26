@@ -2,6 +2,7 @@ package by.shyshaliaksey.webproject.controller.command;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +11,8 @@ import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.command.Router.RouterType;
 import by.shyshaliaksey.webproject.model.entity.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -22,7 +25,7 @@ public class CommandAccessChecker {
 	
 	public static Map<MapKey, Object> isUserHasPermission(Command command, HttpServletRequest request, HttpServletResponse response) {
 		Class<? extends Command> clazz = command.getClass();
-		Map<MapKey, Object> result = new HashMap<>();
+		Map<MapKey, Object> result = new EnumMap<>(MapKey.class);
 		try {
 			// Command.execute(HttpServletRequest request, HttpServletResponse response)
 			final String methodName = "execute";

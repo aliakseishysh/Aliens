@@ -8,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
-import by.shyshaliaksey.webproject.controller.ErrorAttribute;
 import by.shyshaliaksey.webproject.controller.PagePath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
@@ -62,7 +61,7 @@ public class LoginUserCommand implements Command {
 				request.getSession().setAttribute(RequestAttribute.CURRENT_USER_ROLE.getValue(),
 						user.getRole().getValue());
 				if (user.getBannedToDate() != null) {
-					request.getSession().setAttribute(ErrorAttribute.BAN_INFO.name(),
+					request.getSession().setAttribute(SessionAttribute.BAN_INFO.name(),
 							user.getBannedToDate().toString());
 				}
 			}

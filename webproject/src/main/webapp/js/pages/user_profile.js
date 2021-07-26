@@ -1,10 +1,11 @@
 import { EmailUpdateForm, LoginUpdateForm, PasswordUpdateForm, ImageUpdateForm } from "../modules/user.js"
-
+import { removeParameterFromUrl, changeLocationIfUndefined } from "../modules/util.js"
 
 let userId;
 let userEmail;
 let userLogin;
 let userProfileAccountEmail;
+let userProfileAccountLogin;
 
 let formUpdateEmail;
 let formUpdateEmailEmail;
@@ -35,13 +36,11 @@ let passwordUpdateForm;
 /** @type {ImageUpdateForm} */
 let imageUpdateForm;
 
-$(function(){
-    let urlParameters = new URLSearchParams(window.location.search);
-    if (urlParameters.has("token")) {
-        urlParameters.delete("token");
-        let newUrl = urlParameters.toString();
-        window.history.replaceState({}, document.title, "?" + newUrl);
-    }
+/**
+ * url clean
+ */
+ $(function(){
+    removeParameterFromUrl("token");
 });
 
 $(document).ready(function () {
@@ -49,6 +48,7 @@ $(document).ready(function () {
     userId = document.getElementById("form-update-email-parameter-current-user-id");
     userEmail = document.getElementById("form-update-email-parameter-current-user-email");
     userLogin = document.getElementById("form-update-login-parameter-current-user-login");
+    userProfileAccountLogin = document.getElementById("user-profile-account-login");
     userProfileAccountEmail = document.getElementById("user-profile-account-email");
     
     formUpdateEmail =  document.getElementById("form-update-email");
@@ -95,10 +95,11 @@ function updateUserEmail() {
                 jqXHR.responseJSON[EMAIL_FEEDBACK],
                 jqXHR.responseJSON[EMAIL_FEEDBACK]
             );
-            // userProfileAccountEmail.innerHTML = emailUpdateForm.getEmail();
-            // userEmail.innerHTML = emailUpdateForm.getEmail();
+            userProfileAccountEmail.innerHTML = formUpdateEmailEmail.value;
+            userEmail.innerHTML = formUpdateEmailEmail.value;
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             emailUpdateForm.removeValidation();
             emailUpdateForm.setFeedback(jqXHR.responseJSON[EMAIL_STATUS], 
                 jqXHR.responseJSON[EMAIL_FEEDBACK],
@@ -124,10 +125,11 @@ function updateUserLogin() {
                 jqXHR.responseJSON[LOGIN_FEEDBACK],
                 jqXHR.responseJSON[LOGIN_FEEDBACK]
             );
-            userProfileAccountLogin.innerHTML = loginUpdateForm.getLogin();
-            userLogin.innerHTML = loginUpdateForm.getLogin();
+            userProfileAccountLogin.innerHTML = formUpdateLoginLogin.value;
+            userLogin.innerHTML = formUpdateLoginLogin.value;
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             loginUpdateForm.removeValidation();
             loginUpdateForm.setFeedback(jqXHR.responseJSON[LOGIN_STATUS], 
                 jqXHR.responseJSON[LOGIN_FEEDBACK],
@@ -158,6 +160,7 @@ function updateUserPassword() {
             );
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             passwordUpdateForm.removeValidation();
             passwordUpdateForm.setFeedback(jqXHR.responseJSON[PASSWORD_STATUS], 
                 jqXHR.responseJSON[PASSWORD_FEEDBACK], 
@@ -190,6 +193,7 @@ function updateUserImage(image) {
             imageContainer.src = newImagePath;
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             imageUpdateForm.removeValidation();
             imageUpdateForm.setFeedback(jqXHR.responseJSON[IMAGE_STATUS], jqXHR.responseJSON[IMAGE_FEEDBACK]);
         }

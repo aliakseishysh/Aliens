@@ -67,3 +67,38 @@ export class Feedback {
     }
 
 }
+
+export function removeParameterFromUrl(parameter) {
+    let urlParameters = new URLSearchParams(window.location.search);
+    if (urlParameters.has(parameter)) {
+        urlParameters.delete(parameter);
+        let newUrl = urlParameters.toString();
+        window.history.replaceState({}, document.title, "?" + newUrl);
+    }
+}
+
+
+export function changeLocationIfUndefined(jqXHR) {
+    if (jqXHR.responseJSON == undefined) {
+        let baseUrl = CONTROLLER + "?" + COMMAND + "=";
+        switch(jqXHR.status) {
+            case 400:
+                location.assign(baseUrl + OPEN_400_ERROR_PAGE);
+                break;
+            case 403:
+                location.assign(baseUrl + OPEN_403_ERROR_PAGE);
+                break;
+            case 404:
+                location.assign(baseUrl + OPEN_404_ERROR_PAGE);
+                break;
+            case 500:
+                location.assign(baseUrl + OPEN_500_ERROR_PAGE);
+                break;
+            default:
+                location.assign(baseUrl + OPEN_500_ERROR_PAGE);
+                break;
+        }
+        return true;
+    }
+    return false;
+}

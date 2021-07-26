@@ -1,4 +1,5 @@
 import { LoginForm } from "../modules/user.js"
+import { removeParameterFromUrl, changeLocationIfUndefined } from "../modules/util.js"
 /** @type {LoginForm} */
 let loginForm;
 
@@ -7,6 +8,13 @@ let email;
 let password;
 let emailInvalidFeedback;
 let passwordInvalidFeedback;
+
+/**
+ * url clean
+ */
+$(function(){
+    removeParameterFromUrl("token");
+});
 
 /**
  * Setup
@@ -43,6 +51,7 @@ function loginUser() {
             location.assign(url);
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            changeLocationIfUndefined(jqXHR);
             loginForm.removeValidation();
             loginForm.setFeedback(jqXHR.responseJSON[EMAIL_STATUS], 
                 jqXHR.responseJSON[EMAIL_FEEDBACK], 
