@@ -17,6 +17,7 @@ import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.Type;
 import by.shyshaliaksey.webproject.exception.ServiceException;
+import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.service.AdminService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
@@ -45,7 +46,7 @@ public class PromoteUserCommand implements Command {
 		Map<Feedback.Key, Object> result;
 		try {
 			String userLogin = request.getParameter(RequestParameter.LOGIN.getValue());
-			String currentUserLogin = (String) request.getAttribute(RequestAttribute.CURRENT_USER.getValue());
+			String currentUserLogin = ((User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue())).getLogin();
 			result = adminService.promoteUser(userLogin, currentUserLogin);
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
 					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
