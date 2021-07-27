@@ -9,11 +9,9 @@ import static by.shyshaliaksey.webproject.model.dao.ColumnName.USER_PASSWORD_HAS
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.USER_BANNED_TO_DATE;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.USER_IMAGE_URL;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.USER_ROLE_TYPE;
-import static by.shyshaliaksey.webproject.model.dao.ColumnName.USERS_COUNT;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.TOKEN_ID;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.TOKEN_EMAIL;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.TOKEN;
-import static by.shyshaliaksey.webproject.model.dao.ColumnName.TOKEN_STATUS;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.TOKEN_EXPIRATION;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.TOKEN_NEW_EMAIL;
 
@@ -21,11 +19,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,30 +29,38 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import by.shyshaliaksey.webproject.model.dao.DatabaseFeedback;
-import by.shyshaliaksey.webproject.exception.DaoException;
-import by.shyshaliaksey.webproject.exception.ServiceException;
-import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
 import by.shyshaliaksey.webproject.model.dao.UserDao;
+import by.shyshaliaksey.webproject.exception.DaoException;
+import by.shyshaliaksey.webproject.model.connection.ConnectionPool;
 import by.shyshaliaksey.webproject.model.entity.User;
-import by.shyshaliaksey.webproject.model.service.ServiceProvider;
-import by.shyshaliaksey.webproject.model.service.TimeService;
 import by.shyshaliaksey.webproject.model.entity.Comment;
-import by.shyshaliaksey.webproject.model.entity.LoginData;
 import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.entity.Token;
 
+/**
+ * Implementer of {@link UserDao} designed for user operations
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public class UserDaoImpl implements UserDao {
 
 	private static final Logger logger = LogManager.getRootLogger();
-	private static final UserDaoImpl instance = new UserDaoImpl();
-	private static final String SPACE = " ";
-	private static final String FIND_ALL = """
+	private static final UserDao instance = new UserDaoImpl();
+	private static final String FIND_BY_ID = """
 			SELECT user_id, email, login_name, image_url, role_type, _status, banned_to_datetime
 			FROM users
+			WHERE users.user_id = ?
 			""";
-	private static final String FIND_BY_ID = String.join(SPACE, FIND_ALL, "WHERE users.user_id=?");
-	private static final String FIND_BY_LOGIN = String.join(SPACE, FIND_ALL, "WHERE users.login_name=?");
-	private static final String FIND_BY_EMAIL = String.join(SPACE, FIND_ALL, "WHERE users.email=?");
+	private static final String FIND_BY_LOGIN = """
+			SELECT user_id, email, login_name, image_url, role_type, _status, banned_to_datetime
+			FROM users
+			WHERE users.login_name = ?
+			""";
+	private static final String FIND_BY_EMAIL = """
+			SELECT user_id, email, login_name, image_url, role_type, _status, banned_to_datetime
+			FROM users WHERE users.email = ?
+			""";
 	private static final String FIND_USER_LOGIN_DATA = """
 			SELECT password_hash, salt
 			FROM users
@@ -68,20 +71,10 @@ public class UserDaoImpl implements UserDao {
 			FROM users
 			WHERE user_id=? AND _status=? OR _status=?
 			""";
-	private static final String LOGIN_AND_PASSWORD_CHECK = """
-			SELECT count(*) as usersCount
-			FROM users
-			WHERE email=? AND password_hash=? AND _status=? OR _status=?
-			""";
 	private static final String REGISTER = """
 			INSERT INTO users
 			(email, login_name, password_hash, salt, image_url, role_type, _status)
 			VALUES (?, ?, ?, ?, ?, ?, ?)
-			""";
-	private static final String UPDATE_EMAIL = """
-			UPDATE users
-			SET email = ?
-			WHERE user_id = ?
 			""";
 	private static final String UPDATE_EMAIL_BY_EMAIL = """
 			UPDATE users
@@ -154,32 +147,8 @@ public class UserDaoImpl implements UserDao {
 			WHERE token = ? AND _status = ?
 			""";
 
-	public static UserDaoImpl getInstance() {
+	public static UserDao getInstance() {
 		return instance;
-	}
-
-	@Override
-	public List<User> findAll() throws DaoException {
-		List<User> users = new ArrayList<>();
-		try (Connection connection = ConnectionPool.getInstance().getConnection();
-				Statement statement = connection.createStatement()) {
-			ResultSet resultSet = statement.executeQuery(FIND_ALL);
-			while (resultSet.next()) {
-				int id = resultSet.getInt(USER_ID);
-				String email = resultSet.getString(USER_EMAIL);
-				String loginName = resultSet.getString(USER_LOGIN_NAME);
-				String imageUrl = resultSet.getString(USER_IMAGE_URL);
-				Role role = Role.valueOf(resultSet.getString(USER_ROLE_TYPE));
-				User.Status status = User.Status.valueOf(resultSet.getString(USER_STATUS));
-				Date bannedToDate = resultSet.getDate(USER_BANNED_TO_DATE);
-				User user = new User(id, email, loginName, imageUrl, role, status, bannedToDate);
-				users.add(user);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_ALL, e.getMessage());
-			throw new DaoException("Can not proceed request: " + FIND_ALL, e);
-		}
-		return users;
 	}
 
 	@Override
@@ -199,7 +168,8 @@ public class UserDaoImpl implements UserDao {
 				user = Optional.of(new User(userId, email, loginName, imageUrl, role, status, bannedToDate));
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_BY_ID, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_BY_ID, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_BY_ID, e);
 		}
 		return user;
@@ -223,7 +193,8 @@ public class UserDaoImpl implements UserDao {
 				user = Optional.of(new User(userId, email, loginName, imageUrl, role, status, bannedToDate));
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_BY_LOGIN, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_BY_LOGIN, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_BY_LOGIN, e);
 		}
 		return user;
@@ -246,7 +217,8 @@ public class UserDaoImpl implements UserDao {
 				user = Optional.of(new User(userId, email, loginName, imageUrl, role, status, bannedToDate));
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_BY_EMAIL, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_BY_EMAIL, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_BY_EMAIL, e);
 		}
 		return user;
@@ -268,7 +240,8 @@ public class UserDaoImpl implements UserDao {
 				result.put(DatabaseFeedback.Key.SALT, Optional.of(resultSet.getString(USER_SALT)));
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_USER_LOGIN_DATA, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_USER_LOGIN_DATA, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_USER_LOGIN_DATA, e);
 		}
 		return result;
@@ -288,7 +261,8 @@ public class UserDaoImpl implements UserDao {
 				result.put(DatabaseFeedback.Key.SALT, Optional.of(resultSet.getString(USER_SALT)));
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_USER_LOGIN_DATA, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_USER_LOGIN_DATA, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_USER_LOGIN_DATA, e);
 		}
 		return result;
@@ -309,45 +283,10 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(7, User.Status.CONFIRMATION_AWAITING.name());
 			rowsAdded = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", REGISTER, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", REGISTER, e.getMessage(), e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + REGISTER, e);
 		}
 		return rowsAdded == 1;
-	}
-
-	@Override
-	public boolean loginUser(String email, String passwordHash) throws DaoException {
-		int usersCount = 0;
-		try (Connection connection = ConnectionPool.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement(LOGIN_AND_PASSWORD_CHECK)) {
-			statement.setString(1, email);
-			statement.setString(2, passwordHash);
-			statement.setString(3, User.Status.NORMAL.name());
-			statement.setString(4, User.Status.BANNED.name());
-			ResultSet resultSet = statement.executeQuery();
-			if (resultSet.next()) {
-				usersCount = resultSet.getInt(USERS_COUNT);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", LOGIN_AND_PASSWORD_CHECK, e.getMessage());
-			throw new DaoException("Can not proceed request: " + LOGIN_AND_PASSWORD_CHECK, e);
-		}
-		return usersCount == 1;
-	}
-
-	@Override
-	public boolean updateUserEmail(String email, int userId) throws DaoException {
-		int result = 0;
-		try (Connection connection = ConnectionPool.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement(UPDATE_EMAIL)) {
-			statement.setString(1, email);
-			statement.setInt(2, userId);
-			result = statement.executeUpdate();
-		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", UPDATE_EMAIL, e.getMessage());
-			throw new DaoException("Can not proceed request: " + UPDATE_EMAIL, e);
-		}
-		return result == 1;
 	}
 
 	@Override
@@ -359,7 +298,8 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(2, email);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", UPDATE_EMAIL_BY_EMAIL, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", UPDATE_EMAIL_BY_EMAIL, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + UPDATE_EMAIL_BY_EMAIL, e);
 		}
 		return result == 1;
@@ -374,7 +314,8 @@ public class UserDaoImpl implements UserDao {
 			statement.setInt(2, userId);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", UPDATE_LOGIN, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", UPDATE_LOGIN, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + UPDATE_LOGIN, e);
 		}
 		return result == 1;
@@ -389,7 +330,8 @@ public class UserDaoImpl implements UserDao {
 			statement.setInt(2, userId);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", UPDATE_PASSWORD, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", UPDATE_PASSWORD, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + UPDATE_PASSWORD, e);
 		}
 		return result == 1;
@@ -404,7 +346,8 @@ public class UserDaoImpl implements UserDao {
 			statement.setInt(2, userId);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", UPDATE_PROFILE_IMAGE, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", UPDATE_PROFILE_IMAGE, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + UPDATE_PROFILE_IMAGE, e);
 		}
 		return result == 1;
@@ -421,7 +364,8 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(4, User.Status.NORMAL.name());
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", BAN_UNBAN, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", BAN_UNBAN, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + BAN_UNBAN, e);
 		}
 		return result == 1;
@@ -438,7 +382,8 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(4, User.Status.BANNED.name());
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", BAN_UNBAN, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", BAN_UNBAN, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + BAN_UNBAN, e);
 		}
 		return result == 1;
@@ -453,7 +398,8 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(2, userLogin);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", PROMOTE_DEMOTE, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", PROMOTE_DEMOTE, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + PROMOTE_DEMOTE, e);
 		}
 		return result == 1;
@@ -468,7 +414,8 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(2, adminLogin);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", PROMOTE_DEMOTE, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", PROMOTE_DEMOTE, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + PROMOTE_DEMOTE, e);
 		}
 		return result == 1;
@@ -482,10 +429,11 @@ public class UserDaoImpl implements UserDao {
 			statement.setInt(1, userId);
 			statement.setInt(2, alienId);
 			statement.setString(3, newComment);
-			statement.setString(4, Comment.CommentStatus.NORMAL.name());
+			statement.setString(4, Comment.Status.NORMAL.name());
 			rowsAdded = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", ADD_NEW_COMMENT, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", ADD_NEW_COMMENT, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + ADD_NEW_COMMENT, e);
 		}
 		return rowsAdded == 1;
@@ -496,11 +444,12 @@ public class UserDaoImpl implements UserDao {
 		int result = 0;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(CHANGE_COMMENT_STATUS_ADMIN)) {
-			statement.setString(1, Comment.CommentStatus.DELETED.name());
+			statement.setString(1, Comment.Status.DELETED.name());
 			statement.setInt(2, commentId);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", CHANGE_COMMENT_STATUS_ADMIN, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", CHANGE_COMMENT_STATUS_ADMIN, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + CHANGE_COMMENT_STATUS_ADMIN, e);
 		}
 		return result == 1;
@@ -511,20 +460,18 @@ public class UserDaoImpl implements UserDao {
 		int result = 0;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(CHANGE_COMMENT_STATUS_USER)) {
-			statement.setString(1, Comment.CommentStatus.DELETED.name());
+			statement.setString(1, Comment.Status.DELETED.name());
 			statement.setInt(2, commentId);
 			statement.setInt(3, userId);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", CHANGE_COMMENT_STATUS_USER, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", CHANGE_COMMENT_STATUS_USER, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + CHANGE_COMMENT_STATUS_USER, e);
 		}
 		return result == 1;
 	}
 
-	/**
-	 * Method for adding new token for user registration
-	 */
 	@Override
 	public boolean addNewToken(String email, String token, String expirationDate) throws DaoException {
 		int rowsAdded = 0;
@@ -536,22 +483,13 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(4, Token.Status.NORMAL.name());
 			rowsAdded = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", ADD_NEW_TOKEN, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", ADD_NEW_TOKEN, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + ADD_NEW_TOKEN, e);
 		}
 		return rowsAdded == 1;
 	}
 
-	/**
-	 * Method for adding new token for user email updating
-	 * 
-	 * @param email
-	 * @param token
-	 * @param expirationDate
-	 * @param newEmail
-	 * @return
-	 * @throws DaoException
-	 */
 	@Override
 	public boolean addNewToken(String email, String token, String expirationDate, String newEmail) throws DaoException {
 		int rowsAdded = 0;
@@ -564,14 +502,15 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(5, newEmail);
 			rowsAdded = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", ADD_NEW_UPDATE_EMAIL_TOKEN, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", ADD_NEW_UPDATE_EMAIL_TOKEN, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + ADD_NEW_UPDATE_EMAIL_TOKEN, e);
 		}
 		return rowsAdded == 1;
 	}
 
 	@Override
-	public boolean changeUserStatus(String email) throws DaoException {
+	public boolean updateUserStatusToNormal(String email) throws DaoException {
 		int rowsAdded = 0;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(CHANGE_USER_STATUS)) {
@@ -579,7 +518,8 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(2, email);
 			rowsAdded = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", CHANGE_USER_STATUS, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", CHANGE_USER_STATUS, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + CHANGE_USER_STATUS, e);
 		}
 		return rowsAdded == 1;
@@ -603,7 +543,8 @@ public class UserDaoImpl implements UserDao {
 				result = Optional.of(token);
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_TOKEN, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_TOKEN, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_TOKEN, e);
 		}
 		return result;
@@ -619,9 +560,9 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(3, Token.Status.NORMAL.name());
 			rowsUpdated = statement.executeUpdate();
 			return rowsUpdated == 1;
-		} catch (
-		SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", SET_TOKEN_STATUS, e.getMessage());
+		} catch (SQLException e) {
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", SET_TOKEN_STATUS, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + SET_TOKEN_STATUS, e);
 		}
 	}

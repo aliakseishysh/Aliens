@@ -3,13 +3,11 @@ package by.shyshaliaksey.webproject.controller.filter;
 import java.io.IOException;
 
 import by.shyshaliaksey.webproject.controller.StaticPath;
+import by.shyshaliaksey.webproject.controller.PaginationConfiguration;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.CommandDefiner;
 import by.shyshaliaksey.webproject.exception.ServiceException;
-import by.shyshaliaksey.webproject.model.entity.AdminPage;
-import by.shyshaliaksey.webproject.model.entity.AlienPage;
-import by.shyshaliaksey.webproject.model.entity.HomePage;
 import by.shyshaliaksey.webproject.model.service.AlienService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import jakarta.servlet.Filter;
@@ -20,19 +18,24 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * Implementer of {@code Filter} designed for navigation over all pages that
+ * supports navigation.
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 @WebFilter(filterName = "PaginationFilter", urlPatterns = { "/index.jsp", "/controller" })
 public class PaginationFilter implements Filter {
 
-	@SuppressWarnings("incomplete-switch")
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-
-		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-		String requestedPageString = httpServletRequest.getParameter(RequestParameter.PAGE.getValue());
-		String commandString = httpServletRequest.getParameter(RequestParameter.COMMAND.getValue());
-		CommandDefiner commandDefiner = CommandDefiner.fromString(commandString);
 		try {
+			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+			String requestedPageString = httpServletRequest.getParameter(RequestParameter.PAGE.getValue());
+			String commandString = httpServletRequest.getParameter(RequestParameter.COMMAND.getValue());
+			CommandDefiner commandDefiner = CommandDefiner.fromString(commandString);
 			AlienService alienService = ServiceProvider.getInstance().getAlienService();
 			int requestedPage = 1;
 			double aliensCount = 0;
@@ -43,23 +46,23 @@ public class PaginationFilter implements Filter {
 			switch (commandDefiner) {
 			case OPEN_HOME_PAGE:
 				aliensCount = alienService.findAlienCount();
-				pagesCount = (int) Math.ceil(aliensCount / HomePage.ALIENS_PER_PAGE);
+				pagesCount = (int) Math.ceil(aliensCount / PaginationConfiguration.HOME_ALIENS_PER_PAGE);
 				setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
 				break;
 			case OPEN_ALIEN_PROFILE_PAGE:
 				int alienId = Integer.parseInt(request.getParameter(RequestParameter.ALIEN_ID.getValue()));
 				double commentsCount = alienService.findAlienCommentsCount(alienId);
-				pagesCount = (int) Math.ceil(commentsCount / AlienPage.COMMENTS_PER_PAGE);
+				pagesCount = (int) Math.ceil(commentsCount / PaginationConfiguration.ALIEN_PROFILE_COMMENTS_PER_PAGE);
 				setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
 				break;
 			case OPEN_ADMIN_SUGGESTED_ALIENS_PAGE:
 				aliensCount = alienService.findUnapprovedAlienCount();
-				pagesCount = (int) Math.ceil(aliensCount / AdminPage.ALIENS_PER_PAGE);
+				pagesCount = (int) Math.ceil(aliensCount / PaginationConfiguration.ADMIN_SUGGESTED_ALIENS_PER_PAGE);
 				setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
 				break;
 			case OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE:
 				double imagesCount = alienService.findUnapprovedAliensImagesCount();
-				pagesCount = (int) Math.ceil(imagesCount / AdminPage.IMAGES_PER_PAGE);
+				pagesCount = (int) Math.ceil(imagesCount / PaginationConfiguration.ADMIN_SUGGESTED_ALIENS_IMAGES_PER_PAGE);
 				setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
 				break;
 			default:
@@ -69,10 +72,17 @@ public class PaginationFilter implements Filter {
 		} catch (NumberFormatException | ServiceException e) {
 			request.getRequestDispatcher(StaticPath.ERROR_PAGE_400_JSP.getValue()).forward(request, response);
 		}
-		
+
 	}
 
-	private void setAttributesOrForward(ServletRequest request, ServletResponse response, FilterChain chain, int pagesCount, int requestedPage) throws ServletException, IOException {
+	/**
+	 * 
+	 * @param pagesCount    count of pages in current page type
+	 * @param requestedPage page obtained from request
+	 * 
+	 */
+	private void setAttributesOrForward(ServletRequest request, ServletResponse response, FilterChain chain,
+			int pagesCount, int requestedPage) throws ServletException, IOException {
 		if (requestedPage > 0 && requestedPage <= pagesCount || pagesCount == 0 && requestedPage == 1) {
 			request.setAttribute(RequestAttribute.PAGES_COUNT.getValue(), pagesCount);
 			request.setAttribute(RequestAttribute.CURRENT_PAGE.getValue(), requestedPage);
@@ -81,6 +91,5 @@ public class PaginationFilter implements Filter {
 			request.getRequestDispatcher(StaticPath.ERROR_PAGE_400_JSP.getValue()).forward(request, response);
 		}
 	}
-	
-	
+
 }

@@ -203,13 +203,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Map<Feedback.Key, Object> changeEmail(String email, String newEmail, int userId, String websiteUrl, LocaleAttribute locale) throws ServiceException {
+	public Map<Feedback.Key, Object> changeEmail(String email, String newEmail, int userId, String websiteUrl,
+			LocaleAttribute locale) throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
 			UtilService utilService = ServiceProvider.getInstance().getUtilService();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 			validationService.validateEmailFormInput(result, newEmail);
-			
+
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.EMAIL_STATUS))) {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				Optional<User> userOld = userDao.findByEmail(newEmail);
@@ -220,9 +221,9 @@ public class UserServiceImpl implements UserService {
 					String expirationTime = timeService.prepareTokenExpirationDate(minutesToExpriration);
 					userDao.addNewToken(email, token, expirationTime, newEmail);
 					// send message
-					boolean isMessageSent = EmailMessanger.sendEmail(newEmail, token, websiteUrl, EmailMessanger.Function.CHANGE_EMAIL,
-							locale);
-					if(isMessageSent) {
+					boolean isMessageSent = EmailMessanger.sendEmail(newEmail, token, websiteUrl,
+							EmailMessanger.Function.CHANGE_EMAIL, locale);
+					if (isMessageSent) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 						result.put(Feedback.Key.EMAIL_STATUS, Boolean.TRUE);
 						result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.CHECK_YOUR_EMAIL.getValue());
@@ -394,7 +395,7 @@ public class UserServiceImpl implements UserService {
 	public boolean isUserBanned(HttpSession session) {
 		boolean result = false;
 		User user = (User) session.getAttribute(RequestAttribute.CURRENT_USER.getValue());
-		if (user != null && user.getUserStatus() == User.Status.BANNED) {
+		if (user != null && user.getStatus() == User.Status.BANNED) {
 			result = true;
 		}
 		return result;
@@ -565,7 +566,7 @@ public class UserServiceImpl implements UserService {
 					"Error occured when suggesting new alien image " + alienName + " :" + e.getMessage(), e);
 		}
 	}
-	
+
 	@Override
 	public boolean setNewEmail(String tokenRequested) throws ServiceException {
 		try {
@@ -573,7 +574,7 @@ public class UserServiceImpl implements UserService {
 			TimeService timeService = ServiceProvider.getInstance().getTimeService();
 			UserDao userDao = DaoProvider.getInstance().getUserDao();
 			Optional<Token> tokenOptional = userDao.findToken(tokenRequested, Token.Status.NORMAL);
-			if(tokenOptional.isPresent()) {
+			if (tokenOptional.isPresent()) {
 				Token token = tokenOptional.get();
 				boolean isExpired = timeService.isExpired(token.getExpirationDate());
 				if (!isExpired) {

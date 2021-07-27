@@ -14,7 +14,6 @@ public interface AlienService {
 	int findAlienId(String alienName) throws ServiceException;
 	List<Alien> findNormalAliens(int pageNumber) throws ServiceException;
 	Optional<Alien> findAlienById(int alienId) throws ServiceException;
-	List<Comment> findAllComments(int alienId) throws ServiceException;
 	int findAlienCount() throws ServiceException;
 	int findAlienCommentsCount(int alienId) throws ServiceException;
 	List<Comment> findAllCommentsInPage(int alienId, int page) throws ServiceException;

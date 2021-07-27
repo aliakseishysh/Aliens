@@ -1,8 +1,5 @@
 package by.shyshaliaksey.webproject.controller.command.impl.rating;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,24 +20,30 @@ import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Implementer of {@link Command} interface, designed for updating user rate for
+ * specific alien through service layer.
+ * 
+ * @author Aliaksey Shysh
+ * 
+ * @see RatingService
+ * 
+ */
 public class UpdateRatingCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
 
-	@AllowedRoles({Role.USER, Role.ADMIN})
+	@AllowedRoles({ Role.USER, Role.ADMIN })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		int rateValue = Integer.parseInt(request.getParameter(RequestParameter.RATING_VALUE.getValue()));
-		String alienName = request.getParameter(RequestParameter.ALIEN_NAME.getValue());
-		User user = (User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue());
-
-		ServiceProvider serviceProvider = ServiceProvider.getInstance();
-		RatingService ratingService = serviceProvider.getRatingService();
-		AlienService alienService = serviceProvider.getAlienService();
 		Router router;
-		int alienId;
 		try {
-			alienId = alienService.findAlienId(alienName);
+			int rateValue = Integer.parseInt(request.getParameter(RequestParameter.RATING_VALUE.getValue()));
+			String alienName = request.getParameter(RequestParameter.ALIEN_NAME.getValue());
+			User user = (User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue());
+			RatingService ratingService = ServiceProvider.getInstance().getRatingService();
+			AlienService alienService = ServiceProvider.getInstance().getAlienService();
+			int alienId = alienService.findAlienId(alienName);
 			if (ratingService.checkRateExistence(alienId, user.getId())) {
 				ratingService.updateRate(alienId, user.getId(), rateValue);
 			} else {

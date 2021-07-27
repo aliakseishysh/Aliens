@@ -1,6 +1,5 @@
 package by.shyshaliaksey.webproject.controller.command.impl.admin;
 
-
 import java.util.Map;
 
 import org.apache.logging.log4j.Level;
@@ -26,12 +25,21 @@ import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Implementer of {@link Command} interface, designed for demoting administrator
+ * to user through service layer.
+ * 
+ * @author Aliaksey Shysh
+ * 
+ * @see AdminService#demoteAdmin(String, String)
+ * 
+ */
 public class DemoteAdminCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
 	private static final AdminService adminService = ServiceProvider.getInstance().getAdminService();
-	
-	@AllowedRoles({Role.ADMIN})
+
+	@AllowedRoles({ Role.ADMIN })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router;
@@ -41,21 +49,21 @@ public class DemoteAdminCommand implements Command {
 			User currentUser = (User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue());
 			String adminUserLogin = currentUser.getLogin();
 			result = adminService.demoteAdmin(adminLogin, adminUserLogin);
-			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
-			
+			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
+					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
+
 			String jsonResponse = new JSONObject()
-					.put(Feedback.Key.LOGIN_STATUS.getValue(),
-							result.get(Feedback.Key.LOGIN_STATUS))
+					.put(Feedback.Key.LOGIN_STATUS.getValue(), result.get(Feedback.Key.LOGIN_STATUS))
 					.put(Feedback.Key.LOGIN_FEEDBACK.getValue(),
 							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.LOGIN_FEEDBACK).toString()))
 					.toString();
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException e) {
-			logger.log(Level.ERROR, "Exception occured while demoting: {} {} {}", e.getMessage(), e.getStackTrace(), e);
+			logger.log(Level.ERROR, "Exception occured while demoting: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
-		return router;	
+		return router;
 	}
 
 }

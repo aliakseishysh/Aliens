@@ -9,9 +9,6 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import by.shyshaliaksey.webproject.controller.StaticPath;
-
-import by.shyshaliaksey.webproject.controller.StaticPath;
-import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.SessionAttribute;
 import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
@@ -21,9 +18,7 @@ import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.Type;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.User.Role;
-import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.AdminService;
-import by.shyshaliaksey.webproject.model.service.AlienService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.util.DeploymentPropertiesReader;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
@@ -32,6 +27,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
+/**
+ * Implementer of {@link Command} interface, designed for updating alien profile
+ * image through service layer.
+ * 
+ * @author Aliaksey Shysh
+ * 
+ * @see AdminService#updateAlienImage(int, Part, String, String, String)
+ * 
+ */
 public class UpdateAlienImageCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
@@ -61,8 +65,7 @@ public class UpdateAlienImageCommand implements Command {
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException | IOException | ServletException e) {
 			response.setStatus(500);
-			logger.log(Level.ERROR, "Exception occured while alien image updating: {} {} {}", e.getMessage(),
-					e.getStackTrace(), e);
+			logger.log(Level.ERROR, "Exception occured while alien image updating: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

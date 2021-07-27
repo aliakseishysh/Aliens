@@ -1,5 +1,11 @@
 package by.shyshaliaksey.webproject.exception;
 
+/**
+ * Exception for methods in database layer
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public class DaoException extends Exception {
 
 	private static final long serialVersionUID = -3303410395502061392L;

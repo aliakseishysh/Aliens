@@ -1,6 +1,5 @@
 package by.shyshaliaksey.webproject.controller.command.impl.user;
 
-
 import static by.shyshaliaksey.webproject.controller.StaticPath.IMAGE_DEFAULT;
 
 import java.util.Map;
@@ -9,7 +8,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
-
 
 import by.shyshaliaksey.webproject.controller.StaticPath;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
@@ -28,12 +26,21 @@ import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Implementer of {@link Command} interface, designed for register new user in
+ * system through service layer.
+ * 
+ * @author Aliaksey Shysh
+ * 
+ * @see UserService#registerUser(String, String, String, String, String, Role,
+ *      String, LocaleAttribute)
+ * 
+ */
 public class RegisterUserCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
-	private static final UserService userService = ServiceProvider.getInstance().getUserService();
-	
-	@AllowedRoles({Role.GUEST})
+
+	@AllowedRoles({ Role.GUEST })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router;
@@ -44,16 +51,16 @@ public class RegisterUserCommand implements Command {
 			String password = request.getParameter(RequestParameter.PASSWORD.getValue());
 			String passwordRepeat = request.getParameter(RequestParameter.PASSWORD_CONFIRM.getValue());
 			String websiteUrl = DeploymentPropertiesReader.Deployment.CURRENT_DEPLOYMENT.getValue();
-			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
-			result = userService.registerUser(email, login, password, passwordRepeat, IMAGE_DEFAULT.getValue(), Role.USER, websiteUrl, localeAttribute);
-			
+			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
+					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
+			UserService userService = ServiceProvider.getInstance().getUserService();
+			result = userService.registerUser(email, login, password, passwordRepeat, IMAGE_DEFAULT.getValue(),
+					Role.USER, websiteUrl, localeAttribute);
+
 			String jsonResponse = new JSONObject()
-					.put(Feedback.Key.EMAIL_STATUS.getValue(),
-							result.get(Feedback.Key.EMAIL_STATUS))
-					.put(Feedback.Key.LOGIN_STATUS.getValue(),
-							result.get(Feedback.Key.LOGIN_STATUS))
-					.put(Feedback.Key.PASSWORD_STATUS.getValue(),
-							result.get(Feedback.Key.PASSWORD_STATUS))
+					.put(Feedback.Key.EMAIL_STATUS.getValue(), result.get(Feedback.Key.EMAIL_STATUS))
+					.put(Feedback.Key.LOGIN_STATUS.getValue(), result.get(Feedback.Key.LOGIN_STATUS))
+					.put(Feedback.Key.PASSWORD_STATUS.getValue(), result.get(Feedback.Key.PASSWORD_STATUS))
 					.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS.getValue(),
 							result.get(Feedback.Key.PASSWORD_CONFIRMATION_STATUS))
 					.put(Feedback.Key.EMAIL_FEEDBACK.getValue(),
@@ -62,8 +69,8 @@ public class RegisterUserCommand implements Command {
 							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.LOGIN_FEEDBACK).toString()))
 					.put(Feedback.Key.PASSWORD_FEEDBACK.getValue(),
 							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.PASSWORD_FEEDBACK).toString()))
-					.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK.getValue(),
-							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK).toString()))
+					.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK.getValue(), localeAttribute
+							.getLocalizedMessage(result.get(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK).toString()))
 					.toString();
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);

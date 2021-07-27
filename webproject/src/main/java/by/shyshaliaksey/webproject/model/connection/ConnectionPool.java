@@ -14,12 +14,28 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Class for creating connection pool with {@link ConnectionProxy} objects
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public class ConnectionPool {
 
 	private static final Logger logger = LogManager.getRootLogger();
 	private static ConnectionPool instance;
+	/**
+	 * {@link AtomicBoolean} for {@link ConnectionPool#getInstance()} singleton
+	 * implementation
+	 */
 	private static final AtomicBoolean isConnectionPoolCreated = new AtomicBoolean(false);
+	/**
+	 * {@link BlockingQueue} with free connections to database
+	 */
 	private BlockingQueue<ConnectionProxy> freeConnections;
+	/**
+	 * {@link BlockingQueue} with occupied connections to database
+	 */
 	private BlockingQueue<ConnectionProxy> occupiedConnections;
 
 	private ConnectionPool() {
@@ -48,6 +64,9 @@ public class ConnectionPool {
 
 	}
 
+	/**
+	 * @return new or existing {@link ConnectionPool} object
+	 */
 	public static ConnectionPool getInstance() {
 		while (instance == null) {
 			if (isConnectionPoolCreated.compareAndSet(false, true)) {
@@ -57,8 +76,9 @@ public class ConnectionPool {
 		return instance;
 	}
 
-	// TODO what to do with interrupt? call getFreeConnection again from catch? use
-	// optional? or throw new InterruptedException?
+	/**
+	 * @return {@link ConnectionProxy} object from {@link #freeConnections}
+	 */
 	public ConnectionProxy getConnection() {
 		ConnectionProxy connection = null;
 		try {
@@ -66,7 +86,7 @@ public class ConnectionPool {
 			occupiedConnections.put(connection);
 
 		} catch (InterruptedException e) {
-			// TODO need to create lock?
+			logger.log(Level.ERROR, "Current thread was interrupted {} {}", e.getMessage(), e.getStackTrace());
 			Thread.currentThread().interrupt();
 		}
 		return connection;
@@ -75,19 +95,22 @@ public class ConnectionPool {
 	boolean releaseConnection(Connection connection) {
 		boolean result = true;
 		if (!(connection instanceof ConnectionProxy)) {
-			logger.log(Level.ERROR, "Unboxed connection is detected: {}", connection);
+			logger.log(Level.ERROR, "Current connection is not instance of ConnectionProxy : {}", connection);
 			result = false;
 		}
 		occupiedConnections.remove(connection);
 		try {
 			freeConnections.put((ConnectionProxy) connection);
 		} catch (InterruptedException e) {
+			logger.log(Level.ERROR, "Current thread was interrupted {} {}", e.getMessage(), e.getStackTrace());
 			Thread.currentThread().interrupt();
 		}
 		return result;
 	}
 
-	// TODO close only freeConnections or do something with rollback
+	/**
+	 * Method for closing free and occupied connections
+	 */
 	public void destroyConnectionPool() {
 		while (!freeConnections.isEmpty()) {
 			try {
@@ -114,6 +137,9 @@ public class ConnectionPool {
 		deregisterDrivers();
 	}
 
+	/**
+	 * Method for deregistering drivers
+	 */
 	private void deregisterDrivers() {
 		Enumeration<Driver> drivers = DriverManager.getDrivers();
 		while (drivers.hasMoreElements()) {
@@ -121,7 +147,8 @@ public class ConnectionPool {
 			try {
 				DriverManager.deregisterDriver(driver);
 			} catch (SQLException e) {
-				logger.log(Level.ERROR, "Error occured while deregistering driver {}: {}", driver, e.getMessage());
+				logger.log(Level.ERROR, "Error occured while deregistering driver {}: {} {}", driver, e.getMessage(),
+						e.getStackTrace());
 			}
 		}
 	}

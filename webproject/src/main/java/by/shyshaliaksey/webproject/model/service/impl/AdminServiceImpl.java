@@ -215,7 +215,7 @@ public class AdminServiceImpl implements AdminService {
 							StaticPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
 					int alienId = alienDao.addNewAlien(alienName, alienSmallDescription, alienFullDescription,
 							imageUrl);
-					boolean addToGaleryResult = alienDao.addNewImageToGalery(alienId, imageUrl);
+					boolean addToGaleryResult = alienDao.addNewImageToGallery(alienId, imageUrl);
 					if (uploadToRoot && addToGaleryResult && uploadToDeployment) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -320,7 +320,7 @@ public class AdminServiceImpl implements AdminService {
 					boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
 							StaticPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
 					boolean addResult = alienDao.updateAlienImage(alienId, imageUrl);
-					boolean addToGaleryResult = alienDao.addNewImageToGalery(alienId, imageUrl);
+					boolean addToGaleryResult = alienDao.addNewImageToGallery(alienId, imageUrl);
 					if (uploadToRoot && uploadToDeployment && addResult && addToGaleryResult) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -352,7 +352,7 @@ public class AdminServiceImpl implements AdminService {
 			boolean approvingResult = alienDao.approveAlien(alienId);
 			Optional<Alien> alien = alienDao.findById(alienId);
 			String imageUrl = alien.get().getImageUrl();
-			boolean galleryAddResult = alienDao.addNewImageToGalery(alienId, imageUrl);
+			boolean galleryAddResult = alienDao.addNewImageToGallery(alienId, imageUrl);
 			return approvingResult && galleryAddResult;
 		} catch (DaoException e) {
 			throw new ServiceException("Error occured when approving alien " + alienIdString + " :" + e.getMessage(),

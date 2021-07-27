@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Interface for all commands in project
+ * @see Command#execute(HttpServletRequest, HttpServletResponse)
  */
 public interface Command {
 
@@ -26,6 +27,7 @@ public interface Command {
 	 *                 and passes it as an argument to theservlet's service methods
 	 *                 (doGet, doPost, etc).
 	 * @return Router to proceed forward/redirect/ajax response
+	 * @see Router
 	 */
 	public abstract Router execute(HttpServletRequest request, HttpServletResponse response);
 

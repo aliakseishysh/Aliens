@@ -1,7 +1,6 @@
 package by.shyshaliaksey.webproject.controller.command.impl.user;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apache.logging.log4j.Level;
@@ -11,7 +10,6 @@ import org.json.JSONObject;
 
 import by.shyshaliaksey.webproject.controller.StaticPath;
 
-import by.shyshaliaksey.webproject.controller.StaticPath;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.SessionAttribute;
 import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
@@ -21,7 +19,6 @@ import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.Type;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.User.Role;
-import by.shyshaliaksey.webproject.model.service.AdminService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.UserService;
 import by.shyshaliaksey.webproject.model.util.DeploymentPropertiesReader;
@@ -31,12 +28,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
+/**
+ * Implementer of {@link Command} interface, designed for suggesting new alien
+ * through service layer.
+ * 
+ * @author Aliaksey Shysh
+ * 
+ * @see UserService#suggestNewAlien(String, String, String, Part, String,
+ *      String)
+ * 
+ */
 public class SuggestNewAlienCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
-	private static final UserService userService = ServiceProvider.getInstance().getUserService();
 
-	@AllowedRoles({Role.USER})
+	@AllowedRoles({ Role.USER })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router;
@@ -47,27 +53,28 @@ public class SuggestNewAlienCommand implements Command {
 			String alienFullDescription = request.getParameter(RequestParameter.ALIEN_FULL_DESCRIPTION.getValue());
 			Part alienImage = request.getPart(RequestParameter.ALIEN_NEW_IMAGE.getValue());
 			String rootFolder = DeploymentPropertiesReader.Deployment.WEB_APP_ROOT.getValue();
-			String serverDeploymentPath = request.getServletContext()
-					.getRealPath(StaticPath.ROOT_FOLDER.getValue());
-			result = userService.suggestNewAlien(alienName, alienSmallDescription, alienFullDescription,
-					alienImage, rootFolder, serverDeploymentPath);
-			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
-			// TODO to separate class, create new constants
+			String serverDeploymentPath = request.getServletContext().getRealPath(StaticPath.ROOT_FOLDER.getValue());
+			UserService userService = ServiceProvider.getInstance().getUserService();
+			result = userService.suggestNewAlien(alienName, alienSmallDescription, alienFullDescription, alienImage,
+					rootFolder, serverDeploymentPath);
+			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
+					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			String jsonResponse = new JSONObject()
-					.put(Feedback.Key.ALIEN_NAME_STATUS.getValue(),
-							result.get(Feedback.Key.ALIEN_NAME_STATUS))
+					.put(Feedback.Key.ALIEN_NAME_STATUS.getValue(), result.get(Feedback.Key.ALIEN_NAME_STATUS))
 					.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS.getValue(),
 							result.get(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS))
 					.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS.getValue(),
 							result.get(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS))
-					.put(Feedback.Key.IMAGE_STATUS.getValue(),
-							result.get(Feedback.Key.IMAGE_STATUS))
+					.put(Feedback.Key.IMAGE_STATUS.getValue(), result.get(Feedback.Key.IMAGE_STATUS))
 					.put(Feedback.Key.ALIEN_NAME_FEEDBACK.getValue(),
-							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.ALIEN_NAME_FEEDBACK).toString()))
+							localeAttribute
+									.getLocalizedMessage(result.get(Feedback.Key.ALIEN_NAME_FEEDBACK).toString()))
 					.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK.getValue(),
-							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK).toString()))
+							localeAttribute.getLocalizedMessage(
+									result.get(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK).toString()))
 					.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK.getValue(),
-							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK).toString()))
+							localeAttribute.getLocalizedMessage(
+									result.get(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK).toString()))
 					.put(Feedback.Key.IMAGE_FEEDBACK.getValue(),
 							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.IMAGE_FEEDBACK).toString()))
 					.toString();
@@ -75,8 +82,7 @@ public class SuggestNewAlienCommand implements Command {
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException | IOException | ServletException e) {
 			response.setStatus(500);
-			logger.log(Level.ERROR, "Exception occured while alien adding: {} {} {}", e.getMessage(), e.getStackTrace(),
-					e);
+			logger.log(Level.ERROR, "Exception occured while alien adding: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

@@ -3,12 +3,10 @@ package by.shyshaliaksey.webproject.model.dao.impl;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_ID;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_NAME;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_COUNT;
-import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIENS_IMAGES_COUNT;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_COMMENTS_COUNT;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_DESCRIPTION_SMALL;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_DESCRIPTION_FULL;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_IMAGE_URL;
-import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_IMAGE_STATUS;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.ALIEN_IMAGE_IMAGE_URL;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.COMMENT;
 import static by.shyshaliaksey.webproject.model.dao.ColumnName.COMMENT_ID;
@@ -19,7 +17,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,68 +32,114 @@ import by.shyshaliaksey.webproject.model.entity.Alien;
 import by.shyshaliaksey.webproject.model.entity.Comment;
 import by.shyshaliaksey.webproject.model.entity.User;
 
+/**
+ * Implementer of {@link AlienDao} designed for operations with aliens
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public class AlienDaoImpl implements AlienDao {
 
 	private static final Logger logger = LogManager.getRootLogger();
-	private static final AlienDaoImpl instance = new AlienDaoImpl();
-	private static final String SPACE = " ";
-	private static final String FIND_ALL = "SELECT * FROM aliens";
-	private static final String FIND_LIMIT = "SELECT * FROM aliens WHERE _status=? LIMIT ?, ?";
-	private static final String FIND_ALL_COMMENTS_BY_ID = """
+	private static final AlienDao instance = new AlienDaoImpl();
+	private static final String FIND_LIMIT = """
+			SELECT *
+			FROM aliens
+			WHERE _status=? LIMIT ?, ?
+			""";
+	private static final String FIND_BY_ID = """
+			SELECT *
+			FROM aliens
+			WHERE alien_id=?
+			""";
+	private static final String FIND_BY_ID_AND_STATUS = """
+			SELECT *
+			FROM aliens
+			WHERE alien_id = ? AND _status = ?
+			""";
+	private static final String FIND_BY_NAME = """
+			SELECT *
+			FROM aliens
+			WHERE _name = ?
+			""";
+	private static final String ADD_NEW = """
+			INSERT INTO aliens
+			(_name, _status, description_small, description_full, image_url)
+			VALUES (?, ?, ?, ?, ?)
+			""";
+	private static final String ADD_NEW_IMAGE = """
+			INSERT INTO aliens_images
+			(alien_id, image_url, _status)
+			VALUES (?, ?, ?)
+			""";
+	private static final String FIND_ALIEN_COUNT = """
+			SELECT count(*) as alienCount
+			FROM aliens
+			WHERE _status=?
+			""";
+	private static final String FIND_ALIEN_COMMENTS_COUNT = """
+			SELECT count(*) as alienCommentsCount
+			FROM comments
+			WHERE alien_id=?
+			""";
+	private static final String FIND_COMMENTS_LIMIT = """
 			SELECT comments.comment_id, comments.alien_id, comments.comment, comments.comment_status,
-				user_id, users.login_name, users.image_url
+				users.user_id, users.login_name, users.image_url
 			FROM comments
 			INNER JOIN users ON comments.user_id = users.user_id
 			WHERE alien_id=? AND comment_status=?
-			""";
-	private static final String FIND_BY_ID = String.join(SPACE, FIND_ALL, "WHERE alien_id=?");
-	private static final String FIND_BY_ID_AND_STATUS = String.join(SPACE, FIND_ALL, "WHERE alien_id = ? AND _status = ?");
-	private static final String FIND_BY_NAME = String.join(SPACE, FIND_ALL, "WHERE _name=?");
-	private static final String ADD_NEW = "INSERT INTO aliens (_name, _status, description_small, description_full, image_url) VALUES (?, ?, ?, ?, ?)";
-	private static final String ADD_NEW_IMAGE = "INSERT INTO aliens_images (alien_id, image_url, _status) VALUES (?, ?, ?)";
-	private static final String UPDATE = "UPDATE aliens SET _name = ?, description_small = ?, description_full = ?, image_url = ? WHERE alien_id = ?";
-	private static final String FIND_ALIEN_COUNT = "SELECT count(*) as alienCount FROM aliens WHERE _status=?";
-	private static final String FIND_ALIEN_COMMENTS_COUNT = "SELECT count(*) as alienCommentsCount FROM comments WHERE alien_id=?";
-	private static final String FIND_COMMENTS_LIMIT = """
-			SELECT comments.comment_id, comments.alien_id, comments.comment, comments.comment_status, 
-				users.user_id, users.login_name, users.image_url 
-			FROM comments 
-			INNER JOIN users ON comments.user_id = users.user_id 
-			WHERE alien_id=? AND comment_status=? 
 			LIMIT ?, ?
 			""";
-	private static final String FIND_IMAGES_BY_ID = "SELECT image_url FROM aliens_images WHERE alien_id=? and _status=?";
-	private static final String FIND_ALIENS_IMAGES_COUNT = "SELECT count(*) as alienCount FROM aliens_images WHERE _status=?";
-	private static final String FIND_IMAGES = "SELECT aliens_images.alien_id, aliens._name, aliens_images.image_url, aliens_images._status FROM aliens_images INNER JOIN aliens ON aliens_images.alien_id = aliens.alien_id WHERE aliens_images._status=? LIMIT ?, ?";
-	private static final String UPDATE_ALIEN_STATUS = "UPDATE aliens SET _status = ? WHERE alien_id = ?";
-	private static final String CHANGE_PROFILE_IMAGE_STATUS = "UPDATE aliens_images SET _status = ? WHERE alien_id = ? AND _status = ? LIMIT 1";
-	private static final String CHANGE_IMAGE_STATUS = "UPDATE aliens_images SET _status = ? WHERE _status = ? AND image_url = ? LIMIT 1";
-	private static final String MAX_ALIEN_ID = "SELECT MAX(alien_id) FROM aliens";
-	private static final String UPDATE_ALIEN_INFO = "UPDATE aliens SET _name = ?, description_small = ?, description_full = ? WHERE alien_id = ?";
-	private static final String UPDATE_ALIEN_IMAGE = "UPDATE aliens SET image_url = ? WHERE alien_id = ?";
-	
-	public static AlienDaoImpl getInstance() {
+	private static final String FIND_IMAGES_BY_ID = """
+			SELECT image_url
+			FROM aliens_images
+			WHERE alien_id=? and _status=?
+			""";
+	private static final String FIND_ALIENS_IMAGES_COUNT = """
+			SELECT count(*) as alienCount
+			FROM aliens_images
+			WHERE _status=?
+			""";
+	private static final String FIND_IMAGES = """
+			SELECT aliens_images.alien_id, aliens._name, aliens_images.image_url, aliens_images._status
+			FROM aliens_images
+			INNER JOIN aliens ON aliens_images.alien_id = aliens.alien_id
+			WHERE aliens_images._status=?
+			LIMIT ?, ?
+			""";
+	private static final String UPDATE_ALIEN_STATUS = """
+			UPDATE aliens
+			SET _status = ?
+			WHERE alien_id = ?
+			""";
+	private static final String CHANGE_PROFILE_IMAGE_STATUS = """
+			UPDATE aliens_images
+			SET _status = ?
+			WHERE alien_id = ?
+			AND _status = ?
+			LIMIT 1
+			""";
+	private static final String CHANGE_IMAGE_STATUS = """
+			UPDATE aliens_images
+			SET _status = ?
+			WHERE _status = ? AND image_url = ?
+			LIMIT 1
+			""";
+	private static final String UPDATE_ALIEN_INFO = """
+			UPDATE aliens
+			SET _name = ?, description_small = ?, description_full = ?
+			WHERE alien_id = ?
+			""";
+	private static final String UPDATE_ALIEN_IMAGE = """
+			UPDATE aliens
+			SET image_url = ?
+			WHERE alien_id = ?
+			""";
+
+	public static AlienDao getInstance() {
 		return instance;
 	}
-	
-	@Override
-	public int findMaxAlienId() throws DaoException {
-		try (Connection connection = ConnectionPool.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement(MAX_ALIEN_ID)) {
-			ResultSet resultSet = statement.executeQuery();
-			int maxAlienId = -1;
-			if (resultSet.next()) {
-				maxAlienId = resultSet.getInt(ALIEN_ID);
-				return maxAlienId;
-			} else {
-				throw new DaoException("Can not proceed request: " + MAX_ALIEN_ID);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", MAX_ALIEN_ID, e.getMessage());
-			throw new DaoException("Can not proceed request: " + MAX_ALIEN_ID, e);
-		}
-	}
-	
+
 	@Override
 	public List<Alien> findAll(int fromRecord, int aliensPerPageLimit) throws DaoException {
 		List<Alien> aliens = new ArrayList<>();
@@ -116,7 +159,8 @@ public class AlienDaoImpl implements AlienDao {
 				aliens.add(alien);
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_LIMIT, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_LIMIT, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_LIMIT, e);
 		}
 		return aliens;
@@ -137,12 +181,13 @@ public class AlienDaoImpl implements AlienDao {
 				alien = Optional.of(new Alien(alienId, name, descriptionSmall, descriptionBig, imagePath));
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_BY_ID, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_BY_ID, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_BY_ID, e);
 		}
 		return alien;
 	}
-	
+
 	@Override
 	public Optional<Alien> findByIdAndStatus(int alienId, Alien.Status status) throws DaoException {
 		Optional<Alien> alien = Optional.empty();
@@ -159,7 +204,8 @@ public class AlienDaoImpl implements AlienDao {
 				alien = Optional.of(new Alien(alienId, name, descriptionSmall, descriptionBig, imagePath));
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_BY_ID_AND_STATUS, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_BY_ID_AND_STATUS, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_BY_ID_AND_STATUS, e);
 		}
 		return alien;
@@ -181,16 +227,18 @@ public class AlienDaoImpl implements AlienDao {
 				alien = Optional.of(new Alien(alienId, name, descriptionSmall, descriptionBig, imagePath));
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_BY_ID, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_BY_ID, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_BY_ID, e);
 		}
 		return alien;
 	}
 
 	@Override
-	public int addNewAlien(String alienName, String alienSmallDescription, String alienFullDescription, String imageUrl) throws DaoException {
+	public int addNewAlien(String alienName, String alienSmallDescription, String alienFullDescription, String imageUrl)
+			throws DaoException {
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement(ADD_NEW, new String[] {ALIEN_ID})) {
+				PreparedStatement statement = connection.prepareStatement(ADD_NEW, new String[] { ALIEN_ID })) {
 			statement.setString(1, alienName);
 			statement.setString(2, Alien.Status.NORMAL.name());
 			statement.setString(3, alienSmallDescription);
@@ -201,22 +249,23 @@ public class AlienDaoImpl implements AlienDao {
 				ResultSet generatedKeys = statement.getGeneratedKeys();
 				int id = -1;
 				if (generatedKeys.next()) {
-					id = generatedKeys.getInt(1);	
+					id = generatedKeys.getInt(1);
 				}
-				return id;			
-			} else {				
+				return id;
+			} else {
 				throw new DaoException("Can not proceed request: " + ADD_NEW);
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", ADD_NEW, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", ADD_NEW, e.getMessage(), e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + ADD_NEW + " " + e.getMessage(), e);
 		}
 	}
-	
+
 	@Override
-	public int suggestNewAlien(String alienName, String alienSmallDescription, String alienFullDescription, String imageUrl) throws DaoException {
+	public int suggestNewAlien(String alienName, String alienSmallDescription, String alienFullDescription,
+			String imageUrl) throws DaoException {
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement(ADD_NEW, new String[] {ALIEN_ID})) {
+				PreparedStatement statement = connection.prepareStatement(ADD_NEW, new String[] { ALIEN_ID })) {
 			statement.setString(1, alienName);
 			statement.setString(2, Alien.Status.UNDER_CONSIDERATION.name());
 			statement.setString(3, alienSmallDescription);
@@ -226,20 +275,20 @@ public class AlienDaoImpl implements AlienDao {
 			if (affectedRows != 0) {
 				ResultSet generatedKeys = statement.getGeneratedKeys();
 				if (generatedKeys.next()) {
-					int id = generatedKeys.getInt(1);	
-					return id;			
+					int id = generatedKeys.getInt(1);
+					return id;
 				} else {
 					throw new DaoException("Can not proceed request: " + ADD_NEW);
 				}
-			} else {				
+			} else {
 				throw new DaoException("Can not proceed request: " + ADD_NEW);
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", ADD_NEW, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", ADD_NEW, e.getMessage(), e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + ADD_NEW, e);
 		}
 	}
-	
+
 	@Override
 	public boolean suggestNewAlienImage(int alienId, String imageUrl) throws DaoException {
 		int rowsAdded = 0;
@@ -250,14 +299,15 @@ public class AlienDaoImpl implements AlienDao {
 			statement.setString(3, Alien.Status.UNDER_CONSIDERATION.name());
 			rowsAdded = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", ADD_NEW_IMAGE, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", ADD_NEW_IMAGE, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + ADD_NEW_IMAGE, e);
 		}
 		return rowsAdded == 1;
 	}
-	
+
 	@Override
-	public boolean addNewImageToGalery(int alienId, String imageUrl) throws DaoException {
+	public boolean addNewImageToGallery(int alienId, String imageUrl) throws DaoException {
 		int rowsAdded = 0;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(ADD_NEW_IMAGE)) {
@@ -266,16 +316,16 @@ public class AlienDaoImpl implements AlienDao {
 			statement.setString(3, Alien.Status.NORMAL.name());
 			rowsAdded = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", ADD_NEW_IMAGE, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", ADD_NEW_IMAGE, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + ADD_NEW_IMAGE, e);
 		}
 		return rowsAdded == 1;
 	}
 
-	
-	
 	@Override
-	public boolean updateAlienInfo(int alienId, String alienName, String alienSmallDescription, String alienFullDescription) throws DaoException {
+	public boolean updateAlienInfo(int alienId, String alienName, String alienSmallDescription,
+			String alienFullDescription) throws DaoException {
 		int result = 0;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(UPDATE_ALIEN_INFO)) {
@@ -285,12 +335,13 @@ public class AlienDaoImpl implements AlienDao {
 			statement.setInt(4, alienId);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", UPDATE_ALIEN_INFO, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", UPDATE_ALIEN_INFO, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + UPDATE_ALIEN_INFO, e);
 		}
 		return result == 1;
 	}
-	
+
 	@Override
 	public boolean updateAlienImage(int alienId, String imageUrl) throws DaoException {
 		int result = 0;
@@ -300,36 +351,13 @@ public class AlienDaoImpl implements AlienDao {
 			statement.setInt(2, alienId);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", UPDATE_ALIEN_IMAGE, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", UPDATE_ALIEN_IMAGE, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + UPDATE_ALIEN_IMAGE, e);
 		}
 		return result == 1;
 	}
 
-	@Override
-	public List<Comment> findAllComments(int alienId) throws DaoException {
-		List<Comment> comments = new ArrayList<>();
-		try (Connection connection = ConnectionPool.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement(FIND_ALL_COMMENTS_BY_ID)) {
-			statement.setInt(1, alienId);
-			statement.setString(2, Comment.CommentStatus.NORMAL.toString());
-			ResultSet resultSet = statement.executeQuery();
-			while (resultSet.next()) {
-				int commentId = resultSet.getInt(COMMENT_ID);
-				String commentValue = resultSet.getString(COMMENT);
-				int userId = resultSet.getInt(USER_ID);
-				String userLogin = resultSet.getString(USER_LOGIN_NAME);
-				String userImageUrl = resultSet.getString(USER_IMAGE_URL);
-				Comment comment = new Comment(commentId, commentValue, new User(userId, userLogin, userImageUrl));
-				comments.add(comment);
-			}
-		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_ALL_COMMENTS_BY_ID, e.getMessage());
-			throw new DaoException("Can not proceed request: " + FIND_ALL_COMMENTS_BY_ID, e);
-		}
-		return comments;
-	}
-	
 	@Override
 	public int findAlienCount() throws DaoException {
 		int alienCount = 0;
@@ -341,12 +369,13 @@ public class AlienDaoImpl implements AlienDao {
 				alienCount = resultSet.getInt(ALIEN_COUNT);
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_ALIEN_COUNT, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_ALIEN_COUNT, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_ALIEN_COUNT, e);
 		}
 		return alienCount;
 	}
-	
+
 	@Override
 	public int findAlienCommentsCount(int alienId) throws DaoException {
 		int alienCommentsCount = 0;
@@ -358,7 +387,8 @@ public class AlienDaoImpl implements AlienDao {
 				alienCommentsCount = resultSet.getInt(ALIEN_COMMENTS_COUNT);
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_ALIEN_COMMENTS_COUNT, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_ALIEN_COMMENTS_COUNT, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_ALIEN_COMMENTS_COUNT, e);
 		}
 		return alienCommentsCount;
@@ -370,7 +400,7 @@ public class AlienDaoImpl implements AlienDao {
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(FIND_COMMENTS_LIMIT)) {
 			statement.setInt(1, alienId);
-			statement.setString(2, Comment.CommentStatus.NORMAL.toString());
+			statement.setString(2, Comment.Status.NORMAL.toString());
 			statement.setInt(3, fromRecord);
 			statement.setInt(4, aliensPerPageLimit);
 			ResultSet resultSet = statement.executeQuery();
@@ -383,9 +413,10 @@ public class AlienDaoImpl implements AlienDao {
 				Comment comment = new Comment(commentId, commentValue, new User(userId, userLogin, userImageUrl));
 				comments.add(comment);
 			}
-		return comments;
+			return comments;
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_COMMENTS_LIMIT, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_COMMENTS_LIMIT, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_COMMENTS_LIMIT, e);
 		}
 	}
@@ -402,15 +433,16 @@ public class AlienDaoImpl implements AlienDao {
 				String imageUrl = resultSet.getString(ALIEN_IMAGE_IMAGE_URL);
 				imagesUrls.add(imageUrl);
 			}
-		return imagesUrls;
+			return imagesUrls;
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_IMAGES_BY_ID, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_IMAGES_BY_ID, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_IMAGES_BY_ID, e);
 		}
 	}
 
 	@Override
-	public List<Alien> findAllUnapproved(int fromRecord, int aliensPerPageLimit) throws DaoException {
+	public List<Alien> findAllUnapprovedAliens(int fromRecord, int aliensPerPageLimit) throws DaoException {
 		List<Alien> aliens = new ArrayList<>();
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(FIND_LIMIT)) {
@@ -428,7 +460,7 @@ public class AlienDaoImpl implements AlienDao {
 				aliens.add(alien);
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_LIMIT, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_LIMIT, e.getMessage());
 			throw new DaoException("Can not proceed request: " + FIND_LIMIT, e);
 		}
 		return aliens;
@@ -445,7 +477,8 @@ public class AlienDaoImpl implements AlienDao {
 				alienCount = resultSet.getInt(ALIEN_COUNT);
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_ALIEN_COUNT, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_ALIEN_COUNT, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_ALIEN_COUNT, e);
 		}
 		return alienCount;
@@ -462,7 +495,8 @@ public class AlienDaoImpl implements AlienDao {
 				alienCount = resultSet.getInt(ALIEN_COUNT);
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_ALIENS_IMAGES_COUNT, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_ALIENS_IMAGES_COUNT, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_ALIENS_IMAGES_COUNT, e);
 		}
 		return alienCount;
@@ -483,9 +517,10 @@ public class AlienDaoImpl implements AlienDao {
 				String imageUrl = resultSet.getString(ALIEN_IMAGE_IMAGE_URL);
 				aliens.add(new Alien(alienId, alienName, imageUrl));
 			}
-		return aliens;
+			return aliens;
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_IMAGES, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_IMAGES, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + FIND_IMAGES, e);
 		}
 	}
@@ -499,7 +534,8 @@ public class AlienDaoImpl implements AlienDao {
 			statement.setInt(2, alienId);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", UPDATE_ALIEN_STATUS, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", UPDATE_ALIEN_STATUS, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + UPDATE_ALIEN_STATUS, e);
 		}
 		return result == 1;
@@ -514,12 +550,13 @@ public class AlienDaoImpl implements AlienDao {
 			statement.setInt(2, alienId);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", UPDATE_ALIEN_STATUS, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", UPDATE_ALIEN_STATUS, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + UPDATE_ALIEN_STATUS, e);
 		}
 		return result == 1;
 	}
-	
+
 	@Override
 	public boolean declineProfileImage(int alienId) throws DaoException {
 		int result = 0;
@@ -530,12 +567,13 @@ public class AlienDaoImpl implements AlienDao {
 			statement.setString(3, Alien.Status.UNDER_CONSIDERATION.name());
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", CHANGE_PROFILE_IMAGE_STATUS, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", CHANGE_PROFILE_IMAGE_STATUS, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + CHANGE_PROFILE_IMAGE_STATUS, e);
 		}
 		return result == 1;
 	}
-	
+
 	@Override
 	public boolean approveProfileImage(int alienId) throws DaoException {
 		int result = 0;
@@ -546,7 +584,8 @@ public class AlienDaoImpl implements AlienDao {
 			statement.setString(3, Alien.Status.UNDER_CONSIDERATION.name());
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", CHANGE_PROFILE_IMAGE_STATUS, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", CHANGE_PROFILE_IMAGE_STATUS, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + CHANGE_PROFILE_IMAGE_STATUS, e);
 		}
 		return result == 1;
@@ -562,12 +601,13 @@ public class AlienDaoImpl implements AlienDao {
 			statement.setString(3, alienImageUrl);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", CHANGE_IMAGE_STATUS, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", CHANGE_IMAGE_STATUS, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + CHANGE_IMAGE_STATUS, e);
 		}
 		return result == 1;
 	}
-	
+
 	@Override
 	public boolean declineSuggestedImage(String alienImageUrl) throws DaoException {
 		int result = 0;
@@ -578,10 +618,11 @@ public class AlienDaoImpl implements AlienDao {
 			statement.setString(3, alienImageUrl);
 			result = statement.executeUpdate();
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", CHANGE_IMAGE_STATUS, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", CHANGE_IMAGE_STATUS, e.getMessage(),
+					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + CHANGE_IMAGE_STATUS, e);
 		}
 		return result == 1;
 	}
-	
+
 }

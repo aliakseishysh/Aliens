@@ -20,19 +20,36 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+/**
+ * Proxy for {@link Connection}
+ * 
+ * @author Aliaksey Shysh
+ */
 class ConnectionProxy implements Connection {
 
+	/**
+	 * Connection to database
+	 */
 	private Connection connection;
-	
+
 	ConnectionProxy(Connection connection) {
 		this.connection = connection;
 	}
-	
+
+	/**
+	 * Returns connection to free connections queue.
+	 * 
+	 * @see by.shyshaliaksey.webproject.model.connection.ConnectionPool
+	 */
 	public void close() throws SQLException {
 		ConnectionPool.getInstance().releaseConnection(this);
-		
 	}
-	
+
+	/**
+	 * Closes {@link #connection}
+	 * 
+	 * @throws SQLException
+	 */
 	public void reallyClose() throws SQLException {
 		connection.close();
 	}
@@ -76,8 +93,6 @@ class ConnectionProxy implements Connection {
 	public void rollback() throws SQLException {
 		connection.rollback();
 	}
-
-	
 
 	public boolean isClosed() throws SQLException {
 		return connection.isClosed();

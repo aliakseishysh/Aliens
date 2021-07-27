@@ -1,5 +1,11 @@
 package by.shyshaliaksey.webproject.model.dao;
 
+/**
+ * Class for storing information about tables columns name
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public class ColumnName {
 	
 	// table names
@@ -17,14 +23,10 @@ public class ColumnName {
 	// table: `aliens_images`
 	public static final String ALIEN_IMAGE_ID = "alien_image_id";
 	public static final String ALIEN_IMAGE_ALIEN_ID = "alien_id";
-	// TODO if change this, go to carousel.js and change key
+	// if change this field, go to carousel.js and change key
 	public static final String ALIEN_IMAGE_IMAGE_URL = "image_url";
 	public static final String ALIEN_IMAGE_STATUS = "_status";
 	
-//	// table: `roles`
-//	public static final String ROLE_ID = "role_id";
-//	public static final String ROLE_NAME = "_name";
-//	
 	// table: `users`
 	public static final String USER_ID = "user_id";
 	public static final String USER_EMAIL = "email";

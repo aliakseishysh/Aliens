@@ -9,8 +9,6 @@ import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
 
 import by.shyshaliaksey.webproject.controller.StaticPath;
-
-import by.shyshaliaksey.webproject.controller.StaticPath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.SessionAttribute;
@@ -31,12 +29,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
+/**
+ * Implementer of {@link Command} interface, designed for updating user image
+ * through service layer.
+ * 
+ * @author Aliaksey Shysh
+ * 
+ * @see UserService#updateImage(String, String, Part, int, String)
+ * 
+ */
 public class UpdateUserImageCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
 	private static final UserService userService = ServiceProvider.getInstance().getUserService();
-	
-	@AllowedRoles({Role.USER, Role.ADMIN})
+
+	@AllowedRoles({ Role.USER, Role.ADMIN })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router;
@@ -47,21 +54,21 @@ public class UpdateUserImageCommand implements Command {
 			String rootFolder = DeploymentPropertiesReader.Deployment.WEB_APP_ROOT.getValue();
 			String webSiteName = DeploymentPropertiesReader.Deployment.CURRENT_DEPLOYMENT.getValue();
 			String serverDeploymentPath = request.getServletContext().getRealPath(StaticPath.ROOT_FOLDER.getValue());
-			result =  userService.updateImage(serverDeploymentPath, rootFolder, part, userId, webSiteName);
-			
-			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
+			result = userService.updateImage(serverDeploymentPath, rootFolder, part, userId, webSiteName);
+
+			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
+					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			String jsonResponse = new JSONObject()
-					.put(Feedback.Key.IMAGE_STATUS.getValue(),
-							result.get(Feedback.Key.IMAGE_STATUS))
+					.put(Feedback.Key.IMAGE_STATUS.getValue(), result.get(Feedback.Key.IMAGE_STATUS))
 					.put(Feedback.Key.IMAGE_FEEDBACK.getValue(),
 							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.IMAGE_FEEDBACK).toString()))
-					.put(Feedback.Key.IMAGE_PATH.getValue(), result.get(Feedback.Key.IMAGE_PATH).toString())
-					.toString();
+					.put(Feedback.Key.IMAGE_PATH.getValue(), result.get(Feedback.Key.IMAGE_PATH).toString()).toString();
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException | IOException | ServletException e) {
 			response.setStatus(500);
-			logger.log(Level.ERROR, "IOException occured while image updating: {} {}", e.getMessage(), e.getStackTrace(), e);
+			logger.log(Level.ERROR, "IOException occured while image updating: {} {}", e.getMessage(),
+					e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

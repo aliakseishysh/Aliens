@@ -1,11 +1,5 @@
 package by.shyshaliaksey.webproject.controller.command.impl.user;
 
-import java.util.List;
-
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
 import by.shyshaliaksey.webproject.controller.command.Command;
@@ -17,11 +11,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * Implementer of {@link Command} interface, designed for user log out from
+ * system.
+ * 
+ * @author Aliaksey Shysh
+ * 
+ */
 public class LogoutUserCommand implements Command {
 
-	private static final Logger logger = LogManager.getRootLogger();
-	
-	@AllowedRoles({Role.USER, Role.ADMIN})
+	@AllowedRoles({ Role.USER, Role.ADMIN })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession();

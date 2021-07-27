@@ -25,12 +25,20 @@ import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Implementer of {@link Command} interface, designed for updating user password
+ * through service layer.
+ * 
+ * @author Aliaksey Shysh
+ * 
+ * @see UserService#changePassword(String, String, int)
+ * 
+ */
 public class UpdateUserPasswordCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
-	private static final UserService userService = ServiceProvider.getInstance().getUserService();
-	
-	@AllowedRoles({Role.USER, Role.ADMIN})
+
+	@AllowedRoles({ Role.USER, Role.ADMIN })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router;
@@ -39,24 +47,25 @@ public class UpdateUserPasswordCommand implements Command {
 			String password = request.getParameter(RequestParameter.PASSWORD.getValue());
 			String passwordConfirm = request.getParameter(RequestParameter.PASSWORD_CONFIRM.getValue());
 			int userId = ((User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue())).getId();
-			result =  userService.changePassword(password, passwordConfirm, userId);
-			
-			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
+			UserService userService = ServiceProvider.getInstance().getUserService();
+			result = userService.changePassword(password, passwordConfirm, userId);
+
+			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
+					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			String jsonResponse = new JSONObject()
-					.put(Feedback.Key.PASSWORD_STATUS.getValue(),
-							result.get(Feedback.Key.PASSWORD_STATUS))
+					.put(Feedback.Key.PASSWORD_STATUS.getValue(), result.get(Feedback.Key.PASSWORD_STATUS))
 					.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS.getValue(),
 							result.get(Feedback.Key.PASSWORD_CONFIRMATION_STATUS))
 					.put(Feedback.Key.PASSWORD_FEEDBACK.getValue(),
 							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.PASSWORD_FEEDBACK).toString()))
-					.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK.getValue(),
-							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK).toString()))
+					.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK.getValue(), localeAttribute
+							.getLocalizedMessage(result.get(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK).toString()))
 					.toString();
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException e) {
 			response.setStatus(500);
-			logger.log(Level.ERROR, "Exception occured while password updating: {}", e.getMessage(), e);
+			logger.log(Level.ERROR, "Exception occured while password updating: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

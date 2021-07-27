@@ -1,14 +1,11 @@
-	package by.shyshaliaksey.webproject.controller.command.impl.user;
+package by.shyshaliaksey.webproject.controller.command.impl.user;
 
-import java.io.IOException;
 import java.util.Map;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
-
-import by.shyshaliaksey.webproject.controller.StaticPath;
 
 import by.shyshaliaksey.webproject.controller.StaticPath;
 import by.shyshaliaksey.webproject.controller.RequestAttribute;
@@ -25,17 +22,23 @@ import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.UserService;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 
+/**
+ * Implementer of {@link Command} interface, designed for updating user login
+ * through service layer.
+ * 
+ * @author Aliaksey Shysh
+ * 
+ * @see UserService#changeLogin(String, String, int)
+ * 
+ */
 public class UpdateUserLoginCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
-	private static final UserService userService = ServiceProvider.getInstance().getUserService();
-	
-	@AllowedRoles({Role.USER, Role.ADMIN})
+
+	@AllowedRoles({ Role.USER, Role.ADMIN })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router;
@@ -44,12 +47,13 @@ public class UpdateUserLoginCommand implements Command {
 			String login = request.getParameter(RequestParameter.LOGIN.getValue());
 			String newLogin = request.getParameter(RequestParameter.NEW_LOGIN.getValue());
 			int userId = ((User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue())).getId();
-			result =  userService.changeLogin(login, newLogin, userId);
-			
-			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
+			UserService userService = ServiceProvider.getInstance().getUserService();
+			result = userService.changeLogin(login, newLogin, userId);
+
+			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
+					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			String jsonResponse = new JSONObject()
-					.put(Feedback.Key.LOGIN_STATUS.getValue(),
-							result.get(Feedback.Key.LOGIN_STATUS))
+					.put(Feedback.Key.LOGIN_STATUS.getValue(), result.get(Feedback.Key.LOGIN_STATUS))
 					.put(Feedback.Key.LOGIN_FEEDBACK.getValue(),
 							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.LOGIN_FEEDBACK).toString()))
 					.toString();
@@ -62,7 +66,7 @@ public class UpdateUserLoginCommand implements Command {
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException e) {
 			response.setStatus(500);
-			logger.log(Level.ERROR, "Exception occured while email updating: {}", e.getMessage(), e);
+			logger.log(Level.ERROR, "Exception occured while login updating: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

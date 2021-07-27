@@ -3,7 +3,6 @@ package by.shyshaliaksey.webproject.controller.command;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
 
 import by.shyshaliaksey.webproject.controller.StaticPath;
@@ -11,8 +10,6 @@ import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.command.Router.Type;
 import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

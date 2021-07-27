@@ -14,17 +14,11 @@ import by.shyshaliaksey.webproject.controller.RequestAttribute;
 import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.AllowedRoles;
 import by.shyshaliaksey.webproject.controller.command.Command;
-import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.Type;
-import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
-import by.shyshaliaksey.webproject.model.dao.AlienDao;
 import by.shyshaliaksey.webproject.model.dao.ColumnName;
-import by.shyshaliaksey.webproject.model.dao.DaoProvider;
-import by.shyshaliaksey.webproject.model.dao.RatingDao;
 import by.shyshaliaksey.webproject.model.entity.Alien;
-import by.shyshaliaksey.webproject.model.entity.AlienPage;
 import by.shyshaliaksey.webproject.model.entity.Comment;
 import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.service.AlienService;
@@ -33,16 +27,23 @@ import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Implementer of {@link Command} interface, designed for opening alien profile
+ * page.
+ * 
+ * @author Aliaksey Shysh
+ * 
+ */
 public class OpenAlienProfilePageCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
-	
-	@AllowedRoles({Role.GUEST, Role.USER, Role.ADMIN})
+
+	@AllowedRoles({ Role.GUEST, Role.USER, Role.ADMIN })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		int alienId = Integer.parseInt(request.getParameter(RequestParameter.ALIEN_ID.getValue()));
 		Router router;
 		try {
+			int alienId = Integer.parseInt(request.getParameter(RequestParameter.ALIEN_ID.getValue()));
 			ServiceProvider serviceProvider = ServiceProvider.getInstance();
 			AlienService alienService = serviceProvider.getAlienService();
 			RatingService ratingService = serviceProvider.getRatingService();
@@ -52,29 +53,29 @@ public class OpenAlienProfilePageCommand implements Command {
 				request.setAttribute(RequestAttribute.ALIEN.getValue(), alien);
 				double averageRating = ratingService.calculateAverageRate(alienId);
 				request.setAttribute(RequestAttribute.AVERAGE_RATING.getValue(), averageRating);
-				List<Comment> comments = alienService.findAllCommentsInPage(alienId, (int) request.getAttribute(RequestAttribute.CURRENT_PAGE.getValue()));
+				List<Comment> comments = alienService.findAllCommentsInPage(alienId,
+						(int) request.getAttribute(RequestAttribute.CURRENT_PAGE.getValue()));
 				request.setAttribute(RequestAttribute.ALIEN_COMMENTS.getValue(), comments);
 				// carousel images
 				List<String> imagesUrls = alienService.findImages(alienId);
 				JSONArray jsonArray = new JSONArray();
-				for(String url: imagesUrls) {
+				for (String url : imagesUrls) {
 					JSONObject jsonObject = new JSONObject();
 					jsonObject.put(ColumnName.ALIEN_IMAGE_IMAGE_URL, url);
 					jsonArray.put(jsonObject);
 				}
 				request.setAttribute(RequestAttribute.ALIEN_IMAGES.getValue(), jsonArray);
-				
-				
-				
+
 				router = new Router(StaticPath.PAGE_ALIEN_PROFILE_JSP.getValue(), null, Type.FORWARD);
 			} else {
 				router = new Router(StaticPath.ERROR_PAGE_404_JSP.getValue(), null, Type.FORWARD);
 				logger.log(Level.INFO, "No alien with id: {}", alienId);
 			}
-			
-		} catch (ServiceException e) {
+
+		} catch (ServiceException | NumberFormatException e) {
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
-			logger.log(Level.ERROR, "Exception occured while alien searching with id {}: {}", alienId, e.getMessage());
+			logger.log(Level.ERROR, "Exception occured while opening {}: {}", StaticPath.PAGE_ALIEN_PROFILE_JSP,
+					e.getMessage());
 		}
 		return router;
 	}

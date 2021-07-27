@@ -21,6 +21,6 @@
 			</div>
 
 		</div>
-		<p class="article-content text-break">${comment.comment}</p>
+		<p class="article-content text-break">${comment.text}</p>
 	</div>
 </article>

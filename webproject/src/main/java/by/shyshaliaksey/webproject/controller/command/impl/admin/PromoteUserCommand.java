@@ -1,6 +1,5 @@
 package by.shyshaliaksey.webproject.controller.command.impl.admin;
 
-
 import java.util.Map;
 
 import org.apache.logging.log4j.Level;
@@ -18,7 +17,6 @@ import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.controller.command.Router;
 import by.shyshaliaksey.webproject.controller.command.Router.Type;
 import by.shyshaliaksey.webproject.exception.ServiceException;
-import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.service.AdminService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
@@ -26,12 +24,21 @@ import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Implementer of {@link Command} interface, designed for user promoting to
+ * administrator through service layer.
+ * 
+ * @author Aliaksey Shysh
+ * 
+ * @see AdminService#promoteUser(String, String)
+ * 
+ */
 public class PromoteUserCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
 	private static final AdminService adminService = ServiceProvider.getInstance().getAdminService();
-	
-	@AllowedRoles({Role.ADMIN})
+
+	@AllowedRoles({ Role.ADMIN })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router;
@@ -39,21 +46,21 @@ public class PromoteUserCommand implements Command {
 		try {
 			String userLogin = request.getParameter(RequestParameter.LOGIN.getValue());
 			String currentUserLogin = (String) request.getAttribute(RequestAttribute.CURRENT_USER.getValue());
-			result = adminService.promoteUser(userLogin, currentUserLogin);	
-			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession().getAttribute(SessionAttribute.CURRENT_LOCALE.name());
+			result = adminService.promoteUser(userLogin, currentUserLogin);
+			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
+					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			String jsonResponse = new JSONObject()
-					.put(Feedback.Key.LOGIN_STATUS.getValue(),
-							result.get(Feedback.Key.LOGIN_STATUS))
+					.put(Feedback.Key.LOGIN_STATUS.getValue(), result.get(Feedback.Key.LOGIN_STATUS))
 					.put(Feedback.Key.LOGIN_FEEDBACK.getValue(),
 							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.LOGIN_FEEDBACK).toString()))
 					.toString();
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException e) {
-			logger.log(Level.ERROR, "Exception occured while user promoting: {} {} {}", e.getMessage(), e.getStackTrace(), e);
+			logger.log(Level.ERROR, "Exception occured while user promoting: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
-		return router;	
+		return router;
 	}
 
 }

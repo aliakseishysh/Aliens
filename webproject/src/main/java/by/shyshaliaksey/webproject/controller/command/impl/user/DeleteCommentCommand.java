@@ -19,11 +19,21 @@ import by.shyshaliaksey.webproject.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Implementer of {@link Command} interface, designed for deleting user comment
+ * for specific alien through service layer. User can delete his own comment and
+ * administrator can delete all comments.
+ * 
+ * @author Aliaksey Shysh
+ * 
+ * @see UserService#deleteComment(String, User)
+ * 
+ */
 public class DeleteCommentCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
-	
-	@AllowedRoles({Role.USER, Role.ADMIN})
+
+	@AllowedRoles({ Role.USER, Role.ADMIN })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router;
@@ -35,7 +45,7 @@ public class DeleteCommentCommand implements Command {
 			Boolean deleteCommentResult = userService.deleteComment(commentId, currentUser);
 			router = new Router(null, deleteCommentResult.toString(), Type.AJAX_RESPONSE);
 		} catch (ServiceException e) {
-			logger.log(Level.ERROR, "Exception occured while email updating: {}", e.getMessage());
+			logger.log(Level.ERROR, "Exception occured while deleting comment: {}", e.getMessage());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

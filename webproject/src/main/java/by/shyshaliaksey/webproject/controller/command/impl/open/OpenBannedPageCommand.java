@@ -9,12 +9,18 @@ import by.shyshaliaksey.webproject.model.entity.User.Role;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Implementer of {@link Command} interface, designed for opening ban page.
+ * 
+ * @author Aliaksey Shysh
+ * 
+ */
 public class OpenBannedPageCommand implements Command {
 
-	@AllowedRoles({Role.USER, Role.ADMIN})
+	@AllowedRoles({ Role.USER, Role.ADMIN })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		Router router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
+		Router router = new Router(StaticPath.PAGE_BANNED_JSP.getValue(), null, Type.FORWARD);
 		return router;
 	}
 

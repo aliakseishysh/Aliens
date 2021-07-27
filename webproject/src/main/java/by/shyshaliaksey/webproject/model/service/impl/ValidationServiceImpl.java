@@ -8,7 +8,7 @@ import org.apache.commons.io.FilenameUtils;
 import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.controller.command.Feedback.Key;
 import by.shyshaliaksey.webproject.exception.ServiceException;
-import by.shyshaliaksey.webproject.model.entity.FormPattern;
+import by.shyshaliaksey.webproject.model.service.FormPattern;
 import by.shyshaliaksey.webproject.model.service.ValidationService;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleKey;
 import jakarta.servlet.http.Part;
@@ -16,8 +16,8 @@ import jakarta.servlet.http.Part;
 public final class ValidationServiceImpl implements ValidationService {
 
 	@Override
-	public void validateAlienInfoFormInput(Map<Feedback.Key, Object> result, String alienName, String alienSmallDescription,
-			String alienFullDescription) throws ServiceException {
+	public void validateAlienInfoFormInput(Map<Feedback.Key, Object> result, String alienName,
+			String alienSmallDescription, String alienFullDescription) throws ServiceException {
 		if (validateAlienName(alienName)) {
 			result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.TRUE);
 			result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -125,7 +125,7 @@ public final class ValidationServiceImpl implements ValidationService {
 					LocaleKey.PASSWORD_CONFIRMATION_FEEDBACK_INVALID.getValue());
 		}
 	}
-	
+
 	@Override
 	public void validatePasswordEquality(Map<Key, Object> result, String password, String passwordConfirmation)
 			throws ServiceException {
@@ -145,9 +145,10 @@ public final class ValidationServiceImpl implements ValidationService {
 		}
 
 	}
-	
+
 	@Override
-	public void validateImageFormInput(Map<Key, Object> result, String fileExtension, long fileSize) throws ServiceException {
+	public void validateImageFormInput(Map<Key, Object> result, String fileExtension, long fileSize)
+			throws ServiceException {
 		if (validateImageExtension(fileExtension)) {
 			if (validateImageSize(fileSize)) {
 				result.put(Feedback.Key.IMAGE_STATUS, Boolean.TRUE);
@@ -175,8 +176,8 @@ public final class ValidationServiceImpl implements ValidationService {
 			result.put(Feedback.Key.COMMENT_FEEDBACK, LocaleKey.COMMENT_FEEDBACK_INVALID.getValue());
 		}
 	}
-	
-	@Override 
+
+	@Override
 	public void validateAlienNameFormInput(Map<Key, Object> result, String alienName) throws ServiceException {
 		if (validateAlienName(alienName)) {
 			result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.TRUE);
@@ -187,7 +188,7 @@ public final class ValidationServiceImpl implements ValidationService {
 			result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 		}
 	}
-	
+
 	private static boolean validateEmail(String email) {
 		boolean result = Pattern.matches(FormPattern.VALID_EMAIL.getValue(), email);
 		return result;
@@ -209,7 +210,7 @@ public final class ValidationServiceImpl implements ValidationService {
 	}
 
 	private static boolean validateImageSize(long imageSize) {
-		boolean result = imageSize <= Long.parseLong(FormPattern.VALID_IMAGE_SIZE.getValue());
+		boolean result = imageSize <= Long.parseLong(FormPattern.MAX_VALID_IMAGE_SIZE.getValue());
 		return result;
 	}
 

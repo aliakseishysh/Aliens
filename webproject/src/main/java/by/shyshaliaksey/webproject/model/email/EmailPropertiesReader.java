@@ -2,7 +2,6 @@ package by.shyshaliaksey.webproject.model.email;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Properties;
@@ -12,15 +11,21 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Class designed for reading email properties
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public class EmailPropertiesReader {
 
 	private static Logger logger = LogManager.getRootLogger();
 	private static ResourceBundle resourceBundle;
 	private static Properties properties;
-	
+
 	private EmailPropertiesReader() {
 	}
-	
+
 	static {
 		try {
 			resourceBundle = ResourceBundle.getBundle("\\email\\email");
@@ -29,6 +34,7 @@ public class EmailPropertiesReader {
 			properties = new Properties();
 			properties.putAll(messages);
 		} catch (MissingResourceException e) {
+			logger.log(Level.FATAL, "MissingResourceException: {} {}", e.getMessage(), e.getStackTrace());
 			throw new ExceptionInInitializerError("MissingResourceException: " + e.getMessage());
 		}
 	}

@@ -1,7 +1,6 @@
 package by.shyshaliaksey.webproject.controller.command.impl.user;
 
 import java.util.Map;
-import java.util.Optional;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -26,10 +25,18 @@ import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Implementer of {@link Command} interface, designed for user log in through
+ * service layer.
+ * 
+ * @author Aliaksey Shysh
+ * 
+ * @see UserService#userLogIn(String, String)
+ * 
+ */
 public class LoginUserCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
-	private static final UserService userService = ServiceProvider.getInstance().getUserService();
 
 	@AllowedRoles({ Role.GUEST })
 	@Override
@@ -40,11 +47,12 @@ public class LoginUserCommand implements Command {
 			String email = request.getParameter(RequestParameter.EMAIL.getValue());
 			String password = request.getParameter(RequestParameter.PASSWORD.getValue());
 			User user = null;
+			UserService userService = ServiceProvider.getInstance().getUserService();
 			result = userService.userLogIn(email, password);
 
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
 					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
-			
+
 			String jsonResponse = new JSONObject()
 					.put(Feedback.Key.EMAIL_STATUS.getValue(), result.get(Feedback.Key.EMAIL_STATUS))
 					.put(Feedback.Key.PASSWORD_STATUS.getValue(), result.get(Feedback.Key.PASSWORD_STATUS))
@@ -69,8 +77,7 @@ public class LoginUserCommand implements Command {
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException e) {
 			response.setStatus(500);
-			logger.log(Level.ERROR, "Exception occured while alien adding: {} {} {}", e.getMessage(), e.getStackTrace(),
-					e);
+			logger.log(Level.ERROR, "Exception occured while user logining: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

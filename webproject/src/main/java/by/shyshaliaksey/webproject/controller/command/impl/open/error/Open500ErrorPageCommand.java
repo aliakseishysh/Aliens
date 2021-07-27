@@ -9,9 +9,16 @@ import by.shyshaliaksey.webproject.model.entity.User.Role;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Implementer of {@link Command} interface, designed for opening error page
+ * 500.
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public class Open500ErrorPageCommand implements Command {
 
-	@AllowedRoles({Role.GUEST, Role.USER, Role.ADMIN})
+	@AllowedRoles({ Role.GUEST, Role.USER, Role.ADMIN })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);

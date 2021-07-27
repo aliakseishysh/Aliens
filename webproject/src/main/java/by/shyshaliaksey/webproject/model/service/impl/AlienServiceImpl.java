@@ -3,15 +3,13 @@ package by.shyshaliaksey.webproject.model.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import by.shyshaliaksey.webproject.controller.PaginationConfiguration;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.dao.AlienDao;
 import by.shyshaliaksey.webproject.model.dao.DaoProvider;
-import by.shyshaliaksey.webproject.model.entity.AdminPage;
 import by.shyshaliaksey.webproject.model.entity.Alien;
-import by.shyshaliaksey.webproject.model.entity.AlienPage;
 import by.shyshaliaksey.webproject.model.entity.Comment;
-import by.shyshaliaksey.webproject.model.entity.HomePage;
 import by.shyshaliaksey.webproject.model.service.AlienService;
 
 public class AlienServiceImpl implements AlienService {
@@ -37,7 +35,7 @@ public class AlienServiceImpl implements AlienService {
 	@Override
 	public List<Alien> findNormalAliens(int pageNumber) throws ServiceException {
 		try {
-			int aliensPerPageLimit = HomePage.ALIENS_PER_PAGE;
+			int aliensPerPageLimit = PaginationConfiguration.HOME_ALIENS_PER_PAGE;
 			int fromRecord = aliensPerPageLimit * (pageNumber - 1);
 			List<Alien> aliens = alienDao.findAll(fromRecord, aliensPerPageLimit);
 			return aliens;
@@ -49,9 +47,9 @@ public class AlienServiceImpl implements AlienService {
 	@Override
 	public List<Alien> findUnapprovedAliens(int pageNumber) throws ServiceException {
 		try {
-			int aliensPerPageLimit = AdminPage.ALIENS_PER_PAGE;
+			int aliensPerPageLimit = PaginationConfiguration.ADMIN_SUGGESTED_ALIENS_PER_PAGE;
 			int fromRecord = aliensPerPageLimit * (pageNumber - 1);
-			List<Alien> aliens = alienDao.findAllUnapproved(fromRecord, aliensPerPageLimit);
+			List<Alien> aliens = alienDao.findAllUnapprovedAliens(fromRecord, aliensPerPageLimit);
 			return aliens;
 		} catch (DaoException e) {
 			throw new ServiceException("Error occured while looking for aliens: " + e.getMessage(), e);
@@ -80,17 +78,6 @@ public class AlienServiceImpl implements AlienService {
 					"Alien ID: " + alienId + ", " + 
 					"Alien Status: " + status.name() + ", " +		
 					e.getStackTrace(), e);
-		}
-	}
-
-	@Override
-	public List<Comment> findAllComments(int alienId) throws ServiceException {
-		try {
-			List<Comment> comments = alienDao.findAllComments(alienId);
-			return comments;
-		} catch (DaoException e) {
-			throw new ServiceException("Error occured while finding comments: " + e.getMessage() + e.getStackTrace(),
-					e);
 		}
 	}
 
@@ -130,7 +117,7 @@ public class AlienServiceImpl implements AlienService {
 	@Override
 	public List<Comment> findAllCommentsInPage(int alienId, int page) throws ServiceException {
 		try {
-			int aliensPerPageLimit = AlienPage.COMMENTS_PER_PAGE;
+			int aliensPerPageLimit = PaginationConfiguration.ALIEN_PROFILE_COMMENTS_PER_PAGE;
 			int fromRecord = aliensPerPageLimit * (page - 1);
 			List<Comment> comments = alienDao.findComments(alienId, fromRecord, aliensPerPageLimit);
 			return comments;
@@ -164,7 +151,7 @@ public class AlienServiceImpl implements AlienService {
 	@Override
 	public List<Alien> findUnapprovedAliensImages(int page) throws ServiceException {
 		try {
-			int imagesPerPageLimit = AdminPage.IMAGES_PER_PAGE;
+			int imagesPerPageLimit = PaginationConfiguration.ADMIN_SUGGESTED_ALIENS_IMAGES_PER_PAGE;
 			int fromRecord = imagesPerPageLimit * (page - 1);
 			List<Alien> aliens = alienDao.findUnapprovedAliensImages(fromRecord, imagesPerPageLimit);
 			return aliens;

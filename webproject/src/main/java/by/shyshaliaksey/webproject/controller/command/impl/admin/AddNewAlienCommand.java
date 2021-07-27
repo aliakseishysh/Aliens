@@ -27,6 +27,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
+/**
+ * Implementer of {@link Command} interface, designed for adding new alien to
+ * database through service layer.
+ * 
+ * @author Aliaksey Shysh
+ *
+ * @see AdminService#addNewAlien(String, String, String, Part, String, String)
+ * 
+ */
 public class AddNewAlienCommand implements Command {
 
 	private static final Logger logger = LogManager.getRootLogger();
@@ -48,7 +57,6 @@ public class AddNewAlienCommand implements Command {
 					rootFolder, serverDeploymentPath);
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
 					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
-			// TODO to separate class, create new constants
 			String jsonResponse = new JSONObject()
 					.put(Feedback.Key.ALIEN_NAME_STATUS.getValue(), result.get(Feedback.Key.ALIEN_NAME_STATUS))
 					.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS.getValue(),
@@ -72,8 +80,7 @@ public class AddNewAlienCommand implements Command {
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException | IOException | ServletException e) {
 			response.setStatus(500);
-			logger.log(Level.ERROR, "Exception occured while alien adding: {} {} {}", e.getMessage(), e.getStackTrace(),
-					e);
+			logger.log(Level.ERROR, "Exception occured while alien adding: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;
