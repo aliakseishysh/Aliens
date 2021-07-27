@@ -193,14 +193,4 @@ UPDATE `users` SET `_status` = 'NORMAL' WHERE `banned_to_datetime` <= NOW();
 
 
 
-
-
-
-
-
-
-
-
-
-
 -- DROP DATABASE aliens_web_project;
