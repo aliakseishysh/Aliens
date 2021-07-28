@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Implementer of {@link Command} interface, designed for baning user through
- * service layer.
+ * model layer.
  * 
  * @author Aliaksey Shysh
  * 

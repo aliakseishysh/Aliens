@@ -7,7 +7,7 @@ import by.shyshaliaksey.webproject.model.service.impl.UserServiceImpl;
 import by.shyshaliaksey.webproject.model.service.impl.ValidationServiceImpl;
 
 /**
- * Provider for different service layer objects
+ * Provider for different service objects
  * 
  * @author Aliaksey Shysh
  *

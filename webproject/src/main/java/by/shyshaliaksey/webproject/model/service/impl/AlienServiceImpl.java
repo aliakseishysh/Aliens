@@ -14,7 +14,7 @@ import by.shyshaliaksey.webproject.model.service.AlienService;
 
 /**
  * Implementer of {@link AlienService} designed for communication between
- * controller and service layer for actions related to alien.
+ * controller and model layer for actions related to alien.
  * 
  * @author Aliaksey Shysh
  *

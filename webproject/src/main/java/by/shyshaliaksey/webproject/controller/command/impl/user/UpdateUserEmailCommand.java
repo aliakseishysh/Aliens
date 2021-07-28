@@ -21,14 +21,13 @@ import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.UserService;
-import by.shyshaliaksey.webproject.model.util.DeploymentPropertiesReader;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Implementer of {@link Command} interface, designed for updating user email
- * through service layer.
+ * through model layer.
  * 
  * @author Aliaksey Shysh
  * 

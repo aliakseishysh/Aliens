@@ -28,7 +28,7 @@ import jakarta.servlet.http.Part;
 
 /**
  * Implementer of {@link Command} interface, designed for updating alien profile
- * image through service layer.
+ * image through model layer.
  * 
  * @author Aliaksey Shysh
  * 

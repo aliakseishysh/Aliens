@@ -1,7 +1,7 @@
 package by.shyshaliaksey.webproject.exception;
 
 /**
- * Exception for methods in service layer
+ * Exception for methods in services
  * 
  * @author Aliaksey Shysh
  *

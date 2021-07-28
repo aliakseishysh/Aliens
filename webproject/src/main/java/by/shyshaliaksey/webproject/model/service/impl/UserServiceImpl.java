@@ -35,7 +35,7 @@ import jakarta.xml.bind.DatatypeConverter;
 
 /**
  * Implementer of {@link UserService} designed for communication between
- * controller and service layer for actions related to user.
+ * controller and model layer for actions related to user.
  * 
  * @author Aliaksey Shysh
  *

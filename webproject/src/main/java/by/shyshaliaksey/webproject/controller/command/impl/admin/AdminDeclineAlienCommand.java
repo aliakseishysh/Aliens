@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Implementer of {@link Command} interface, designed for declining alien
- * suggested by user through service layer.
+ * suggested by user through model layer.
  * 
  * @author Aliaksey Shysh
  *

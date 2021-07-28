@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Implementer of {@link Command} interface, designed for demoting administrator
- * to user through service layer.
+ * to user through model layer.
  * 
  * @author Aliaksey Shysh
  * 

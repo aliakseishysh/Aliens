@@ -22,7 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Implementer of {@link Command} interface, designed for finding user rate for
- * specific alien through service layer.
+ * specific alien through model layer.
  * 
  * @author Aliaksey Shysh
  * 

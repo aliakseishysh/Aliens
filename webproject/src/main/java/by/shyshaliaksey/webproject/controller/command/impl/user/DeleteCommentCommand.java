@@ -21,7 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Implementer of {@link Command} interface, designed for deleting user comment
- * for specific alien through service layer. User can delete his own comment and
+ * for specific alien through model layer. User can delete his own comment and
  * administrator can delete all comments.
  * 
  * @author Aliaksey Shysh

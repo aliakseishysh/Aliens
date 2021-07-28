@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Implementer of {@link Command} interface, designed for adding new user
- * comment for specific alien through service layer.
+ * comment for specific alien through model layer.
  * 
  * @author Aliaksey Shysh
  * 

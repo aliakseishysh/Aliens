@@ -11,7 +11,7 @@ import jakarta.servlet.http.Part;
 
 /**
  * Interface {@code UserService} designed for communication between controller
- * and service layer for actions related to user.
+ * and model layer for actions related to user.
  * 
  * @author Aliaksey Shysh
  *

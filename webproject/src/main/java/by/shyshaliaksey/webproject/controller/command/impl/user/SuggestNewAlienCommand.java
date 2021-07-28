@@ -21,7 +21,6 @@ import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.UserService;
-import by.shyshaliaksey.webproject.model.util.DeploymentPropertiesReader;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +29,7 @@ import jakarta.servlet.http.Part;
 
 /**
  * Implementer of {@link Command} interface, designed for suggesting new alien
- * through service layer.
+ * through model layer.
  * 
  * @author Aliaksey Shysh
  * 

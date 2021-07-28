@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Implementer of {@link Command} interface, designed for user promoting to
- * administrator through service layer.
+ * administrator through model layer.
  * 
  * @author Aliaksey Shysh
  * 

@@ -1,7 +1,5 @@
 package by.shyshaliaksey.webproject.controller.command.impl.user;
 
-import static by.shyshaliaksey.webproject.controller.StaticPath.IMAGE_DEFAULT;
-
 import java.util.Map;
 
 import org.apache.logging.log4j.Level;
@@ -21,14 +19,13 @@ import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
 import by.shyshaliaksey.webproject.model.service.UserService;
-import by.shyshaliaksey.webproject.model.util.DeploymentPropertiesReader;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Implementer of {@link Command} interface, designed for register new user in
- * system through service layer.
+ * system through model layer.
  * 
  * @author Aliaksey Shysh
  * 

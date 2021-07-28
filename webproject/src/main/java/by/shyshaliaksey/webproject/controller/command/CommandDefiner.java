@@ -41,23 +41,31 @@ import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserImageC
 import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserLoginCommand;
 import by.shyshaliaksey.webproject.controller.command.impl.user.UpdateUserPasswordCommand;
 
+/**
+ * Enum {@code CommandDefiner} designed for storing command object for purpose
+ * of not creating new every time at request. And for defining command from
+ * string.
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public enum CommandDefiner implements EnumValue {
 
-	OPEN_HOME_PAGE("home-page", new OpenHomePageCommand()),
-	OPEN_LOGIN_PAGE("login-page", new OpenLoginPageCommand()),
+	OPEN_HOME_PAGE("home-page", new OpenHomePageCommand()), OPEN_LOGIN_PAGE("login-page", new OpenLoginPageCommand()),
 	OPEN_REGISTER_PAGE("register-page", new OpenRegisterPageCommand()),
 	OPEN_USER_PROFILE_PAGE("user-profile-page", new OpenUserProfilePageCommand()),
 	OPEN_ALIEN_PROFILE_PAGE("alien-profile-page", new OpenAlienProfilePageCommand()),
 	OPEN_ADMIN_FUNCTIONAL_PAGE("admin-functional-page", new OpenAdminFunctionalPageCommand()),
 	OPEN_ADMIN_SUGGESTED_ALIENS_PAGE("suggested-aliens-page", new OpenAdminSuggestedAliensPageCommand()),
-	OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE("suggested-aliens-images-page", new OpenAdminSuggestedAliensImagesPageCommand()),
+	OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE("suggested-aliens-images-page",
+			new OpenAdminSuggestedAliensImagesPageCommand()),
 	OPEN_USER_SUGGEST_ALIEN_PAGE("suggest-alien-page", new OpenSuggestAlienPageCommand()),
 	OPEN_BANNED_PAGE("banned-page", new OpenBannedPageCommand()),
 	OPEN_400_ERROR_PAGE("400-error-page", new Open400ErrorPageCommand()),
 	OPEN_403_ERROR_PAGE("403-error-page", new Open403ErrorPageCommand()),
 	OPEN_404_ERROR_PAGE("404-error-page", new Open404ErrorPageCommand()),
 	OPEN_500_ERROR_PAGE("500-error-page", new Open500ErrorPageCommand()),
-	
+
 	ADMIN_APPROVE_ALIEN("admin-approve-alien", new AdminApproveAlienCommand()),
 	ADMIN_DECLINE_ALIEN("admin-decline-alien", new AdminDeclineAlienCommand()),
 	ADMIN_APPROVE_ALIEN_IMAGE("admin-approve-alien-image", new AdminApproveAlienImageCommand()),
@@ -65,18 +73,15 @@ public enum CommandDefiner implements EnumValue {
 	SUGGEST_ALIEN("suggest-alien", new SuggestNewAlienCommand()),
 	SUGGEST_ALIEN_IMAGE("suggest-alien-image", new SuggestNewAlienImageCommand()),
 	CHANGE_LOCALE("change-locale", new ChangeLocaleCommand()),
-	REGISTER_USER("register-user", new RegisterUserCommand()),
-	LOGIN_USER("login-user", new LoginUserCommand()),
+	REGISTER_USER("register-user", new RegisterUserCommand()), LOGIN_USER("login-user", new LoginUserCommand()),
 	LOGOUT_USER("logout-user", new LogoutUserCommand()),
 	UPDATE_RATING("update-alien-rating", new UpdateRatingCommand()),
 	UPDATE_USER_EMAIL("update-user-email", new UpdateUserEmailCommand()),
 	UPDATE_USER_LOGIN("update-user-login", new UpdateUserLoginCommand()),
 	UPDATE_USER_IMAGE("update-user-image", new UpdateUserImageCommand()),
 	UPDATE_USER_PASSWORD("update-password", new UpdateUserPasswordCommand()),
-	FIND_USER_RATE("update-user-rate", new FindUserRateCommand()),
-	BAN_USER("ban-user", new BanUserCommand()),
-	UNBAN_USER("unban-user", new UnbanUserCommand()),
-	PROMOTE_USER("pronote-user", new PromoteUserCommand()),
+	FIND_USER_RATE("update-user-rate", new FindUserRateCommand()), BAN_USER("ban-user", new BanUserCommand()),
+	UNBAN_USER("unban-user", new UnbanUserCommand()), PROMOTE_USER("pronote-user", new PromoteUserCommand()),
 	DEMOTE_ADMIN("denote-admin", new DemoteAdminCommand()),
 	UPDATE_ALIEN_INFO("update-alien-info", new UpdateAlienInfoCommand()),
 	UPDATE_ALIEN_IMAGE("update-alien-image", new UpdateAlienImageCommand()),
@@ -86,39 +91,47 @@ public enum CommandDefiner implements EnumValue {
 
 	private String value;
 	private Command command;
-	
+
 	private CommandDefiner(String value, Command command) {
 		this.value = value;
 		this.command = command;
 	}
-	
+
 	@Override
 	public String getValue() {
 		return value;
 	}
-	
+
 	public Command getCommand() {
 		return command;
 	}
-	
+
 	/**
-	 * @param commandName parameter obtained from request
-	 * @return Command instance corresponding to {@code commandName}
+	 * Defines command from string to {@code Command}
+	 * 
+	 * @param commandName {@code String} command name obtained from request
+	 * @return {@code Command} object corresponding to {@code commandName}
 	 */
 	public static Command defineCommand(String commandName) {
 		CommandDefiner commandDefiner = CommandDefiner.fromString(commandName);
 		Command command = commandDefiner.getCommand();
 		return command;
 	}
-	
+
+	/**
+	 * Defines {@code CommandDefiner} value from string
+	 * 
+	 * @param commandName {@code String} command name obtained from request
+	 * @return {@code CommandDefiner} object corresponding to {@code commandName}
+	 */
 	public static CommandDefiner fromString(String commandName) {
 		CommandDefiner result = OPEN_404_ERROR_PAGE;
-        for (CommandDefiner commandDefiner : CommandDefiner.values()) {
-            if (commandDefiner.getValue().equals(commandName)) {
-                result = commandDefiner;
-            }
-        }
-        return result;
-    }
-	
+		for (CommandDefiner commandDefiner : CommandDefiner.values()) {
+			if (commandDefiner.getValue().equals(commandName)) {
+				result = commandDefiner;
+			}
+		}
+		return result;
+	}
+
 }

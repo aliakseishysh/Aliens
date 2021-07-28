@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Implementer of {@link Command} interface, designed for updating user password
- * through service layer.
+ * through model layer.
  * 
  * @author Aliaksey Shysh
  * 

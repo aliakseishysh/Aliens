@@ -8,7 +8,7 @@ import jakarta.servlet.http.Part;
 
 /**
  * Interface {@code AdminService} designed for communication between
- * controller and service layer for actions related to administrator.
+ * controller and model layer for actions related to administrator.
  * @author Aliaksey Shysh
  *
  */

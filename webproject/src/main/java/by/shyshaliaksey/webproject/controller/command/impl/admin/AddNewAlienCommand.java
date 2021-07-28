@@ -29,7 +29,7 @@ import jakarta.servlet.http.Part;
 
 /**
  * Implementer of {@link Command} interface, designed for adding new alien to
- * database through service layer.
+ * database through model layer.
  * 
  * @author Aliaksey Shysh
  *

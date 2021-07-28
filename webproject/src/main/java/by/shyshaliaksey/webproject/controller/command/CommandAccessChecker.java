@@ -20,8 +20,9 @@ public class CommandAccessChecker {
 	}
 
 	/**
+	 * Checks user permission to access method by {@link User.Role}
 	 * 
-	 * @param command  Current Command instance, obtained from
+	 * @param command  Current {@code Command} instance, obtained from
 	 *                 {@link by.shyshaliaksey.webproject.controller.command.CommandDefiner }
 	 * @param request  Extends the jakarta.servlet.ServletRequest interface to
 	 *                 provide request information for HTTP servlets. The servlet
@@ -48,7 +49,7 @@ public class CommandAccessChecker {
 			methodArgumentsClasses[1] = HttpServletResponse.class;
 			Method method = clazz.getMethod(methodName, methodArgumentsClasses);
 			AllowedRoles allowedRolesAnnotation = method.getAnnotation(AllowedRoles.class);
-			Role[] allowedRoles;
+			User.Role[] allowedRoles;
 			if (allowedRolesAnnotation == null) {
 				allowedRoles = new Role[1];
 				allowedRoles[0] = Role.GUEST;
@@ -63,8 +64,7 @@ public class CommandAccessChecker {
 			} else {
 				response.setStatus(403);
 				result.put(MapKey.RESULT, Boolean.FALSE);
-				result.put(MapKey.ROUTER,
-						new Router(StaticPath.ERROR_PAGE_403_JSP.getValue(), null, Type.FORWARD));
+				result.put(MapKey.ROUTER, new Router(StaticPath.ERROR_PAGE_403_JSP.getValue(), null, Type.FORWARD));
 			}
 		} catch (NoSuchMethodException | SecurityException e) {
 			response.setStatus(500);
