@@ -44,9 +44,10 @@ public class UpdateUserLoginCommand implements Command {
 		Router router;
 		Map<Feedback.Key, Object> result;
 		try {
-			String login = request.getParameter(RequestParameter.LOGIN.getValue());
 			String newLogin = request.getParameter(RequestParameter.NEW_LOGIN.getValue());
-			int userId = ((User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue())).getId();
+			User user = (User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue());
+			int userId = user.getId();
+			String login = user.getLogin();
 			UserService userService = ServiceProvider.getInstance().getUserService();
 			result = userService.changeLogin(login, newLogin, userId);
 
@@ -58,9 +59,7 @@ public class UpdateUserLoginCommand implements Command {
 							localeAttribute.getLocalizedMessage(result.get(Feedback.Key.LOGIN_FEEDBACK).toString()))
 					.toString();
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.LOGIN_STATUS))) {
-				User user = (User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue());
 				user.setLogin(newLogin);
-				request.getSession().setAttribute(RequestAttribute.CURRENT_USER.getValue(), user);
 			}
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);

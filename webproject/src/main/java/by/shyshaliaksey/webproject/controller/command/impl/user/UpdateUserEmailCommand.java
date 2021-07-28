@@ -45,14 +45,14 @@ public class UpdateUserEmailCommand implements Command {
 		Router router;
 		Map<Feedback.Key, Object> result;
 		try {
-			String email = request.getParameter(RequestParameter.EMAIL.getValue());
 			String newEmail = request.getParameter(RequestParameter.NEW_EMAIL.getValue());
-			int userId = ((User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue())).getId();
-			String websiteUrl = DeploymentPropertiesReader.Deployment.CURRENT_DEPLOYMENT.getValue();
+			User user = (User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue());
+			String userEmail = user.getEmail();
+			int userId = user.getId();
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
 					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			UserService userService = ServiceProvider.getInstance().getUserService();
-			result = userService.changeEmail(email, newEmail, userId, websiteUrl, localeAttribute);
+			result = userService.makeRequestForNewEmail(userEmail, newEmail, userId, localeAttribute);
 
 			String jsonResponse = new JSONObject()
 					.put(Feedback.Key.EMAIL_STATUS.getValue(), result.get(Feedback.Key.EMAIL_STATUS))

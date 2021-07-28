@@ -50,12 +50,10 @@ public class RegisterUserCommand implements Command {
 			String login = request.getParameter(RequestParameter.LOGIN.getValue());
 			String password = request.getParameter(RequestParameter.PASSWORD.getValue());
 			String passwordRepeat = request.getParameter(RequestParameter.PASSWORD_CONFIRM.getValue());
-			String websiteUrl = DeploymentPropertiesReader.Deployment.CURRENT_DEPLOYMENT.getValue();
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
 					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			UserService userService = ServiceProvider.getInstance().getUserService();
-			result = userService.registerUser(email, login, password, passwordRepeat, IMAGE_DEFAULT.getValue(),
-					Role.USER, websiteUrl, localeAttribute);
+			result = userService.registerUser(email, login, password, passwordRepeat, localeAttribute);
 
 			String jsonResponse = new JSONObject()
 					.put(Feedback.Key.EMAIL_STATUS.getValue(), result.get(Feedback.Key.EMAIL_STATUS))

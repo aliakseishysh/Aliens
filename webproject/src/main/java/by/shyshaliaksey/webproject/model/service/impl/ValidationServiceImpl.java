@@ -3,16 +3,19 @@ package by.shyshaliaksey.webproject.model.service.impl;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FilenameUtils;
-
 import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.controller.command.Feedback.Key;
 import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.service.FormPattern;
 import by.shyshaliaksey.webproject.model.service.ValidationService;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleKey;
-import jakarta.servlet.http.Part;
 
+/**
+ * Implementer of {@link ValidationService} designed for validation form inputs.
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public final class ValidationServiceImpl implements ValidationService {
 
 	@Override
@@ -210,7 +213,7 @@ public final class ValidationServiceImpl implements ValidationService {
 	}
 
 	private static boolean validateImageSize(long imageSize) {
-		boolean result = imageSize <= Long.parseLong(FormPattern.MAX_VALID_IMAGE_SIZE.getValue());
+		boolean result = imageSize * 8 <= Long.parseLong(FormPattern.MAX_VALID_IMAGE_SIZE.getValue());
 		return result;
 	}
 

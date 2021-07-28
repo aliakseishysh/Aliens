@@ -48,7 +48,7 @@ public class LoginUserCommand implements Command {
 			String password = request.getParameter(RequestParameter.PASSWORD.getValue());
 			User user = null;
 			UserService userService = ServiceProvider.getInstance().getUserService();
-			result = userService.userLogIn(email, password);
+			result = userService.authorizeUser(email, password);
 
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
 					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());

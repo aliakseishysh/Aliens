@@ -48,10 +48,9 @@ public class SuggestNewAlienImageCommand implements Command {
 		try {
 			String alienName = request.getParameter(RequestParameter.ALIEN_NAME.getValue());
 			Part alienImage = request.getPart(RequestParameter.ALIEN_NEW_IMAGE.getValue());
-			String rootFolder = DeploymentPropertiesReader.Deployment.WEB_APP_ROOT.getValue();
 			String serverDeploymentPath = request.getServletContext().getRealPath(StaticPath.ROOT_FOLDER.getValue());
 			UserService userService = ServiceProvider.getInstance().getUserService();
-			result = userService.suggestNewAlienImage(alienName, alienImage, rootFolder, serverDeploymentPath);
+			result = userService.suggestNewAlienImage(alienName, alienImage, serverDeploymentPath);
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
 					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			String jsonResponse = new JSONObject()

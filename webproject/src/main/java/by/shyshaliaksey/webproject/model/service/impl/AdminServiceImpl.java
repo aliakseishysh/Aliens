@@ -18,16 +18,25 @@ import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.AdminService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
-import by.shyshaliaksey.webproject.model.service.TimeService;
-import by.shyshaliaksey.webproject.model.service.UtilService;
 import by.shyshaliaksey.webproject.model.service.ValidationService;
+import by.shyshaliaksey.webproject.model.util.DateHandler;
+import by.shyshaliaksey.webproject.model.util.DeploymentPropertiesReader;
+import by.shyshaliaksey.webproject.model.util.FileHandler;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleKey;
 import jakarta.servlet.http.Part;
 
+/**
+ * Implementer of {@link AdminService} designed for communication between
+ * controller and service layer for actions related to administrator.
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public class AdminServiceImpl implements AdminService {
 
 	@Override
-	public Map<Feedback.Key, Object> banUser(String userLogin, String daysToBan, String currentUser) throws ServiceException {
+	public Map<Feedback.Key, Object> banUser(String userLogin, String daysToBan, String currentUser)
+			throws ServiceException {
 		try {
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
@@ -37,8 +46,7 @@ public class AdminServiceImpl implements AdminService {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				Optional<User> user = userDao.findByLogin(userLogin);
 				if (user.isPresent() && !currentUser.equals(userLogin)) {
-					TimeService timeService = ServiceProvider.getInstance().getTimeService();
-					String banDate = timeService.prepareBanDate(Integer.parseInt(daysToBan));
+					String banDate = DateHandler.prepareBanDate(Integer.parseInt(daysToBan));
 					boolean banUserResult = userDao.banUser(userLogin, banDate);
 					if (banUserResult) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
@@ -78,8 +86,7 @@ public class AdminServiceImpl implements AdminService {
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.LOGIN_STATUS))) {
 				Optional<User> user = userDao.findByLogin(userLogin);
 				if (user.isPresent() && !currentUser.equals(userLogin)) {
-					TimeService timeService = ServiceProvider.getInstance().getTimeService();
-					String unbanDate = timeService.prepareBanDate(0);
+					String unbanDate = DateHandler.prepareBanDate(0);
 					boolean unbanUserResult = userDao.unbanUser(userLogin, unbanDate);
 					if (unbanUserResult) {
 						result.put(Feedback.Key.LOGIN_STATUS, Boolean.TRUE);
@@ -190,33 +197,31 @@ public class AdminServiceImpl implements AdminService {
 
 	@Override
 	public Map<Feedback.Key, Object> addNewAlien(String alienName, String alienSmallDescription,
-			String alienFullDescription, Part alienImage, String rootFolder, String serverDeploymentPath)
-			throws ServiceException {
+			String alienFullDescription, Part alienImage, String serverDeploymentPath) throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
-			UtilService utilService = ServiceProvider.getInstance().getUtilService();
 			AlienDao alienDao = DaoProvider.getInstance().getAlienDao();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
-			validationService.validateAlienInfoFormInput(result, alienName, alienSmallDescription, alienFullDescription);
-			String fileName = alienImage.getSubmittedFileName();			
-			validationService.validateImageFormInput(result, FilenameUtils.getExtension(fileName), alienImage.getSize());
-			
+			validationService.validateAlienInfoFormInput(result, alienName, alienSmallDescription,
+					alienFullDescription);
+			String fileName = alienImage.getSubmittedFileName();
+			validationService.validateImageFormInput(result, FilenameUtils.getExtension(fileName),
+					alienImage.getSize());
+
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_NAME_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
 				if (!alienInDatabase.isPresent()) {
-					String newFileName = utilService.prepareAlienImageName(fileName);
+					String newFileName = FileHandler.prepareAlienImageName(fileName);
 					String imageUrl = StaticPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
-					boolean uploadToRoot = utilService.uploadImage(rootFolder, StaticPath.ALIEN_IMAGE_FOLDER.getValue(),
-							newFileName, alienImage);
-					boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
+					boolean uploadToDeployment = FileHandler.uploadImage(serverDeploymentPath,
 							StaticPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
 					int alienId = alienDao.addNewAlien(alienName, alienSmallDescription, alienFullDescription,
 							imageUrl);
 					boolean addToGaleryResult = alienDao.addNewImageToGallery(alienId, imageUrl);
-					if (uploadToRoot && addToGaleryResult && uploadToDeployment) {
+					if (addToGaleryResult && uploadToDeployment) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 						result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -255,7 +260,6 @@ public class AdminServiceImpl implements AdminService {
 	public Map<Feedback.Key, Object> updateAlienInfo(int alienId, String alienName, String alienSmallDescription,
 			String alienFullDescription) throws ServiceException {
 		try {
-			UtilService utilService = ServiceProvider.getInstance().getUtilService();
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
 			AlienDao alienDao = DaoProvider.getInstance().getAlienDao();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
@@ -301,30 +305,29 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public Map<Feedback.Key, Object> updateAlienImage(int alienId, Part alienImage, String rootFolder,
-			String serverDeploymentPath, String websiteUrl) throws ServiceException {
+	public Map<Feedback.Key, Object> updateAlienImage(int alienId, Part alienImage, String serverDeploymentPath)
+			throws ServiceException {
 		try {
-			UtilService utilService = ServiceProvider.getInstance().getUtilService();
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
 			AlienDao alienDao = DaoProvider.getInstance().getAlienDao();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
-			String fileName = alienImage.getSubmittedFileName();			
-			validationService.validateImageFormInput(result, FilenameUtils.getExtension(fileName), alienImage.getSize());
+			String fileName = alienImage.getSubmittedFileName();
+			validationService.validateImageFormInput(result, FilenameUtils.getExtension(fileName),
+					alienImage.getSize());
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 				Optional<Alien> alienInDatabase = alienDao.findById(alienId);
 				if (alienInDatabase.isPresent()) {
-					String newFileName = utilService.prepareAlienImageName(fileName);
+					String newFileName = FileHandler.prepareAlienImageName(fileName);
 					String imageUrl = StaticPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
-					boolean uploadToRoot = utilService.uploadImage(rootFolder, StaticPath.ALIEN_IMAGE_FOLDER.getValue(),
-							newFileName, alienImage);
-					boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
+					boolean uploadToDeployment = FileHandler.uploadImage(serverDeploymentPath,
 							StaticPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
 					boolean addResult = alienDao.updateAlienImage(alienId, imageUrl);
 					boolean addToGaleryResult = alienDao.addNewImageToGallery(alienId, imageUrl);
-					if (uploadToRoot && uploadToDeployment && addResult && addToGaleryResult) {
+					if (uploadToDeployment && addResult && addToGaleryResult) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-						result.put(Feedback.Key.IMAGE_PATH, websiteUrl + imageUrl);
+						result.put(Feedback.Key.IMAGE_PATH,
+								DeploymentPropertiesReader.Deployment.CURRENT_DEPLOYMENT.getValue() + imageUrl);
 					} else {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 						result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
@@ -333,7 +336,8 @@ public class AdminServiceImpl implements AdminService {
 				} else {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 					result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
-					result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.ALIEN_NAME_FEEDBACK_INVALID_DOES_NOT_EXIST.getValue());
+					result.put(Feedback.Key.IMAGE_FEEDBACK,
+							LocaleKey.ALIEN_NAME_FEEDBACK_INVALID_DOES_NOT_EXIST.getValue());
 				}
 			} else {
 				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);

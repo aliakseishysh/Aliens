@@ -9,8 +9,6 @@ import java.util.Optional;
 import org.apache.commons.io.FilenameUtils;
 
 import by.shyshaliaksey.webproject.controller.StaticPath;
-import by.shyshaliaksey.webproject.controller.RequestAttribute;
-import by.shyshaliaksey.webproject.controller.RequestParameter;
 import by.shyshaliaksey.webproject.controller.command.Feedback;
 import by.shyshaliaksey.webproject.exception.DaoException;
 import by.shyshaliaksey.webproject.exception.ServiceException;
@@ -23,21 +21,29 @@ import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.entity.Token;
 import by.shyshaliaksey.webproject.model.entity.User;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
-import by.shyshaliaksey.webproject.model.service.TimeService;
 import by.shyshaliaksey.webproject.model.service.UserService;
-import by.shyshaliaksey.webproject.model.service.UtilService;
 import by.shyshaliaksey.webproject.model.service.ValidationService;
+import by.shyshaliaksey.webproject.model.util.DateHandler;
+import by.shyshaliaksey.webproject.model.util.DeploymentPropertiesReader;
 import by.shyshaliaksey.webproject.model.util.EmailMessanger;
+import by.shyshaliaksey.webproject.model.util.FileHandler;
+import by.shyshaliaksey.webproject.model.util.CryptoHandler;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleKey;
-import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import jakarta.xml.bind.DatatypeConverter;
 
+/**
+ * Implementer of {@link UserService} designed for communication between
+ * controller and service layer for actions related to user.
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public class UserServiceImpl implements UserService {
 
 	@Override
-	public Map<Feedback.Key, Object> userLogIn(String email, String password) throws ServiceException {
+	public Map<Feedback.Key, Object> authorizeUser(String email, String password) throws ServiceException {
 		try {
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
@@ -54,8 +60,8 @@ public class UserServiceImpl implements UserService {
 					String passwordHash = passwordDatabaseOptional.get();
 					String saltHex = saltDatabaseOptional.get();
 					byte[] salt = DatatypeConverter.parseHexBinary(saltHex);
-					UtilService utilService = ServiceProvider.getInstance().getUtilService();
-					String enteredPassword = DatatypeConverter.printHexBinary(utilService.hashPassword(password, salt));
+					String enteredPassword = DatatypeConverter
+							.printHexBinary(CryptoHandler.hashPassword(password, salt));
 					if (enteredPassword.equals(passwordHash)) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 						result.put(Feedback.Key.EMAIL_STATUS, Boolean.TRUE);
@@ -102,47 +108,39 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
-	// TODO do something with dao register
 	@Override
 	public Map<Feedback.Key, Object> registerUser(String email, String login, String password, String passwordRepeat,
-			String imagePath, Role role, String websiteUrl, LocaleAttribute locale) throws ServiceException {
-		Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
-		ValidationService validationService = ServiceProvider.getInstance().getValidationService();
-		validationService.validateEmailFormInput(result, email);
-		validationService.validateLoginFormInput(result, login);
-		validationService.validatePasswordFormInput(result, password);
-		validationService.validatePasswordConfirmationFormInput(result, passwordRepeat);
-
+			LocaleAttribute locale) throws ServiceException {
 		try {
+			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
+			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
+			validationService.validateEmailFormInput(result, email);
+			validationService.validateLoginFormInput(result, login);
+			validationService.validatePasswordFormInput(result, password);
+			validationService.validatePasswordConfirmationFormInput(result, passwordRepeat);
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.EMAIL_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.LOGIN_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.PASSWORD_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.PASSWORD_CONFIRMATION_STATUS))) {
 				if (password.equals(passwordRepeat)) {
-					UtilService utilService = ServiceProvider.getInstance().getUtilService();
-					byte[] salt = utilService.createSalt();
-					byte[] hashedPassword = utilService.hashPassword(password, salt);
+					byte[] salt = CryptoHandler.createSalt();
+					byte[] hashedPassword = CryptoHandler.hashPassword(password, salt);
 					String saltHex = DatatypeConverter.printHexBinary(salt);
 					String hashedPasswordHex = DatatypeConverter.printHexBinary(hashedPassword);
 					UserDao userDao = DaoProvider.getInstance().getUserDao();
 					Optional<User> userOptional = userDao.findByEmail(email);
 					boolean registerResult = false;
 
-					if (!userOptional.isPresent()) {
+					if (!userOptional.isPresent() || !userOptional.get().getLogin().equals(login)) {
 						registerResult = userDao.registerUser(email, login, hashedPasswordHex, saltHex,
 								IMAGE_DEFAULT.getValue(), Role.USER);
 						if (registerResult) {
-							String token = utilService.createToken(email);
-							TimeService timeService = ServiceProvider.getInstance().getTimeService();
+							String token = CryptoHandler.createToken(email);
 							final int minutesToExpriration = 5;
-							String expirationTime = timeService.prepareTokenExpirationDate(minutesToExpriration);
+							String expirationTime = DateHandler.prepareTokenExpirationDate(minutesToExpriration);
 							userDao.addNewToken(email, token, expirationTime);
-							// send message
-							EmailMessanger.sendEmail(email, token, websiteUrl, EmailMessanger.Function.REGISTER,
-									locale);
-
-							// TODO start demon thread
-
+							EmailMessanger.sendEmail(email, token,
+									EmailMessanger.Function.REGISTER, locale);
 							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 							result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.CHECK_YOUR_EMAIL.getValue());
 							result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -203,11 +201,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Map<Feedback.Key, Object> changeEmail(String email, String newEmail, int userId, String websiteUrl,
+	public Map<Feedback.Key, Object> makeRequestForNewEmail(String email, String newEmail, int userId,
 			LocaleAttribute locale) throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
-			UtilService utilService = ServiceProvider.getInstance().getUtilService();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 			validationService.validateEmailFormInput(result, newEmail);
 
@@ -215,13 +212,12 @@ public class UserServiceImpl implements UserService {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				Optional<User> userOld = userDao.findByEmail(newEmail);
 				if (!userOld.isPresent()) {
-					String token = utilService.createToken(email);
-					TimeService timeService = ServiceProvider.getInstance().getTimeService();
+					String token = CryptoHandler.createToken(email);
 					final int minutesToExpriration = 5;
-					String expirationTime = timeService.prepareTokenExpirationDate(minutesToExpriration);
+					String expirationTime = DateHandler.prepareTokenExpirationDate(minutesToExpriration);
 					userDao.addNewToken(email, token, expirationTime, newEmail);
 					// send message
-					boolean isMessageSent = EmailMessanger.sendEmail(newEmail, token, websiteUrl,
+					boolean isMessageSent = EmailMessanger.sendEmail(newEmail, token,
 							EmailMessanger.Function.CHANGE_EMAIL, locale);
 					if (isMessageSent) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
@@ -309,9 +305,8 @@ public class UserServiceImpl implements UserService {
 					if (saltDatabaseOptional.isPresent()) {
 						String saltHex = saltDatabaseOptional.get();
 						byte[] salt = DatatypeConverter.parseHexBinary(saltHex);
-						UtilService utilService = ServiceProvider.getInstance().getUtilService();
 						String hashedPassword = DatatypeConverter
-								.printHexBinary(utilService.hashPassword(password, salt));
+								.printHexBinary(CryptoHandler.hashPassword(password, salt));
 						boolean passwordUpdateResult = userDao.updateUserPassword(hashedPassword, userId);
 						if (passwordUpdateResult) {
 							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
@@ -350,8 +345,8 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Map<Feedback.Key, Object> updateImage(String serverDeploymentPath, String rootFolder, Part userImage,
-			int userId, String websiteUrl) throws ServiceException {
+	public Map<Feedback.Key, Object> updateImage(String serverDeploymentPath, Part userImage, int userId)
+			throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
@@ -361,21 +356,18 @@ public class UserServiceImpl implements UserService {
 
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 
-				UtilService utilService = ServiceProvider.getInstance().getUtilService();
-
 				String fileName = userImage.getSubmittedFileName();
-				String newFileName = utilService.prepareAlienImageName(fileName);
+				String newFileName = FileHandler.prepareAlienImageName(fileName);
 				String imageUrl = StaticPath.PROFILE_IMAGE_FOLDER.getValue() + newFileName;
-				boolean uploadToRoot = utilService.uploadImage(rootFolder, StaticPath.PROFILE_IMAGE_FOLDER.getValue(),
-						newFileName, userImage);
-				boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
+				boolean uploadToDeployment = FileHandler.uploadImage(serverDeploymentPath,
 						StaticPath.PROFILE_IMAGE_FOLDER.getValue(), newFileName, userImage);
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				boolean updateImageResult = userDao.updateProfileImage(imageUrl, userId);
-				if (uploadToRoot && uploadToDeployment && updateImageResult) {
+				if (uploadToDeployment && updateImageResult) {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 					result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-					result.put(Feedback.Key.IMAGE_PATH, websiteUrl + imageUrl);
+					result.put(Feedback.Key.IMAGE_PATH,
+							DeploymentPropertiesReader.Deployment.CURRENT_DEPLOYMENT.getValue() + imageUrl);
 				} else {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 					result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
@@ -389,16 +381,6 @@ public class UserServiceImpl implements UserService {
 			throw new ServiceException("Error occured when updating image for userId " + userId + " :" + e.getMessage(),
 					e);
 		}
-	}
-
-	@Override
-	public boolean isUserBanned(HttpSession session) {
-		boolean result = false;
-		User user = (User) session.getAttribute(RequestAttribute.CURRENT_USER.getValue());
-		if (user != null && user.getStatus() == User.Status.BANNED) {
-			result = true;
-		}
-		return result;
 	}
 
 	@Override
@@ -450,11 +432,9 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Map<Feedback.Key, Object> suggestNewAlien(String alienName, String alienSmallDescription,
-			String alienFullDescription, Part alienImage, String rootFolder, String serverDeploymentPath)
-			throws ServiceException {
+			String alienFullDescription, Part alienImage, String serverDeploymentPath) throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
-			UtilService utilService = ServiceProvider.getInstance().getUtilService();
 			AlienDao alienDao = DaoProvider.getInstance().getAlienDao();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 			validationService.validateAlienInfoFormInput(result, alienName, alienSmallDescription,
@@ -469,15 +449,12 @@ public class UserServiceImpl implements UserService {
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
 				if (!alienInDatabase.isPresent()) {
-					String newFileName = utilService.prepareAlienImageName(fileName);
+					String newFileName = FileHandler.prepareAlienImageName(fileName);
 					String imageUrl = StaticPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
-					int alienId = alienDao.suggestNewAlien(alienName, alienSmallDescription, alienFullDescription,
-							imageUrl);
-					boolean uploadToRoot = utilService.uploadImage(rootFolder, StaticPath.ALIEN_IMAGE_FOLDER.getValue(),
-							newFileName, alienImage);
-					boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
+					alienDao.suggestNewAlien(alienName, alienSmallDescription, alienFullDescription, imageUrl);
+					boolean uploadToDeployment = FileHandler.uploadImage(serverDeploymentPath,
 							StaticPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
-					if (uploadToRoot && uploadToDeployment) {
+					if (uploadToDeployment) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 						result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -513,11 +490,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Map<Feedback.Key, Object> suggestNewAlienImage(String alienName, Part alienImage, String rootFolder,
+	public Map<Feedback.Key, Object> suggestNewAlienImage(String alienName, Part alienImage,
 			String serverDeploymentPath) throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
-			UtilService utilService = ServiceProvider.getInstance().getUtilService();
 			AlienDao alienDao = DaoProvider.getInstance().getAlienDao();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
 			validationService.validateAlienNameFormInput(result, alienName);
@@ -530,15 +506,13 @@ public class UserServiceImpl implements UserService {
 				if (alienInDatabase.isPresent()) {
 
 					String fileName = alienImage.getSubmittedFileName();
-					String newFileName = utilService.prepareAlienImageName(fileName);
+					String newFileName = FileHandler.prepareAlienImageName(fileName);
 					String imageUrl = StaticPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
 					int alienId = alienInDatabase.get().getId();
-					boolean uploadToRoot = utilService.uploadImage(rootFolder, StaticPath.ALIEN_IMAGE_FOLDER.getValue(),
-							newFileName, alienImage);
-					boolean uploadToDeployment = utilService.uploadImage(serverDeploymentPath,
+					boolean uploadToDeployment = FileHandler.uploadImage(serverDeploymentPath,
 							StaticPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
 					boolean suggestImageResult = alienDao.suggestNewAlienImage(alienId, imageUrl);
-					if (uploadToRoot && uploadToDeployment && suggestImageResult) {
+					if (uploadToDeployment && suggestImageResult) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
 						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -571,15 +545,35 @@ public class UserServiceImpl implements UserService {
 	public boolean setNewEmail(String tokenRequested) throws ServiceException {
 		try {
 			boolean result = false;
-			TimeService timeService = ServiceProvider.getInstance().getTimeService();
 			UserDao userDao = DaoProvider.getInstance().getUserDao();
 			Optional<Token> tokenOptional = userDao.findToken(tokenRequested, Token.Status.NORMAL);
 			if (tokenOptional.isPresent()) {
 				Token token = tokenOptional.get();
-				boolean isExpired = timeService.isExpired(token.getExpirationDate());
+				boolean isExpired = DateHandler.isExpired(token.getExpirationDate());
 				if (!isExpired) {
 					boolean updateResult = userDao.updateUserEmail(token.getEmail(), token.getNewEmail());
 					result = updateResult;
+				}
+			}
+			return result;
+		} catch (DaoException e) {
+			throw new ServiceException("Can not activate user account", e);
+		}
+	}
+
+	@Override
+	public boolean activateAccount(String tokenRequested) throws ServiceException {
+		try {
+			boolean result = false;
+			UserDao userDao = DaoProvider.getInstance().getUserDao();
+			Optional<Token> tokenOptional = userDao.findToken(tokenRequested, Token.Status.NORMAL);
+			if (tokenOptional.isPresent()) {
+				Token token = tokenOptional.get();
+				boolean isExpired = DateHandler.isExpired(token.getExpirationDate());
+				if (!isExpired) {
+					boolean activateUserAccountResult = userDao.updateUserStatusToNormal(token.getEmail());
+					boolean setTokenStatusExpired = userDao.setTokenStatusExpired(tokenRequested);
+					result = activateUserAccountResult && setTokenStatusExpired;
 				}
 			}
 			return result;

@@ -31,6 +31,7 @@ public enum FormPattern implements EnumValue {
 		this.value = value;
 	}
 
+	@Override
 	public String getValue() {
 		return value;
 	}

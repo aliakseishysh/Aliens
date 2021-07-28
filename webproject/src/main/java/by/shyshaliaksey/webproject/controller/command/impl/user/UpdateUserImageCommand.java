@@ -51,10 +51,8 @@ public class UpdateUserImageCommand implements Command {
 		try {
 			Part part = request.getPart(RequestParameter.NEW_IMAGE.getValue());
 			int userId = ((User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue())).getId();
-			String rootFolder = DeploymentPropertiesReader.Deployment.WEB_APP_ROOT.getValue();
-			String webSiteName = DeploymentPropertiesReader.Deployment.CURRENT_DEPLOYMENT.getValue();
 			String serverDeploymentPath = request.getServletContext().getRealPath(StaticPath.ROOT_FOLDER.getValue());
-			result = userService.updateImage(serverDeploymentPath, rootFolder, part, userId, webSiteName);
+			result = userService.updateImage(serverDeploymentPath, part, userId);
 
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
 					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());

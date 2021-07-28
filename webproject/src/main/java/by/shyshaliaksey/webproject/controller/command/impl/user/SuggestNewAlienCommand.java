@@ -52,11 +52,10 @@ public class SuggestNewAlienCommand implements Command {
 			String alienSmallDescription = request.getParameter(RequestParameter.ALIEN_SMALL_DESCRIPTION.getValue());
 			String alienFullDescription = request.getParameter(RequestParameter.ALIEN_FULL_DESCRIPTION.getValue());
 			Part alienImage = request.getPart(RequestParameter.ALIEN_NEW_IMAGE.getValue());
-			String rootFolder = DeploymentPropertiesReader.Deployment.WEB_APP_ROOT.getValue();
 			String serverDeploymentPath = request.getServletContext().getRealPath(StaticPath.ROOT_FOLDER.getValue());
 			UserService userService = ServiceProvider.getInstance().getUserService();
 			result = userService.suggestNewAlien(alienName, alienSmallDescription, alienFullDescription, alienImage,
-					rootFolder, serverDeploymentPath);
+					serverDeploymentPath);
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
 					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			String jsonResponse = new JSONObject()

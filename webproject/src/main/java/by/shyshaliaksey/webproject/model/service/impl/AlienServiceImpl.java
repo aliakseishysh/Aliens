@@ -12,6 +12,13 @@ import by.shyshaliaksey.webproject.model.entity.Alien;
 import by.shyshaliaksey.webproject.model.entity.Comment;
 import by.shyshaliaksey.webproject.model.service.AlienService;
 
+/**
+ * Implementer of {@link AlienService} designed for communication between
+ * controller and service layer for actions related to alien.
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public class AlienServiceImpl implements AlienService {
 
 	private static final AlienDao alienDao = DaoProvider.getInstance().getAlienDao();
@@ -57,27 +64,13 @@ public class AlienServiceImpl implements AlienService {
 	}
 
 	@Override
-	public Optional<Alien> findAlienById(int alienId) throws ServiceException {
-		try {
-			Optional<Alien> alien = alienDao.findById(alienId);
-			return alien;
-		} catch (DaoException e) {
-			throw new ServiceException("Error occured while finding alien by id: " + alienId + " :" + e.getMessage(),
-					e);
-		}
-	}
-
-	@Override
 	public Optional<Alien> findAlienByIdAndStatus(int alienId, Alien.Status status) throws ServiceException {
 		try {
 			Optional<Alien> alien = alienDao.findByIdAndStatus(alienId, status);
 			return alien;
 		} catch (DaoException e) {
-			throw new ServiceException(
-					"Error occured while finding alien by id and status: " + 
-					"Alien ID: " + alienId + ", " + 
-					"Alien Status: " + status.name() + ", " +		
-					e.getStackTrace(), e);
+			throw new ServiceException("Error occured while finding alien by id and status: " + "Alien ID: " + alienId
+					+ ", " + "Alien Status: " + status.name() + ", " + e.getStackTrace(), e);
 		}
 	}
 
@@ -106,8 +99,8 @@ public class AlienServiceImpl implements AlienService {
 	@Override
 	public int findAlienCommentsCount(int alienId) throws ServiceException {
 		try {
-			int alienCount = alienDao.findAlienCommentsCount(alienId);
-			return alienCount;
+			int alienCommentsNumber = alienDao.findAlienCommentsCount(alienId);
+			return alienCommentsNumber;
 		} catch (DaoException e) {
 			throw new ServiceException("Error occured while finding comments: " + e.getMessage() + e.getStackTrace(),
 					e);

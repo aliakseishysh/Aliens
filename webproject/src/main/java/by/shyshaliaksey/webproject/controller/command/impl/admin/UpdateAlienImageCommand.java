@@ -20,7 +20,6 @@ import by.shyshaliaksey.webproject.exception.ServiceException;
 import by.shyshaliaksey.webproject.model.entity.User.Role;
 import by.shyshaliaksey.webproject.model.service.AdminService;
 import by.shyshaliaksey.webproject.model.service.ServiceProvider;
-import by.shyshaliaksey.webproject.model.util.DeploymentPropertiesReader;
 import by.shyshaliaksey.webproject.model.util.localization.LocaleAttribute;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,10 +48,8 @@ public class UpdateAlienImageCommand implements Command {
 		try {
 			int alienId = Integer.parseInt(request.getParameter(RequestParameter.ALIEN_ID.getValue()));
 			Part alienImage = request.getPart(RequestParameter.ALIEN_NEW_IMAGE.getValue());
-			String rootFolder = DeploymentPropertiesReader.Deployment.WEB_APP_ROOT.getValue();
 			String serverDeploymentPath = request.getServletContext().getRealPath(StaticPath.ROOT_FOLDER.getValue());
-			String websiteUrl = DeploymentPropertiesReader.Deployment.CURRENT_DEPLOYMENT.getValue();
-			result = adminService.updateAlienImage(alienId, alienImage, rootFolder, serverDeploymentPath, websiteUrl);
+			result = adminService.updateAlienImage(alienId, alienImage, serverDeploymentPath);
 
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
 					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());

@@ -3,11 +3,15 @@ package by.shyshaliaksey.webproject.model.service;
 import by.shyshaliaksey.webproject.model.service.impl.AdminServiceImpl;
 import by.shyshaliaksey.webproject.model.service.impl.AlienServiceImpl;
 import by.shyshaliaksey.webproject.model.service.impl.RatingServiceImpl;
-import by.shyshaliaksey.webproject.model.service.impl.TimeServiceImpl;
 import by.shyshaliaksey.webproject.model.service.impl.UserServiceImpl;
-import by.shyshaliaksey.webproject.model.service.impl.UtilServiceImpl;
 import by.shyshaliaksey.webproject.model.service.impl.ValidationServiceImpl;
 
+/**
+ * Provider for different service layer objects
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public class ServiceProvider {
 
 	private static final ServiceProvider instance = new ServiceProvider();
@@ -15,13 +19,11 @@ public class ServiceProvider {
 	private static final RatingService ratingService = new RatingServiceImpl();
 	private static final UserService userService = new UserServiceImpl();
 	private static final AdminService adminService = new AdminServiceImpl();
-	private static final TimeService timeService = new TimeServiceImpl();
 	private static final ValidationService validationService = new ValidationServiceImpl();
-	private static final UtilService utilService = new UtilServiceImpl();
-	
+
 	private ServiceProvider() {
 	}
-	
+
 	public static ServiceProvider getInstance() {
 		return instance;
 	}
@@ -37,20 +39,13 @@ public class ServiceProvider {
 	public UserService getUserService() {
 		return userService;
 	}
-	
+
 	public AdminService getAdminService() {
 		return adminService;
 	}
-	
-	public TimeService getTimeService() {
-		return timeService;
-	}
-	
+
 	public ValidationService getValidationService() {
 		return validationService;
 	}
-	
-	public UtilService getUtilService() {
-		return utilService;
-	}
+
 }

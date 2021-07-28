@@ -8,15 +8,23 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Class {@code LocalizationReader} designed for read localization files
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public class LocalizationReader {
 
 	private static Logger logger = LogManager.getRootLogger();
 	private ResourceBundle resourceBundle;
-	
+
 	public LocalizationReader(Locale locale) {
 		try {
-			resourceBundle = ResourceBundle.getBundle("\\localization\\localization", locale);			
+			resourceBundle = ResourceBundle.getBundle("\\localization\\localization", locale);
 		} catch (MissingResourceException e) {
+			logger.log(Level.FATAL, "Can not read localization properties file: {} {} {}", locale.toLanguageTag(),
+					e.getMessage(), e.getStackTrace());
 			throw new ExceptionInInitializerError("MissingResourceException: " + e.getMessage());
 		}
 	}
@@ -24,5 +32,5 @@ public class LocalizationReader {
 	public ResourceBundle getResourceBundle() {
 		return resourceBundle;
 	}
-	
+
 }

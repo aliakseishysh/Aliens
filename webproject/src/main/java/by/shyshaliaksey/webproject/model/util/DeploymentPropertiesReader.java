@@ -9,11 +9,18 @@ import org.apache.logging.log4j.Logger;
 
 import by.shyshaliaksey.webproject.controller.EnumValue;
 
+/**
+ * Class {@code DeploymentPropertiesReader} designed for reading
+ * deployment.properties file
+ * 
+ * @author Aliaksey Shysh
+ *
+ */
 public class DeploymentPropertiesReader {
 
 	private static Logger logger = LogManager.getRootLogger();
 	private static final ResourceBundle resourceBundle;
-	
+
 	static {
 		try {
 			resourceBundle = ResourceBundle.getBundle("\\settings\\deployment");
@@ -23,11 +30,18 @@ public class DeploymentPropertiesReader {
 		}
 	}
 
+	/**
+	 * Enum {@code Deployment} designed for storing data from deployment.properties
+	 * file
+	 * 
+	 * @author Aliaksey Shysh
+	 *
+	 */
 	public enum Deployment implements EnumValue {
 		WEB_APP_ROOT(resourceBundle.getString("WEB_APP_ROOT")),
 		CURRENT_DEPLOYMENT(resourceBundle.getString("CURRENT_DEPLOYMENT")),
 		PROJECT_NAME(resourceBundle.getString("PROJECT_NAME"));
-		
+
 		private String value;
 
 		private Deployment(String value) {
@@ -40,5 +54,4 @@ public class DeploymentPropertiesReader {
 		}
 	}
 
-	
 }
