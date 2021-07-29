@@ -97,13 +97,19 @@ public class ConnectionPool {
 		if (!(connection instanceof ConnectionProxy)) {
 			logger.log(Level.ERROR, "Current connection is not instance of ConnectionProxy : {}", connection);
 			result = false;
-		}
-		occupiedConnections.remove(connection);
-		try {
-			freeConnections.put((ConnectionProxy) connection);
-		} catch (InterruptedException e) {
-			logger.log(Level.ERROR, "Current thread was interrupted {} {}", e.getMessage(), e.getStackTrace());
-			Thread.currentThread().interrupt();
+		} else {
+			if (occupiedConnections.contains(connection) || freeConnections.contains(connection)) {
+				occupiedConnections.remove(connection);
+				try {
+					freeConnections.put((ConnectionProxy) connection);
+				} catch (InterruptedException e) {
+					logger.log(Level.ERROR, "Current thread was interrupted {} {}", e.getMessage(), e.getStackTrace());
+					Thread.currentThread().interrupt();
+				}
+			} else {
+				logger.log(Level.ERROR, "Current connection does not belong to connection pool  : {}", connection);
+				result = false;
+			}
 		}
 		return result;
 	}
@@ -116,25 +122,26 @@ public class ConnectionPool {
 			try {
 				freeConnections.take().reallyClose();
 			} catch (SQLException e) {
-				logger.log(Level.WARN, "Connection is not deleted: {}", e.getMessage());
+				logger.log(Level.WARN, "Connection is not closed: {}", e.getMessage());
 			} catch (InterruptedException e) {
-				logger.log(Level.WARN, "Connection is not deleted: {}", e.getMessage());
+				logger.log(Level.WARN, "Current thread was interrupted: {}", e.getMessage());
 				Thread.currentThread().interrupt();
 			}
 		}
 		while (!occupiedConnections.isEmpty()) {
 			try {
 				ConnectionProxy connection = occupiedConnections.take();
-				connection.rollback();
+				//TODO connection.rollback();
 				connection.reallyClose();
 			} catch (SQLException e) {
-				logger.log(Level.WARN, "Connection is not deleted: {}", e.getMessage());
+				logger.log(Level.WARN, "Connection is not closed: {}", e.getMessage());
 			} catch (InterruptedException e) {
-				logger.log(Level.WARN, "Connection is not deleted: {}", e.getMessage());
+				logger.log(Level.WARN, "Current thread was interrupted: {}", e.getMessage());
 				Thread.currentThread().interrupt();
 			}
 		}
 		deregisterDrivers();
+		logger.log(Level.INFO, "Connection pool successfully destroyed");
 	}
 
 	/**
