@@ -27,29 +27,29 @@ public class RatingDaoImpl implements RatingDao {
 	private static final Logger logger = LogManager.getRootLogger();
 	private static final RatingDaoImpl instance = new RatingDaoImpl();
 	private static final String ADD_RATE = """
-			INSERT INTO ratings 
-			(alien_id, user_id, rate_value) 
+			INSERT INTO `ratings`
+			(`alien_id`, `user_id`, `rate_value`) 
 			VALUES (?, ?, ?)
 			""";
 	private static final String UPDATE_RATE = """
-			UPDATE ratings 
-			SET rate_value = ? 
-			WHERE alien_id = ? AND user_id = ?
+			UPDATE `ratings`
+			SET `rate_value` = ? 
+			WHERE `alien_id` = ? AND `user_id` = ?
 			""";
 	private static final String AVERAGE_RATING = """
-			SELECT AVG(rate_value) AS averageRate 
-			FROM ratings 
-			WHERE alien_id=?
+			SELECT AVG(`rate_value`) AS `averageRate`
+			FROM `ratings`
+			WHERE `alien_id` = ?
 			""";
 	private static final String CHECK_RATE_EXISTENCE = """
-			SELECT COUNT(*) as ratesCount 
-			FROM ratings 
-			WHERE alien_id=? AND user_id=?
+			SELECT COUNT(`rate_id`) as `ratesCount`
+			FROM `ratings` 
+			WHERE `alien_id` = ? AND `user_id` = ?
 			""";
 	private static final String FIND_USER_RATE = """
-			SELECT rate_value 
-			FROM ratings 
-			WHERE alien_id=? AND user_id=?
+			SELECT `rate_value` 
+			FROM `ratings` 
+			WHERE `alien_id` = ? AND `user_id` = ?
 			""";
 
 	private RatingDaoImpl() {

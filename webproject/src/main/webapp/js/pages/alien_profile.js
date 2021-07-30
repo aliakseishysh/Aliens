@@ -155,7 +155,7 @@ function addNewComment() {
     });
 };
 
-function deleteComment(commentId) {
+function deleteComment(commentId, div) {
     let data = {};
     data[COMMENT_ID] = commentId;
     let url = CONTROLLER + "?" + COMMAND + "=" + DELETE_COMMENT;
@@ -164,6 +164,7 @@ function deleteComment(commentId) {
         type: "POST",
         data: data,
         success: function (data, textStatus, jqXHR) {
+            div.remove();
             alert("success");
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -287,7 +288,7 @@ $(function() {
     deleteCommentButtons.forEach(button => 
         button.addEventListener('click', function(event) {
             let commentId = button.parentElement.children[0].innerText;
-            alienProfile.deleteComment(commentId, userId);
+            alienProfile.deleteComment(commentId, button.parentElement.parentElement.parentElement.parentElement.parentElement);
         })
     );
 });

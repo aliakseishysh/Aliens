@@ -15,7 +15,7 @@ public class ColumnName {
 	
 	// table: `aliens`
 	public static final String ALIEN_ID = "alien_id";
-	public static final String ALIEN_NAME = "_name";
+	public static final String ALIEN_NAME = "name";
 	public static final String ALIEN_DESCRIPTION_SMALL = "description_small";
 	public static final String ALIEN_DESCRIPTION_FULL = "description_full";
 	public static final String ALIEN_IMAGE_URL = "image_url";
@@ -25,7 +25,7 @@ public class ColumnName {
 	public static final String ALIEN_IMAGE_ALIEN_ID = "alien_id";
 	// if change this field, go to carousel.js and change key
 	public static final String ALIEN_IMAGE_IMAGE_URL = "image_url";
-	public static final String ALIEN_IMAGE_STATUS = "_status";
+	public static final String ALIEN_IMAGE_STATUS = "status";
 	
 	// table: `users`
 	public static final String USER_ID = "user_id";
@@ -35,7 +35,7 @@ public class ColumnName {
 	public static final String USER_SALT = "salt";
 	public static final String USER_IMAGE_URL = "image_url";
 	public static final String USER_ROLE_TYPE = "role_type";
-	public static final String USER_STATUS = "_status";
+	public static final String USER_STATUS = "status";
 	public static final String USER_BANNED_TO_DATE = "banned_to_datetime";
 	
 	// table: `ratings`
@@ -54,7 +54,7 @@ public class ColumnName {
 	public static final String TOKEN_ID ="token_id";
 	public static final String TOKEN_EMAIL ="email";
 	public static final String TOKEN ="token";
-	public static final String TOKEN_STATUS ="_status";
+	public static final String TOKEN_STATUS ="status";
 	public static final String TOKEN_EXPIRATION ="expiration_date";
 	public static final String TOKEN_NEW_EMAIL ="new_email";
 	

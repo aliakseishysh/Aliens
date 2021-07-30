@@ -2,6 +2,7 @@ package by.shyshaliaksey.webproject.model.service.impl;
 
 import static by.shyshaliaksey.webproject.controller.StaticPath.IMAGE_DEFAULT;
 
+import java.util.Calendar;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -135,9 +136,9 @@ public class UserServiceImpl implements UserService {
 						registerResult = userDao.registerUser(email, login, hashedPasswordHex, saltHex,
 								IMAGE_DEFAULT.getValue(), Role.USER);
 						if (registerResult) {
-							String token = CryptoHandler.createToken(email);
+							String token = CryptoHandler.createToken();
 							final int minutesToExpriration = 5;
-							String expirationTime = DateHandler.prepareTokenExpirationDate(minutesToExpriration);
+							String expirationTime = DateHandler.prepareDate(minutesToExpriration, Calendar.MINUTE);
 							userDao.addNewToken(email, token, expirationTime);
 							EmailMessanger.sendEmail(email, token,
 									EmailMessanger.Function.REGISTER, locale);
@@ -212,9 +213,9 @@ public class UserServiceImpl implements UserService {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				Optional<User> userOld = userDao.findByEmail(newEmail);
 				if (!userOld.isPresent()) {
-					String token = CryptoHandler.createToken(email);
+					String token = CryptoHandler.createToken();
 					final int minutesToExpriration = 5;
-					String expirationTime = DateHandler.prepareTokenExpirationDate(minutesToExpriration);
+					String expirationTime = DateHandler.prepareDate(minutesToExpriration, Calendar.MINUTE);
 					userDao.addNewToken(email, token, expirationTime, newEmail);
 					// send message
 					boolean isMessageSent = EmailMessanger.sendEmail(newEmail, token,

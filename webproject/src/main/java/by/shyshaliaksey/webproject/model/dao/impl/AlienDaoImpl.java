@@ -43,97 +43,97 @@ public class AlienDaoImpl implements AlienDao {
 	private static final Logger logger = LogManager.getRootLogger();
 	private static final AlienDao instance = new AlienDaoImpl();
 	private static final String FIND_LIMIT = """
-			SELECT *
-			FROM aliens
-			WHERE _status=? LIMIT ?, ?
+			SELECT `alien_id`, `name`, `status`, `description_small`, `description_full`, `image_url`
+			FROM `aliens`
+			WHERE `status` = ? LIMIT ?, ?
 			""";
 	private static final String FIND_BY_ID = """
-			SELECT *
-			FROM aliens
-			WHERE alien_id=?
+			SELECT `alien_id`, `name`, `status`, `description_small`, `description_full`, `image_url`
+			FROM `aliens`
+			WHERE `alien_id` = ?
 			""";
 	private static final String FIND_BY_ID_AND_STATUS = """
-			SELECT *
-			FROM aliens
-			WHERE alien_id = ? AND _status = ?
+			SELECT `alien_id`, `name`, `status`, `description_small`, `description_full`, `image_url`
+			FROM `aliens`
+			WHERE `alien_id` = ? AND `status` = ?
 			""";
 	private static final String FIND_BY_NAME = """
-			SELECT *
-			FROM aliens
-			WHERE _name = ?
+			SELECT `alien_id`, `name`, `status`, `description_small`, `description_full`, `image_url`
+			FROM `aliens`
+			WHERE `name` = ?
 			""";
 	private static final String ADD_NEW = """
-			INSERT INTO aliens
-			(_name, _status, description_small, description_full, image_url)
+			INSERT INTO `aliens`
+			(`name`, `status`, `description_small`, `description_full`, `image_url`)
 			VALUES (?, ?, ?, ?, ?)
 			""";
 	private static final String ADD_NEW_IMAGE = """
-			INSERT INTO aliens_images
-			(alien_id, image_url, _status)
+			INSERT INTO `aliens_images`
+			(`alien_id`, `image_url`, `status`)
 			VALUES (?, ?, ?)
 			""";
 	private static final String FIND_ALIEN_COUNT = """
-			SELECT count(*) as alienCount
-			FROM aliens
-			WHERE _status=?
+			SELECT count(`alien_id`) as `alienCount`
+			FROM `aliens`
+			WHERE `status` = ?
 			""";
 	private static final String FIND_ALIEN_COMMENTS_COUNT = """
-			SELECT count(*) as alienCommentsCount
-			FROM comments
-			WHERE alien_id=?
+			SELECT count(`comment_id`) as `alienCommentsCount`
+			FROM `comments`
+			WHERE `alien_id` = ? AND `comment_status` = ?
 			""";
 	private static final String FIND_COMMENTS_LIMIT = """
-			SELECT comments.comment_id, comments.alien_id, comments.comment, comments.comment_status,
-				users.user_id, users.login_name, users.image_url
-			FROM comments
-			INNER JOIN users ON comments.user_id = users.user_id
-			WHERE alien_id=? AND comment_status=?
+			SELECT `comments`.`comment_id`, `comments`.`alien_id`, `comments`.`comment`, `comments`.`comment_status`,
+				`users`.`user_id`, `users`.`login_name`, `users`.`image_url`
+			FROM `comments`
+			INNER JOIN `users` ON `comments`.`user_id` = `users`.`user_id`
+			WHERE `alien_id` = ? AND `comment_status` = ?
 			LIMIT ?, ?
 			""";
 	private static final String FIND_IMAGES_BY_ID = """
-			SELECT image_url
-			FROM aliens_images
-			WHERE alien_id=? and _status=?
+			SELECT `image_url`
+			FROM `aliens_images`
+			WHERE `alien_id` = ? and `status` = ?
 			""";
 	private static final String FIND_ALIENS_IMAGES_COUNT = """
-			SELECT count(*) as alienCount
-			FROM aliens_images
-			WHERE _status=?
+			SELECT count(`alien_image_id`) as `alienCount`
+			FROM `aliens_images`
+			WHERE `status`= ?
 			""";
 	private static final String FIND_IMAGES = """
-			SELECT aliens_images.alien_id, aliens._name, aliens_images.image_url, aliens_images._status
-			FROM aliens_images
-			INNER JOIN aliens ON aliens_images.alien_id = aliens.alien_id
-			WHERE aliens_images._status=?
+			SELECT `aliens_images`.`alien_id`, `aliens`.`name`, `aliens_images`.`image_url`, `aliens_images`.`status`
+			FROM `aliens_images`
+			INNER JOIN `aliens` ON `aliens_images`.`alien_id` = `aliens`.`alien_id`
+			WHERE `aliens_images`.`status` = ?
 			LIMIT ?, ?
 			""";
 	private static final String UPDATE_ALIEN_STATUS = """
-			UPDATE aliens
-			SET _status = ?
-			WHERE alien_id = ?
+			UPDATE `aliens`
+			SET `status` = ?
+			WHERE `alien_id` = ?
 			""";
 	private static final String CHANGE_PROFILE_IMAGE_STATUS = """
-			UPDATE aliens_images
-			SET _status = ?
-			WHERE alien_id = ?
-			AND _status = ?
+			UPDATE `aliens_images`
+			SET `status` = ?
+			WHERE `alien_id` = ?
+			AND `status` = ?
 			LIMIT 1
 			""";
 	private static final String CHANGE_IMAGE_STATUS = """
-			UPDATE aliens_images
-			SET _status = ?
-			WHERE _status = ? AND image_url = ?
+			UPDATE `aliens_images`
+			SET `status` = ?
+			WHERE `status` = ? AND `image_url` = ?
 			LIMIT 1
 			""";
 	private static final String UPDATE_ALIEN_INFO = """
-			UPDATE aliens
-			SET _name = ?, description_small = ?, description_full = ?
-			WHERE alien_id = ?
+			UPDATE `aliens`
+			SET `name` = ?, `description_small` = ?, `description_full` = ?
+			WHERE `alien_id` = ?
 			""";
 	private static final String UPDATE_ALIEN_IMAGE = """
-			UPDATE aliens
-			SET image_url = ?
-			WHERE alien_id = ?
+			UPDATE `aliens`
+			SET `image_url` = ?
+			WHERE `alien_id` = ?
 			""";
 
 	public static AlienDao getInstance() {
@@ -382,6 +382,7 @@ public class AlienDaoImpl implements AlienDao {
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(FIND_ALIEN_COMMENTS_COUNT)) {
 			statement.setInt(1, alienId);
+			statement.setString(2, Comment.Status.NORMAL.name());
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
 				alienCommentsCount = resultSet.getInt(ALIEN_COMMENTS_COUNT);

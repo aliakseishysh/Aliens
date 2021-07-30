@@ -1,5 +1,5 @@
 const validExtensions = ["image/jpg", "image/jpeg", "image/png"];
-const imageMaxSize = 1000000; // in bytes
+const imageMaxSize = parseInt(MAX_VALID_IMAGE_SIZE); // in bytes
 
 export function validateEmail(email) {
     let result = false;

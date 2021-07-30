@@ -209,7 +209,7 @@ public final class ValidationServiceImpl implements ValidationService {
 	}
 
 	private static boolean validateImageSize(long imageSize) {
-		return imageSize * 8 <= Long.parseLong(FormPattern.MAX_VALID_IMAGE_SIZE.getValue()) && imageSize > 0;
+		return imageSize <= Long.parseLong(FormPattern.MAX_VALID_IMAGE_SIZE.getValue()) && imageSize > 0;
 	}
 
 	private static boolean validateDaysToBan(int daysToBan) {

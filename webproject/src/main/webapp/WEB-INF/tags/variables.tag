@@ -99,6 +99,7 @@
 	const LOCALIZATION_EN = `${LOCALIZATION_EN}`;
 	const IMAGE_PATH = `${IMAGE_PATH}`;
 	const CURRENT_DEPLOYMENT = `${CURRENT_DEPLOYMENT}`;
+	const MAX_VALID_IMAGE_SIZE = `${MAX_VALID_IMAGE_SIZE}`;
 
 	var ALIEN_IMAGES = `${alienImages}`;
 	var userId = `${currentUser.id}`;

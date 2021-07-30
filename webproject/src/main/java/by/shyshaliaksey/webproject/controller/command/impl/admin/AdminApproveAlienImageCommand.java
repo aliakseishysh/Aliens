@@ -38,8 +38,8 @@ public class AdminApproveAlienImageCommand implements Command {
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
 		Router router;
 		try {
-			String imageUrl = request.getParameter(RequestParameter.IMAGE.getValue());
-			boolean result = adminService.approveAlienImage(imageUrl);
+			String imageName = request.getParameter(RequestParameter.IMAGE.getValue());
+			boolean result = adminService.approveAlienImage(StaticPath.ALIEN_IMAGE_FOLDER.getValue() + imageName);
 
 			String jsonResponse = new JSONObject().put(Feedback.Key.ALIEN_STATUS.getValue(), result).toString();
 			if (result) {

@@ -1,4 +1,4 @@
-import { sendPost } from "../modules/request.js";
+import { changeLocationIfUndefined } from "../modules/util.js";
 
 let buttonsApprove;
 let buttonsDecline;
@@ -13,6 +13,24 @@ $(document).ready(function () {
     declineUrl = CONTROLLER + "?" + COMMAND + "=" + ADMIN_DECLINE_ALIEN;
 });
 
+function sendPost(data, url, div) {
+    $.ajax({
+        url: url,
+        type: "POST",
+        data: data,
+        dataType: "json",
+        success: function (data, textStatus, jqXHR) {
+            div.remove();
+            alert("success");
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            if(!changeLocationIfUndefined(jqXHR)) {
+                alert("error");
+            }
+        }
+    });
+}
+
 $(document).ready(function () {
 
     buttonsApprove.forEach(button => 
@@ -20,16 +38,16 @@ $(document).ready(function () {
             let alienId = button.parentElement.firstElementChild.innerHTML;
             let data = {};
             data[ALIEN_ID] = alienId;
-            sendPost(data, approveUrl);
+            sendPost(data, approveUrl, button.parentElement);
         })
-    )
+    );
 
     buttonsDecline.forEach(button => 
         button.addEventListener('click', function(event) {
             let alienId = button.parentElement.firstElementChild.innerHTML;
             let data = {};
             data[ALIEN_ID] = alienId;
-            sendPost(data, declineUrl);
+            sendPost(data, declineUrl, button.parentElement);
         }
     ));
 

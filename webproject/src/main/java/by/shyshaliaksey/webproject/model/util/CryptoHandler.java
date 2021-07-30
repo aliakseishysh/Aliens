@@ -28,7 +28,7 @@ public class CryptoHandler {
 	}
 
 	/**
-	 * Hashes password
+	 * Hashes password with provided salt
 	 * 
 	 * @param password {@code String} password to hash
 	 * @param salt     {@code String} salt to hash password
@@ -45,7 +45,7 @@ public class CryptoHandler {
 			byte[] hash = factory.generateSecret(spec).getEncoded();
 			return hash;
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-			// can't happen
+			// can't happen in context of program
 			logger.log(Level.FATAL, "Error occured while instantiating SecretKeyFactory with algorithm {} {} {}",
 					algorithmName, e.getMessage(), e.getStackTrace());
 			throw new RuntimeException(
@@ -66,26 +66,27 @@ public class CryptoHandler {
 	}
 
 	/**
-	 * Creates token from email
+	 * Creates token from email with generated salt
 	 * 
-	 * @param email {@code String} user email
 	 * @return {@code String} generated token
 	 */
-	public static String createToken(String email) {
+	public static String createToken() {
 		final int iterations = 10;
 		final int size = 32 * 8;
-		KeySpec spec = new PBEKeySpec(email.toCharArray(), createSalt(), iterations, size);
 		final String algorithmName = "PBKDF2WithHmacSHA1";
 		try {
+			char[] messageToHash = DatatypeConverter.printHexBinary(createSalt()).toCharArray();
+			KeySpec spec = new PBEKeySpec(messageToHash, createSalt(), iterations, size);
 			SecretKeyFactory factory = SecretKeyFactory.getInstance(algorithmName);
 			byte[] hash = factory.generateSecret(spec).getEncoded();
 			return DatatypeConverter.printHexBinary(hash);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-			// can't happen
+			// can't happen in context of program
 			logger.log(Level.FATAL, "Error occured while instantiating SecretKeyFactory with algorithm {} {} {}",
 					algorithmName, e.getMessage(), e.getStackTrace());
 			throw new RuntimeException(
 					"Error occured while instantiating SecretKeyFactory with algorithm " + algorithmName, e);
 		}
 	}
+
 }

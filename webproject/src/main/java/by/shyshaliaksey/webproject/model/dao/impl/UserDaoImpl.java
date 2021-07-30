@@ -48,38 +48,38 @@ public class UserDaoImpl implements UserDao {
 	private static final Logger logger = LogManager.getRootLogger();
 	private static final UserDao instance = new UserDaoImpl();
 	private static final String FIND_BY_ID = """
-			SELECT user_id, email, login_name, image_url, role_type, _status, banned_to_datetime
-			FROM users
-			WHERE users.user_id = ?
+			SELECT `user_id`, `email`, `login_name`, `image_url`, `role_type`, `status`, `banned_to_datetime`
+			FROM `users`
+			WHERE `users`.`user_id` = ?
 			""";
 	private static final String FIND_BY_LOGIN = """
-			SELECT user_id, email, login_name, image_url, role_type, _status, banned_to_datetime
-			FROM users
-			WHERE users.login_name = ?
+			SELECT `user_id`, `email`, `login_name`, `image_url`, `role_type`, `status`, `banned_to_datetime`
+			FROM `users`
+			WHERE `users`.`login_name` = ?
 			""";
 	private static final String FIND_BY_EMAIL = """
-			SELECT user_id, email, login_name, image_url, role_type, _status, banned_to_datetime
-			FROM users WHERE users.email = ?
+			SELECT `user_id`, `email`, `login_name`, `image_url`, `role_type`, `status`, `banned_to_datetime`
+			FROM `users` WHERE `users`.`email` = ?
 			""";
 	private static final String FIND_USER_LOGIN_DATA = """
-			SELECT password_hash, salt
-			FROM users
-			WHERE email=? AND _status=? OR _status=?
+			SELECT `password_hash`, `salt`
+			FROM `users`
+			WHERE `email` = ? AND `status` = ? OR `status` = ?
 			""";
 	private static final String FIND_USER_LOGIN_DATA_BY_ID = """
-			SELECT password_hash, salt
-			FROM users
-			WHERE user_id=? AND _status=? OR _status=?
+			SELECT `password_hash`, `salt`
+			FROM `users`
+			WHERE `user_id` = ? AND `status` = ? OR `status` = ?
 			""";
 	private static final String REGISTER = """
-			INSERT INTO users
-			(email, login_name, password_hash, salt, image_url, role_type, _status)
+			INSERT INTO `users`
+			(`email`, `login_name`, `password_hash`, `salt`, `image_url`, `role_type`, `status`)
 			VALUES (?, ?, ?, ?, ?, ?, ?)
 			""";
 	private static final String UPDATE_EMAIL_BY_EMAIL = """
-			UPDATE users
-			SET email = ?
-			WHERE email = ?
+			UPDATE `users`
+			SET `email` = ?
+			WHERE `email` = ?
 			""";
 	private static final String UPDATE_LOGIN = """
 			UPDATE users
@@ -87,64 +87,64 @@ public class UserDaoImpl implements UserDao {
 			WHERE user_id = ?
 			""";
 	private static final String UPDATE_PASSWORD = """
-			UPDATE users
-			SET password_hash = ?
-			WHERE user_id = ?
+			UPDATE `users`
+			SET `password_hash` = ?
+			WHERE `user_id` = ?
 			""";
 	private static final String UPDATE_PROFILE_IMAGE = """
-			UPDATE users
-			SET image_url = ?
-			WHERE user_id = ?
+			UPDATE `users`
+			SET `image_url` = ?
+			WHERE `user_id` = ?
 			""";
 	private static final String BAN_UNBAN = """
-			UPDATE users
-			SET _status = ?, banned_to_datetime = ?
-			WHERE login_name = ? AND _status = ?
+			UPDATE `users`
+			SET `status` = ?, `banned_to_datetime` = ?
+			WHERE `login_name` = ? AND `status` = ?
 			""";
 	private static final String PROMOTE_DEMOTE = """
-			UPDATE users
-			SET role_type = ?
-			WHERE login_name = ?
+			UPDATE `users`
+			SET `role_type` = ?
+			WHERE `login_name` = ?
 			""";
 	private static final String ADD_NEW_COMMENT = """
-			INSERT INTO comments
-			(user_id, alien_id, comment, comment_status)
+			INSERT INTO `comments`
+			(`user_id`, `alien_id`, `comment`, `comment_status`)
 			VALUES (?, ?, ?, ?)
 			""";
 	private static final String CHANGE_COMMENT_STATUS_ADMIN = """
-			UPDATE comments
-			SET comment_status = ?
-			WHERE comment_id = ?
+			UPDATE `comments`
+			SET `comment_status` = ?
+			WHERE `comment_id` = ?
 			""";
 	private static final String CHANGE_COMMENT_STATUS_USER = """
-			UPDATE comments
-			SET comment_status = ?
-			WHERE comment_id = ? AND user_id = ?
+			UPDATE `comments`
+			SET `comment_status` = ?
+			WHERE `comment_id` = ? AND `user_id` = ?
 			""";
 	private static final String ADD_NEW_TOKEN = """
-			INSERT INTO tokens
-			(email, token, expiration_date, _status)
+			INSERT INTO `tokens`
+			(`email`, `token`, `expiration_date`, `status`)
 			VALUES (?, ?, ?, ?)
 			""";
 	private static final String ADD_NEW_UPDATE_EMAIL_TOKEN = """
-			INSERT INTO tokens
-			(email, token, expiration_date, _status, new_email)
+			INSERT INTO `tokens`
+			(`email`, `token`, `expiration_date`, `status`, `new_email`)
 			VALUES (?, ?, ?, ?, ?)
 			""";
 	private static final String CHANGE_USER_STATUS = """
-			UPDATE users
-			SET _status = ?
-			WHERE email = ?
+			UPDATE `users`
+			SET `status` = ?
+			WHERE `email` = ?
 			""";
 	private static final String FIND_TOKEN = """
-			SELECT token_id, email, token, _status, expiration_date, new_email
-			FROM tokens
-			WHERE token = ? AND _status = ?
+			SELECT `token_id`, `email`, `token`, `status`, `expiration_date`, `new_email`
+			FROM `tokens`
+			WHERE `token` = ? AND `status` = ?
 			""";
 	private static final String SET_TOKEN_STATUS = """
-			UPDATE tokens
-			SET _status = ?
-			WHERE token = ? AND _status = ?
+			UPDATE `tokens`
+			SET `status` = ?
+			WHERE `token` = ? AND `status` = ?
 			""";
 
 	public static UserDao getInstance() {

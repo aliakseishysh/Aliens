@@ -1,5 +1,6 @@
 package by.shyshaliaksey.webproject.model.service.impl;
 
+import java.util.Calendar;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -46,7 +47,7 @@ public class AdminServiceImpl implements AdminService {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				Optional<User> user = userDao.findByLogin(userLogin);
 				if (user.isPresent() && !currentUser.equals(userLogin)) {
-					String banDate = DateHandler.prepareBanDate(Integer.parseInt(daysToBan));
+					String banDate = DateHandler.prepareDate(Integer.parseInt(daysToBan), Calendar.DATE);
 					boolean banUserResult = userDao.banUser(userLogin, banDate);
 					if (banUserResult) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
@@ -86,7 +87,7 @@ public class AdminServiceImpl implements AdminService {
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.LOGIN_STATUS))) {
 				Optional<User> user = userDao.findByLogin(userLogin);
 				if (user.isPresent() && !currentUser.equals(userLogin)) {
-					String unbanDate = DateHandler.prepareBanDate(0);
+					String unbanDate = DateHandler.prepareDate(0, Calendar.DATE);
 					boolean unbanUserResult = userDao.unbanUser(userLogin, unbanDate);
 					if (unbanUserResult) {
 						result.put(Feedback.Key.LOGIN_STATUS, Boolean.TRUE);
