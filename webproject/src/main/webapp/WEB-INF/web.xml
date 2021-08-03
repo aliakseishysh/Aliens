@@ -16,6 +16,7 @@
 		<error-code>500</error-code>
 		<location>/WEB-INF/jsp/error_pages/error_page_500.jsp</location>
 	</error-page>
+
 	<filter-mapping>
 		<filter-name>BanFilter</filter-name>
 		<url-pattern />
@@ -24,4 +25,12 @@
 		<filter-name>PaginationFilter</filter-name>
 		<url-pattern />
 	</filter-mapping>
+
+	<jsp-config>
+		<taglib>
+			<taglib-uri>aliens</taglib-uri>
+			<taglib-location>/WEB-INF/tags/aliens.tld</taglib-location>
+		</taglib>
+	</jsp-config>
+
 </web-app>
