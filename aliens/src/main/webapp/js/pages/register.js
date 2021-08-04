@@ -93,6 +93,8 @@ const registerPage = {
     openLoginPage: openLoginPage
 }
 
+window.registerPage = registerPage;
+
 /**
  * Register processing
  */

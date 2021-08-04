@@ -59,7 +59,7 @@
 		<small class="text-muted"> 
 			${TEXT[FORM_REGISTER_ALREADY_HAVE_AN_ACCOUNT]}
 			<a class="ml-2" href="#" 
-			onclick="openLoginPage()">
+			onclick="registerPage.openLoginPage()">
 			${TEXT[FORM_REGISTER_SIGN_IN]}</a>
 		</small>
 	</div>
