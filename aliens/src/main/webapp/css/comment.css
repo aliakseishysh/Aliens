@@ -1,0 +1,9 @@
+@charset "UTF-8";
+.row-comment {
+	position: relative;
+}
+
+.justify-content-end-comment {
+	position: absolute;
+	right: 2px;
+}
