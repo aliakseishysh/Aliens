@@ -15,7 +15,6 @@
 		</fieldset>
 		<div class="form-group col-sm-10">
 			<p id="form-update-image-parameter-current-user-id" hidden>${currentUser.id}</p>
-			<!-- TODO change this with something else (error ) -->
 			<button class="btn btn-outline-info" 
 					type="submit">
 				${TEXT[FORM_IMAGE_UPDATE_SUBMIT]}

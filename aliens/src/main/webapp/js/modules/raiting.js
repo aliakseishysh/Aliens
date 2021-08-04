@@ -1,3 +1,5 @@
+import { changeLocationIfUndefined } from "../modules/util.js";
+
 function setRatingValue() {
     let ratingInput = $("input[type='radio']");
     let data = {};
@@ -11,8 +13,10 @@ function setRatingValue() {
                 star.checked = true;
             }
         },
-        error: function() {
-            // TODO show error
+        error: function (jqXHR, textStatus, errorThrown) {
+            if(!changeLocationIfUndefined(jqXHR)) {
+                alert(jqXHR.status + " " + textStatus + " " + errorThrown);
+            }
         }
     });
 };
@@ -25,12 +29,13 @@ function updateRating(ratingValue) {
         url: CONTROLLER + "?" + COMMAND + "=" + UPDATE_RATING,
         data: data,
         success: function(averageRate) {
-            // let averageRatingText = TEMPLATE_ALIEN_RATING_AVERAGE_RATING;
             let averageRatingElement = document.getElementById("average-rating");
             averageRatingElement.innerText = averageRate;
         },
-        error: function() {
-            // TODO show error
+        error: function (jqXHR, textStatus, errorThrown) {
+            if(!changeLocationIfUndefined(jqXHR)) {
+                alert(jqXHR.status + " " + textStatus + " " + errorThrown);
+            }
         }
     });
 };

@@ -74,6 +74,8 @@ const loginPage = {
     openRegisterPage: openRegisterPage
 };
 
+window.loginPage = loginPage;
+
 /**
  * Login processing
  */

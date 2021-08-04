@@ -67,7 +67,6 @@ public interface UserDao {
 	 */
 	Map<DatabaseFeedback.Key, Optional<String>> findUserLoginData(int userId) throws DaoException;
 
-	// TODO update after services refactoring
 	/**
 	 * Adds new user with {@link User.Status#CONFIRMATION_AWAITING} status to
 	 * database with specified parameters
@@ -129,7 +128,6 @@ public interface UserDao {
 	 */
 	boolean updateProfileImage(String imageUrl, int userId) throws DaoException;
 
-	// TODO update after services refactoring
 	/**
 	 * Updates {@link User.Status} to {@link User.Status#BANNED} of user with
 	 * specified login

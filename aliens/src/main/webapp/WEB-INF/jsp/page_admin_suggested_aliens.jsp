@@ -21,7 +21,7 @@
 							<fieldset class="form-group">
 								<legend class="border-bottom mb-4">${TEXT[PAGE_ADMIN_SUGGESTED_ALIENS_H1]}</legend>
 							</fieldset>
-								<p>No suggested aliens (TODO internalization)</p>
+								<p>${TEXT[PAGE_ADMIN_SUGGESTED_NO_ALIENS]}</p>
 						</div>
 						</c:when>
 						<c:otherwise>

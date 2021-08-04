@@ -21,7 +21,7 @@
 							<fieldset class="form-group">
 								<legend class="border-bottom mb-4">${TEXT[PAGE_ADMIN_SUGGESTED_ALIENS_IMAGES_H1]}</legend>
 							</fieldset>
-								<p>No suggested images (TODO internalization)</p>
+								<p>${TEXT[PAGE_ADMIN_SUGGESTED_ALIENS_NO_IMAGES]}</p>
 						</div>
 						</c:when>
 						<c:otherwise>

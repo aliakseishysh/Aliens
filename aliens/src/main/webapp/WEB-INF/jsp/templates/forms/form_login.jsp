@@ -28,13 +28,6 @@
 		<button class="btn btn-outline-info" type="submit">
 			${TEXT[FORM_LOGIN_SUBMIT]}
 		</button>
-		<!--
-			<small class="text-muted">
-				TODO if have time
-				<a class="ml-2" href="#" onclick="loginPage.restorePassword()">Forgot Password?</a>
-			</small>
-		-->
-	</div>
 </form>
 
 <div class="border-top pt-3">

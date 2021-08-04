@@ -39,9 +39,11 @@ public enum LocaleKey implements EnumValue {
 	PAGE_ADMIN_SUGGESTED_ALIENS_H1("page_admin_suggested_aliens_h1"),
 	PAGE_ADMIN_SUGGESTED_APPROVE_BUTTON("page_admin_suggested_approve_button"),
 	PAGE_ADMIN_SUGGESTED_DECLINE_BUTTON("page_admin_suggested_decline_button"),
+	PAGE_ADMIN_SUGGESTED_NO_ALIENS("page_admin_suggested_no_aliens"),
 	// admin page suggested images
 	PAGE_ADMIN_SUGGESTED_ALIENS_IMAGES_TITLE("page_admin_suggested_aliens_images_title"),
 	PAGE_ADMIN_SUGGESTED_ALIENS_IMAGES_H1("page_admin_suggested_aliens_images_h1"),
+	PAGE_ADMIN_SUGGESTED_ALIENS_NO_IMAGES("page_admin_suggested_aliens_no_images"),
 	// Template admin profile
 	TEMPLATE_ADMIN_PROFILE("template_admin_profile"),
 	// Template alien rating

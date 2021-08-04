@@ -4,10 +4,12 @@ Aliens is a small social blog website about aliens and different creatures. You 
 ____
 ## Project stack:
 * JDK 15.0.2
+* Servlet API 5.0
 * Tomcat 10.0.6
 * JSP, HTML, CSS
 * JS, JQuery 3.6.0
 * Bootstrap 4.6.0
+* MySQL 8.0
 ____
 ## Roles:
 * Guest
