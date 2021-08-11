@@ -5,8 +5,6 @@ import java.util.Calendar;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import by.shyshaliaksey.aliens.model.util.DateHandler;
-
 public class DateHandlerTest {
 
 	@Test

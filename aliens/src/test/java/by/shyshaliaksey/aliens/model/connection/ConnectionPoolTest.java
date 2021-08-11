@@ -8,11 +8,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import by.shyshaliaksey.aliens.model.connection.ConnectionFactory;
-import by.shyshaliaksey.aliens.model.connection.ConnectionPool;
-import by.shyshaliaksey.aliens.model.connection.ConnectionProxy;
-
-
 public class ConnectionPoolTest {
 	
 	@BeforeClass

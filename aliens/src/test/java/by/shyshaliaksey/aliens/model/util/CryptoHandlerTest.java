@@ -3,8 +3,6 @@ package by.shyshaliaksey.aliens.model.util;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import by.shyshaliaksey.aliens.model.util.CryptoHandler;
-
 public class CryptoHandlerTest {
 
 	@Test

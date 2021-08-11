@@ -9,7 +9,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import by.shyshaliaksey.aliens.controller.command.Feedback;
-import by.shyshaliaksey.aliens.model.service.impl.ValidationServiceImpl;
 
 public class ValidationServiceImplTest {
 

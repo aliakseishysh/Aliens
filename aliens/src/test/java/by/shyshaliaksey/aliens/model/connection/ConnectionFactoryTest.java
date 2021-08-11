@@ -6,8 +6,6 @@ import java.sql.SQLException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import by.shyshaliaksey.aliens.model.connection.ConnectionFactory;
-
 public class ConnectionFactoryTest {
 
 	@Test

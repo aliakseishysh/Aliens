@@ -3,9 +3,6 @@ package by.shyshaliaksey.aliens.controller.command;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import by.shyshaliaksey.aliens.controller.command.Command;
-import by.shyshaliaksey.aliens.controller.command.CommandDefiner;
-
 public class CommandDefinerTest {
 
 	@Test

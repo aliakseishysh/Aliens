@@ -8,8 +8,6 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import by.shyshaliaksey.aliens.controller.RequestAttribute;
-import by.shyshaliaksey.aliens.controller.command.CommandAccessChecker;
-import by.shyshaliaksey.aliens.controller.command.CommandDefiner;
 import by.shyshaliaksey.aliens.controller.command.CommandAccessChecker.MapKey;
 import by.shyshaliaksey.aliens.model.entity.User;
 import jakarta.servlet.http.HttpServletRequest;

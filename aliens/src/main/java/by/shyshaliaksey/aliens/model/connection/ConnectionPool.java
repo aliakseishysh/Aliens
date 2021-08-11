@@ -106,8 +106,7 @@ public class ConnectionPool {
 			logger.log(Level.ERROR, "Current connection is not instance of ConnectionProxy : {}", connection);
 			result = false;
 		} else {
-			if (occupiedConnections.contains(connection) || freeConnections.contains(connection)) {
-				occupiedConnections.remove(connection);
+			if (occupiedConnections.remove(connection)) {
 				try {
 					freeConnections.put((ConnectionProxy) connection);
 				} catch (InterruptedException e) {
