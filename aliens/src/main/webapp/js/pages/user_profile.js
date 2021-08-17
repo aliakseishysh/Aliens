@@ -43,9 +43,6 @@ let imageUpdateForm;
     removeParameterFromUrl("token");
 });
 
-reloadIfBack();
-
-
 $(document).ready(function () {
 
     userId = document.getElementById("form-update-email-parameter-current-user-id");

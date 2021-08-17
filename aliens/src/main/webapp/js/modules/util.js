@@ -77,23 +77,6 @@ export function removeParameterFromUrl(parameter) {
     }
 }
 
-export function reloadIfBack() {
-    // window.addEventListener( "pageshow", function ( event ) {
-    //     let historyTraversal = event.persisted || 
-    //                            ( typeof window.performance != "undefined" && 
-    //                                 window.performance.navigation.type === 2 );
-    //     if ( historyTraversal ) {
-    //       // Handle page restore.
-    //       window.location.reload();
-    //     }
-    // });
-    // var perfEntries = performance.getEntriesByType("navigation");
-    // if (perfEntries[0].type === "back_forward") {
-    //     window.location.reload();
-    // }
-}
-
-
 export function changeLocationIfUndefined(jqXHR) {
     if (jqXHR.responseJSON == undefined) {
         let baseUrl = CONTROLLER + "?" + COMMAND + "=";
