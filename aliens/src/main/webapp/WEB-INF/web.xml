@@ -18,6 +18,10 @@
 	</error-page>
 
 	<filter-mapping>
+		<filter-name>CacheFilter</filter-name>
+		<url-pattern />
+	</filter-mapping>
+	<filter-mapping>
 		<filter-name>BanFilter</filter-name>
 		<url-pattern />
 	</filter-mapping>
@@ -25,7 +29,6 @@
 		<filter-name>PaginationFilter</filter-name>
 		<url-pattern />
 	</filter-mapping>
-
 	<jsp-config>
 		<taglib>
 			<taglib-uri>aliens</taglib-uri>

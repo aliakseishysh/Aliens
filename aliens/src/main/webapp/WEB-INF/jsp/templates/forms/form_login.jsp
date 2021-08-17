@@ -28,6 +28,7 @@
 		<button class="btn btn-outline-info" type="submit">
 			${TEXT[FORM_LOGIN_SUBMIT]}
 		</button>
+	</div>
 </form>
 
 <div class="border-top pt-3">

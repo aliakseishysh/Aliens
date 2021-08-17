@@ -1,5 +1,5 @@
 import { EmailUpdateForm, LoginUpdateForm, PasswordUpdateForm, ImageUpdateForm } from "../modules/user.js"
-import { removeParameterFromUrl, changeLocationIfUndefined } from "../modules/util.js"
+import { removeParameterFromUrl, changeLocationIfUndefined, reloadIfBack } from "../modules/util.js"
 
 let userId;
 let userEmail;
@@ -42,6 +42,9 @@ let imageUpdateForm;
  $(function(){
     removeParameterFromUrl("token");
 });
+
+reloadIfBack();
+
 
 $(document).ready(function () {
 
@@ -322,4 +325,3 @@ $(document).ready(function () {
         imageUpdateForm.setLabelText();
     });
 });
-
