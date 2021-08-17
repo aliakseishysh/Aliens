@@ -229,13 +229,14 @@ public interface UserDao {
 	boolean addNewToken(String email, String token, String expirationDate, String newEmail) throws DaoException;
 
 	/**
-	 * Updates user status to {@link User.Status#NORMAL}
+	 * Updates user status to {@link User.Status#NORMAL} and sets token expired
 	 * 
 	 * @param email {@code String} user email
+	 * @param token {@code String} token
 	 * @return true if count of affected rows equals 1, false otherwise
 	 * @throws DaoException
 	 */
-	boolean updateUserStatusToNormal(String email) throws DaoException;
+	boolean activateAccountAndSetTokenExpired(String email, String token) throws DaoException;
 
 	/**
 	 * Finds token information by specified token
@@ -246,14 +247,5 @@ public interface UserDao {
 	 * @throws DaoException
 	 */
 	Optional<Token> findToken(String tokenRequestedContent, Token.Status status) throws DaoException;
-
-	/**
-	 * Updates token status to {@link Token.Status#EXPIRED}
-	 * 
-	 * @param tokenRequestedContent {@code String} token
-	 * @return true if count of affected rows equals 1, false otherwiseА
-	 * @throws DaoException
-	 */
-	boolean setTokenStatusExpired(String tokenRequestedContent) throws DaoException;
 
 }

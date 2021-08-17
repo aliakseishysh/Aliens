@@ -52,10 +52,10 @@ public interface AlienDao {
 	 * @see Alien
 	 */
 	Optional<Alien> findByName(String alienName) throws DaoException;
-
+	
 	/**
 	 * Adds new alien with specified parameters and {@link Alien.Status#NORMAL}
-	 * status into database
+	 * status into aliens table and alien image into gallery
 	 * 
 	 * @param alienName             name of new alien
 	 * @param alienSmallDescription small description of new alien
@@ -65,8 +65,8 @@ public interface AlienDao {
 	 * @throws DaoException
 	 * @see Alien
 	 */
-	int addNewAlien(String alienName, String alienSmallDescription, String alienFullDescription, String imageUrl)
-			throws DaoException;
+	boolean addNewAlienAndImageToGallery(String alienName, String alienSmallDescription,
+			String alienFullDescription, String imageUrl) throws DaoException;
 
 	/**
 	 * Adds new alien with specified parameters and
@@ -122,7 +122,7 @@ public interface AlienDao {
 			throws DaoException;
 
 	/**
-	 * Updates alien image for specified alien
+	 * Updates alien image and adds it to gallery for specified alien
 	 * 
 	 * @param alienId  id of alien
 	 * @param imageUrl url of new image
@@ -130,8 +130,8 @@ public interface AlienDao {
 	 * @throws DaoException
 	 * @see Alien
 	 */
-	boolean updateAlienImage(int alienId, String imageUrl) throws DaoException;
-
+	boolean updateAlienImageAndAddToGallery(int alienId, String imageUrl) throws DaoException;
+	
 	/**
 	 * Finds alien count with {@link Alien.Status#NORMAL} status
 	 * 

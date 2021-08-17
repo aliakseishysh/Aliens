@@ -219,15 +219,30 @@ public class AdminServiceImpl implements AdminService {
 					String imageUrl = StaticPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
 					boolean uploadToDeployment = FileHandler.uploadImage(serverDeploymentPath,
 							StaticPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
-					int alienId = alienDao.addNewAlien(alienName, alienSmallDescription, alienFullDescription,
-							imageUrl);
-					boolean addToGaleryResult = alienDao.addNewImageToGallery(alienId, imageUrl);
-					if (addToGaleryResult && uploadToDeployment) {
-						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-						result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-						result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+					if (uploadToDeployment) {
+						boolean addAlienResult = alienDao.addNewAlienAndImageToGallery(alienName, alienSmallDescription,
+								alienFullDescription, imageUrl);
+						if (addAlienResult) {
+							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
+							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK,
+									LocaleKey.EMPTY_MESSAGE.getValue());
+							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK,
+									LocaleKey.EMPTY_MESSAGE.getValue());
+							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						} else {
+							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
+							result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
+							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS, Boolean.FALSE);
+							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS, Boolean.FALSE);
+							result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
+							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+							result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_FEEDBACK,
+									LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+							result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_FEEDBACK,
+									LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+						}
 					} else {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 						result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
@@ -322,13 +337,18 @@ public class AdminServiceImpl implements AdminService {
 					String imageUrl = StaticPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
 					boolean uploadToDeployment = FileHandler.uploadImage(serverDeploymentPath,
 							StaticPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
-					boolean addResult = alienDao.updateAlienImage(alienId, imageUrl);
-					boolean addToGaleryResult = alienDao.addNewImageToGallery(alienId, imageUrl);
-					if (uploadToDeployment && addResult && addToGaleryResult) {
-						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-						result.put(Feedback.Key.IMAGE_PATH,
-								DeploymentPropertiesReader.Deployment.CURRENT_DEPLOYMENT.getValue() + imageUrl);
+					if (uploadToDeployment) {
+						boolean updateResult = alienDao.updateAlienImageAndAddToGallery(alienId, imageUrl);
+						if (updateResult) {
+							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
+							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+							result.put(Feedback.Key.IMAGE_PATH,
+									DeploymentPropertiesReader.Deployment.CURRENT_DEPLOYMENT.getValue() + imageUrl);
+						} else {
+							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
+							result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
+							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+						}
 					} else {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 						result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);

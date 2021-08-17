@@ -356,19 +356,24 @@ public class UserServiceImpl implements UserService {
 			validationService.validateImageFormInput(result, fileExtension, userImage.getSize());
 
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
-
 				String fileName = userImage.getSubmittedFileName();
 				String newFileName = FileHandler.prepareAlienImageName(fileName);
 				String imageUrl = StaticPath.PROFILE_IMAGE_FOLDER.getValue() + newFileName;
 				boolean uploadToDeployment = FileHandler.uploadImage(serverDeploymentPath,
 						StaticPath.PROFILE_IMAGE_FOLDER.getValue(), newFileName, userImage);
-				UserDao userDao = DaoProvider.getInstance().getUserDao();
-				boolean updateImageResult = userDao.updateProfileImage(imageUrl, userId);
-				if (uploadToDeployment && updateImageResult) {
-					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-					result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-					result.put(Feedback.Key.IMAGE_PATH,
-							DeploymentPropertiesReader.Deployment.CURRENT_DEPLOYMENT.getValue() + imageUrl);
+				if (uploadToDeployment) {
+					UserDao userDao = DaoProvider.getInstance().getUserDao();
+					boolean updateImageResult = userDao.updateProfileImage(imageUrl, userId);
+					if (updateImageResult) {
+						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
+						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+						result.put(Feedback.Key.IMAGE_PATH,
+								DeploymentPropertiesReader.Deployment.CURRENT_DEPLOYMENT.getValue() + imageUrl);						
+					} else {
+						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
+						result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
+						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+					}
 				} else {
 					result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 					result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
@@ -512,11 +517,19 @@ public class UserServiceImpl implements UserService {
 					int alienId = alienInDatabase.get().getId();
 					boolean uploadToDeployment = FileHandler.uploadImage(serverDeploymentPath,
 							StaticPath.ALIEN_IMAGE_FOLDER.getValue(), newFileName, alienImage);
-					boolean suggestImageResult = alienDao.suggestNewAlienImage(alienId, imageUrl);
-					if (uploadToDeployment && suggestImageResult) {
-						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
-						result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
-						result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+					if (uploadToDeployment) {
+						boolean suggestImageResult = alienDao.suggestNewAlienImage(alienId, imageUrl);
+						if (suggestImageResult) {
+							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
+							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
+							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());							
+						} else {
+							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
+							result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
+							result.put(Feedback.Key.IMAGE_STATUS, Boolean.FALSE);
+							result.put(Feedback.Key.ALIEN_NAME_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+							result.put(Feedback.Key.IMAGE_FEEDBACK, LocaleKey.INTERNAL_SERVER_ERROR.getValue());
+						}
 					} else {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.INTERNAL_SERVER_ERROR);
 						result.put(Feedback.Key.ALIEN_NAME_STATUS, Boolean.FALSE);
@@ -572,9 +585,7 @@ public class UserServiceImpl implements UserService {
 				Token token = tokenOptional.get();
 				boolean isExpired = DateHandler.isExpired(token.getExpirationDate());
 				if (!isExpired) {
-					boolean activateUserAccountResult = userDao.updateUserStatusToNormal(token.getEmail());
-					boolean setTokenStatusExpired = userDao.setTokenStatusExpired(tokenRequested);
-					result = activateUserAccountResult && setTokenStatusExpired;
+					result = userDao.activateAccountAndSetTokenExpired(token.getEmail(), tokenRequested);
 				}
 			}
 			return result;

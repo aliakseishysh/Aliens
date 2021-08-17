@@ -508,21 +508,52 @@ public class UserDaoImpl implements UserDao {
 		}
 		return rowsAdded == 1;
 	}
-
+	
 	@Override
-	public boolean updateUserStatusToNormal(String email) throws DaoException {
-		int rowsAdded = 0;
-		try (Connection connection = ConnectionPool.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement(CHANGE_USER_STATUS)) {
-			statement.setString(1, User.Status.NORMAL.name());
-			statement.setString(2, email);
-			rowsAdded = statement.executeUpdate();
+	public boolean activateAccountAndSetTokenExpired(String email, String token) throws DaoException {
+		boolean result = false;
+		final Connection connection = ConnectionPool.getInstance().getConnection();
+		try (PreparedStatement updateStatus = connection.prepareStatement(CHANGE_USER_STATUS);
+				PreparedStatement expireToken = connection.prepareStatement(SET_TOKEN_STATUS)) {
+			connection.setAutoCommit(false);
+			updateStatus.setString(1, User.Status.NORMAL.name());
+			updateStatus.setString(2, email);
+			int updateReflectedRows = updateStatus.executeUpdate();
+			if (updateReflectedRows == 1) {
+				expireToken.setString(1, Token.Status.EXPIRED.name());
+				expireToken.setString(2, token);
+				expireToken.setString(3, Token.Status.NORMAL.name());
+				int addReflectedRows = expireToken.executeUpdate();
+				if (addReflectedRows == 1) {
+					connection.commit();
+					result = true;
+				} else {
+					connection.rollback();
+				}
+			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", CHANGE_USER_STATUS, e.getMessage(),
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {} {}", CHANGE_USER_STATUS, SET_TOKEN_STATUS, e.getMessage(),
 					e.getStackTrace());
-			throw new DaoException("Can not proceed request: " + CHANGE_USER_STATUS, e);
+			try {
+				connection.rollback();
+			} catch (SQLException e1) {
+				logger.log(Level.ERROR, "Can not rollback on `{}` request: {} {} {}", CHANGE_USER_STATUS, SET_TOKEN_STATUS,
+						e.getMessage(), e.getStackTrace());
+				throw new DaoException(
+						"Can not proceed request: " + CHANGE_USER_STATUS + " " + SET_TOKEN_STATUS + " " + e.getMessage(), e);
+			}
+		} finally {
+			try {
+				connection.setAutoCommit(true);
+				connection.close();
+			} catch (SQLException e) {
+				logger.log(Level.ERROR, "Can not return connection on `{}` request: {} {} {}", CHANGE_USER_STATUS, SET_TOKEN_STATUS,
+						e.getMessage(), e.getStackTrace());
+				throw new DaoException(
+						"Can not proceed request: " + CHANGE_USER_STATUS + " " + SET_TOKEN_STATUS + " " + e.getMessage(), e);
+			}
 		}
-		return rowsAdded == 1;
+		return result;
 	}
 
 	@Override
@@ -548,23 +579,6 @@ public class UserDaoImpl implements UserDao {
 			throw new DaoException("Can not proceed request: " + FIND_TOKEN, e);
 		}
 		return result;
-	}
-
-	@Override
-	public boolean setTokenStatusExpired(String tokenRequestedContent) throws DaoException {
-		int rowsUpdated = 0;
-		try (Connection connection = ConnectionPool.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement(SET_TOKEN_STATUS)) {
-			statement.setString(1, Token.Status.EXPIRED.name());
-			statement.setString(2, tokenRequestedContent);
-			statement.setString(3, Token.Status.NORMAL.name());
-			rowsUpdated = statement.executeUpdate();
-			return rowsUpdated == 1;
-		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", SET_TOKEN_STATUS, e.getMessage(),
-					e.getStackTrace());
-			throw new DaoException("Can not proceed request: " + SET_TOKEN_STATUS, e);
-		}
 	}
 
 }
