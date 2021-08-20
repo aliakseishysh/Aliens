@@ -7,7 +7,7 @@
 		<p id="alien-small-description" class="h4 text-break">${alien.smallDescription}</p>
 	</div>
 	<c:choose>
-		<c:when test="${currentUser.role == USER or currentUser.role == ADMIN}">
+		<c:when test="${currentUser.role == USER or (currentUser.role == ADMIN and param[COMMAND] == OPEN_ALIEN_PROFILE_PAGE)}">
 			<jsp:include page="${TEMPLATE_ALIEN_RATING_JSP}"/>						
 		</c:when>
 	</c:choose>

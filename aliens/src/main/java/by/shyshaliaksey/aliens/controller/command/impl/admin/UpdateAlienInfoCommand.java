@@ -69,7 +69,7 @@ public class UpdateAlienInfoCommand implements Command {
 					.toString();
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
-		} catch (ServiceException e) {
+		} catch (ServiceException | NumberFormatException e) {
 			response.setStatus(500);
 			logger.log(Level.ERROR, "Exception occured while alien info updating: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);

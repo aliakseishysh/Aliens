@@ -38,9 +38,9 @@ public class ApplicationListener implements ServletContextListener {
 		ConnectionPool.getInstance();
 		DaoProvider.getInstance();
 		EmailPropertiesReader.getPropeties();
-        ServiceProvider.getInstance();
-        setServletContextVariables(sce.getServletContext());
-        LocaleAttribute.LOCALIZATION_EN.getResourceBundle();
+		ServiceProvider.getInstance();
+		setServletContextVariables(sce.getServletContext());
+		LocaleAttribute.LOCALIZATION_EN.getResourceBundle();
 	}
 
 	/**
