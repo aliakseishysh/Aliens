@@ -49,19 +49,6 @@ export class AlienForm {
                 isFullDescriptionCorrect, fullDescriptionValidFeedback, fullDescriptionInvalidFeedback);
     }
 
-    setServerFeedbackInfo(isNameCorrect, isSmallDescriptionCorrect, isFullDescriptionCorrect, nameFeedback, smallDescriptionFeedback, 
-        fullDescriptionFeedback) {
-        Feedback.setElementFeedback(this.#name, this.#nameValid, this.#nameInvalid, isNameCorrect, nameFeedback, nameFeedback);
-        Feedback.setElementFeedback(this.#descriptionSmall, this.#descriptionSmallValid, this.#descriptionSmallInvalid, 
-            isSmallDescriptionCorrect, smallDescriptionFeedback, smallDescriptionFeedback);
-        Feedback.setElementFeedback(this.#descriptionFull, this.#descriptionFullValid, this.#descriptionFullInvalid, 
-            isFullDescriptionCorrect, fullDescriptionFeedback, fullDescriptionFeedback);
-    }
-
-    setServerFeedbackName(isNameCorrect, nameFeedback) {
-        Feedback.setElementFeedback(this.#name, this.#nameValid, this.#nameInvalid, isNameCorrect, nameFeedback, nameFeedback);
-    }
-
     setFeedbackName(isNameCorrect, nameValidFeedback, nameInvalidFeedback) {
         Feedback.setElementFeedback(this.#name, this.#nameValid, this.#nameInvalid, isNameCorrect, nameValidFeedback, nameInvalidFeedback);
     }
@@ -118,13 +105,11 @@ export class AlienForm {
     }
 
     validateName() {
-        let nameCheckResult = Validator.validateElement(this.#name, validateInput);
-        return nameCheckResult;
+        return Validator.validateElement(this.#name, validateInput);
     }
 
     validateImage() {
-        let imageCheckResult = Validator.validateElement(this.#image, validateImage);
-        return imageCheckResult;
+        return Validator.validateElement(this.#image, validateImage);
     }
 
     validate() {

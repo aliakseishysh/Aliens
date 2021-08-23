@@ -57,8 +57,7 @@ public class ChangeLocaleCommand implements Command {
 		session.setAttribute(LocaleKey.PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL.name(),
 				locale.getLocalizedMessage(LocaleKey.PASSWORD_FEEDBACK_INVALID_PASSWORDS_ARE_NOT_EQUAL.getValue()));
 
-		Router router = new Router(null, Boolean.TRUE.toString(), Type.AJAX_RESPONSE);
-		return router;
+		return new Router(null, Boolean.TRUE.toString(), Type.AJAX_RESPONSE);
 	}
 
 }

@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
  */
 class DatabasePropertiesReader {
 
-	private static Logger logger = LogManager.getRootLogger();
+	private static final Logger logger = LogManager.getRootLogger();
 	static final String DATABASE_URL;
 	static final String DATABASE_TIMEZONE;
 	static final String DATABASE_USERNAME;

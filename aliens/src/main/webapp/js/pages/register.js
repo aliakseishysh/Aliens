@@ -81,7 +81,7 @@ function registerUser() {
             );
         }
     });
-};
+}
 
 function openLoginPage() {
     let url = CONTROLLER + "?" + COMMAND + "=" + OPEN_LOGIN_PAGE;
@@ -102,7 +102,7 @@ $(document).ready(function () {
     formRegisterElement.addEventListener('submit', function(event) {
         registerForm.removeValidation();
         let validationResult = registerForm.validate();
-        if(!validationResult.some(result => result == false)) {
+        if(!validationResult.some(result => result === false)) {
             event.preventDefault();
             registerPage.registerUser();
         } else {

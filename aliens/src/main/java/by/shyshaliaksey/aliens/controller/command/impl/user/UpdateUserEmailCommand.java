@@ -30,8 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * through model layer.
  * 
  * @author Aliaksey Shysh
- * 
- * @see UserService#changeEmail(String, String, int, String, LocaleAttribute)
+ *
  * 
  */
 public class UpdateUserEmailCommand implements Command {
@@ -47,11 +46,10 @@ public class UpdateUserEmailCommand implements Command {
 			String newEmail = request.getParameter(RequestParameter.NEW_EMAIL.getValue());
 			User user = (User) request.getSession().getAttribute(RequestAttribute.CURRENT_USER.getValue());
 			String userEmail = user.getEmail();
-			int userId = user.getId();
 			LocaleAttribute localeAttribute = (LocaleAttribute) request.getSession()
 					.getAttribute(SessionAttribute.CURRENT_LOCALE.name());
 			UserService userService = ServiceProvider.getInstance().getUserService();
-			result = userService.makeRequestForNewEmail(userEmail, newEmail, userId, localeAttribute);
+			result = userService.makeRequestForNewEmail(userEmail, newEmail, localeAttribute);
 
 			String jsonResponse = new JSONObject()
 					.put(Feedback.Key.EMAIL_STATUS.getValue(), result.get(Feedback.Key.EMAIL_STATUS))
@@ -61,8 +59,8 @@ public class UpdateUserEmailCommand implements Command {
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException e) {
-			response.setStatus(500);
-			logger.log(Level.ERROR, "Exception occured while email updating: {} {}", e.getMessage(), e.getStackTrace());
+			response.setStatus(Feedback.Code.INTERNAL_SERVER_ERROR.getStatusCode());
+			logger.log(Level.ERROR, "Exception occurred while email updating: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

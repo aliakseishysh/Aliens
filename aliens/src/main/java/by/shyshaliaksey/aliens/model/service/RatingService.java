@@ -49,7 +49,7 @@ public interface RatingService {
 	 * @param alienId {@code int} alien id obtained from request
 	 * @param userId  {@code int} user id obtained from current session
 	 * @return {@code true} if rate exists, {@code false} otherwise
-	 * @throws ServiceException
+	 * @throws ServiceException if rating service exception occurred
 	 */
 	boolean checkRateExistence(int alienId, int userId) throws ServiceException;
 

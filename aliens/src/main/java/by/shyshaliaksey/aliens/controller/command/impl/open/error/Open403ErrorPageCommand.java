@@ -21,8 +21,7 @@ public class Open403ErrorPageCommand implements Command {
 	@AllowedRoles({ Role.GUEST, Role.USER, Role.ADMIN })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		Router router = new Router(StaticPath.ERROR_PAGE_403_JSP.getValue(), null, Type.FORWARD);
-		return router;
+        return new Router(StaticPath.ERROR_PAGE_403_JSP.getValue(), null, Type.FORWARD);
 	}
 
 }

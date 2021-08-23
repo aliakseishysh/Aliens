@@ -18,16 +18,14 @@ public class ConnectionPoolTest {
 	@Test
 	public void releaseNullTest() {
 		boolean actual = ConnectionPool.getInstance().releaseConnection(null);
-		boolean expected = false;
-		Assert.assertEquals(actual, expected);
+		Assert.assertFalse(actual);
 	}
 	
 	@Test
 	public void releaseExternalSqlConnectionTest() {
 		try (Connection connection = ConnectionFactory.createConnection()){
 			boolean actual = ConnectionPool.getInstance().releaseConnection(connection);
-			boolean expected = false;
-			Assert.assertEquals(actual, expected);
+			Assert.assertFalse(actual);
 		} catch (SQLException e) {
 			Assert.fail("Can not create connection", e.getCause());
 		}
@@ -39,8 +37,7 @@ public class ConnectionPoolTest {
 		try {
 			connection = new ConnectionProxy(ConnectionFactory.createConnection());
 			boolean actual = ConnectionPool.getInstance().releaseConnection(connection);
-			boolean expected = false;
-			Assert.assertEquals(actual, expected);
+			Assert.assertFalse(actual);
 		} catch (SQLException e) {
 			Assert.fail("Can not create connection", e.getCause());
 		} finally {

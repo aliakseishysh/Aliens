@@ -10,9 +10,8 @@ public class DateHandlerTest {
 	@Test
 	public void expirationDateTest() {
 		String expiredDate = DateHandler.prepareDate(-1, Calendar.MINUTE);
-		boolean expected = true;
 		boolean actual = DateHandler.isExpired(expiredDate);
-		Assert.assertEquals(actual, expected);
+		Assert.assertTrue(actual);
 	}
 
 }

@@ -1,5 +1,7 @@
 package by.shyshaliaksey.aliens.model.entity;
 
+import java.util.Objects;
+
 /**
  * Class {@code Token} designed for storing information about token
  * 
@@ -8,80 +10,30 @@ package by.shyshaliaksey.aliens.model.entity;
  */
 public class Token {
 
-	private int tokenId;
-	private String email;
-	private String tokenText;
-	private Status status;
-	private String expirationDate;
-	private String newEmail;
+	private final String email;
+	private final String expirationDate;
+	private final String newEmail;
 
 	public enum Status {
 		NORMAL, EXPIRED
 	}
 
-	public Token(int tokenId, String email, String tokenText, Status status, String expirationDate) {
-		this.tokenId = tokenId;
+	public Token(String email, String expirationDate, String newEmail) {
 		this.email = email;
-		this.tokenText = tokenText;
-		this.status = status;
-		this.expirationDate = expirationDate;
-	}
-
-	public Token(int tokenId, String email, String tokenText, Status status, String expirationDate, String newEmail) {
-		this.tokenId = tokenId;
-		this.email = email;
-		this.tokenText = tokenText;
-		this.status = status;
 		this.expirationDate = expirationDate;
 		this.newEmail = newEmail;
-	}
-
-	public int getTokenId() {
-		return tokenId;
-	}
-
-	public void setTokenId(int tokenId) {
-		this.tokenId = tokenId;
 	}
 
 	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getTokenText() {
-		return tokenText;
-	}
-
-	public void setTokenText(String tokenText) {
-		this.tokenText = tokenText;
-	}
-
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
-	}
-
 	public String getExpirationDate() {
 		return expirationDate;
 	}
 
-	public void setExpirationDate(String expirationDate) {
-		this.expirationDate = expirationDate;
-	}
-
 	public String getNewEmail() {
 		return newEmail;
-	}
-
-	public void setNewEmail(String newEmail) {
-		this.newEmail = newEmail;
 	}
 
 	@Override
@@ -91,72 +43,27 @@ public class Token {
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((expirationDate == null) ? 0 : expirationDate.hashCode());
 		result = prime * result + ((newEmail == null) ? 0 : newEmail.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
-		result = prime * result + tokenId;
-		result = prime * result + ((tokenText == null) ? 0 : tokenText.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Token token = (Token) o;
+
+		if (!Objects.equals(email, token.email)) return false;
+		if (!Objects.equals(expirationDate, token.expirationDate))
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Token other = (Token) obj;
-		if (email == null) {
-			if (other.email != null) {
-				return false;
-			}
-		} else if (!email.equals(other.email)) {
-			return false;
-		}
-		if (expirationDate == null) {
-			if (other.expirationDate != null) {
-				return false;
-			}
-		} else if (!expirationDate.equals(other.expirationDate)) {
-			return false;
-		}
-		if (newEmail == null) {
-			if (other.newEmail != null) {
-				return false;
-			}
-		} else if (!newEmail.equals(other.newEmail)) {
-			return false;
-		}
-		if (status != other.status) {
-			return false;
-		}
-		if (tokenId != other.tokenId) {
-			return false;
-		}
-		if (tokenText == null) {
-			if (other.tokenText != null) {
-				return false;
-			}
-		} else if (!tokenText.equals(other.tokenText)) {
-			return false;
-		}
-		return true;
+		return Objects.equals(newEmail, token.newEmail);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Token [tokenId=");
-		builder.append(tokenId);
-		builder.append(", email=");
+		final StringBuilder builder = new StringBuilder();
+		builder.append("Token [email=");
 		builder.append(email);
-		builder.append(", tokenText=");
-		builder.append(tokenText);
-		builder.append(", status=");
-		builder.append(status);
 		builder.append(", expirationDate=");
 		builder.append(expirationDate);
 		builder.append(", newEmail=");

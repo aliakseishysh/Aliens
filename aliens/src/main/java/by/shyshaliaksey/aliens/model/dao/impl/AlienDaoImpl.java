@@ -112,13 +112,6 @@ public class AlienDaoImpl implements AlienDao {
 			SET `status` = ?
 			WHERE `alien_id` = ?
 			""";
-	private static final String CHANGE_PROFILE_IMAGE_STATUS = """
-			UPDATE `aliens_images`
-			SET `status` = ?
-			WHERE `alien_id` = ?
-			AND `status` = ?
-			LIMIT 1
-			""";
 	private static final String CHANGE_IMAGE_STATUS = """
 			UPDATE `aliens_images`
 			SET `status` = ?
@@ -234,6 +227,7 @@ public class AlienDaoImpl implements AlienDao {
 		return alien;
 	}
 
+	@SuppressWarnings("ThrowFromFinallyBlock")
 	@Override
 	public boolean addNewAlienAndImageToGallery(String alienName, String alienSmallDescription,
 			String alienFullDescription, String imageUrl) throws DaoException {
@@ -251,7 +245,7 @@ public class AlienDaoImpl implements AlienDao {
 			int affectedRows = addAlien.executeUpdate();
 			if (affectedRows != 0) {
 				ResultSet generatedKeys = addAlien.getGeneratedKeys();
-				int id = -1;
+				int id;
 				if (generatedKeys.next()) {
 					id = generatedKeys.getInt(1);
 
@@ -291,8 +285,8 @@ public class AlienDaoImpl implements AlienDao {
 	}
 
 	@Override
-	public int suggestNewAlien(String alienName, String alienSmallDescription, String alienFullDescription,
-			String imageUrl) throws DaoException {
+	public void suggestNewAlien(String alienName, String alienSmallDescription, String alienFullDescription,
+								String imageUrl) throws DaoException {
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(ADD_NEW, new String[] { ALIEN_ID })) {
 			statement.setString(1, alienName);
@@ -304,8 +298,7 @@ public class AlienDaoImpl implements AlienDao {
 			if (affectedRows != 0) {
 				ResultSet generatedKeys = statement.getGeneratedKeys();
 				if (generatedKeys.next()) {
-					int id = generatedKeys.getInt(1);
-					return id;
+					generatedKeys.getInt(1);
 				} else {
 					throw new DaoException("Can not proceed request: " + ADD_NEW);
 				}
@@ -320,7 +313,7 @@ public class AlienDaoImpl implements AlienDao {
 
 	@Override
 	public boolean suggestNewAlienImage(int alienId, String imageUrl) throws DaoException {
-		int rowsAdded = 0;
+		int rowsAdded;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(ADD_NEW_IMAGE)) {
 			statement.setInt(1, alienId);
@@ -337,7 +330,7 @@ public class AlienDaoImpl implements AlienDao {
 
 	@Override
 	public boolean addNewImageToGallery(int alienId, String imageUrl) throws DaoException {
-		int rowsAdded = 0;
+		int rowsAdded;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(ADD_NEW_IMAGE)) {
 			statement.setInt(1, alienId);
@@ -355,7 +348,7 @@ public class AlienDaoImpl implements AlienDao {
 	@Override
 	public boolean updateAlienInfo(int alienId, String alienName, String alienSmallDescription,
 			String alienFullDescription) throws DaoException {
-		int result = 0;
+		int result;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(UPDATE_ALIEN_INFO)) {
 			statement.setString(1, alienName);
@@ -371,6 +364,7 @@ public class AlienDaoImpl implements AlienDao {
 		return result == 1;
 	}
 
+	@SuppressWarnings("ThrowFromFinallyBlock")
 	@Override
 	public boolean updateAlienImageAndAddToGallery(int alienId, String imageUrl) throws DaoException {
 		boolean result = false;
@@ -521,7 +515,7 @@ public class AlienDaoImpl implements AlienDao {
 				aliens.add(alien);
 			}
 		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", FIND_LIMIT, e.getMessage());
+			logger.log(Level.ERROR, "Can not proceed `{}` request: {}", FIND_LIMIT, e.getMessage());
 			throw new DaoException("Can not proceed request: " + FIND_LIMIT, e);
 		}
 		return aliens;
@@ -588,7 +582,7 @@ public class AlienDaoImpl implements AlienDao {
 
 	@Override
 	public boolean approveAlien(int alienId) throws DaoException {
-		int result = 0;
+		int result;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(UPDATE_ALIEN_STATUS)) {
 			statement.setString(1, Alien.Status.NORMAL.name());
@@ -604,7 +598,7 @@ public class AlienDaoImpl implements AlienDao {
 
 	@Override
 	public boolean declineAlien(int alienId) throws DaoException {
-		int result = 0;
+		int result;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(UPDATE_ALIEN_STATUS)) {
 			statement.setString(1, Alien.Status.DECLINED.name());
@@ -619,42 +613,8 @@ public class AlienDaoImpl implements AlienDao {
 	}
 
 	@Override
-	public boolean declineProfileImage(int alienId) throws DaoException {
-		int result = 0;
-		try (Connection connection = ConnectionPool.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement(CHANGE_PROFILE_IMAGE_STATUS)) {
-			statement.setString(1, Alien.Status.DECLINED.name());
-			statement.setInt(2, alienId);
-			statement.setString(3, Alien.Status.UNDER_CONSIDERATION.name());
-			result = statement.executeUpdate();
-		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", CHANGE_PROFILE_IMAGE_STATUS, e.getMessage(),
-					e.getStackTrace());
-			throw new DaoException("Can not proceed request: " + CHANGE_PROFILE_IMAGE_STATUS, e);
-		}
-		return result == 1;
-	}
-
-	@Override
-	public boolean approveProfileImage(int alienId) throws DaoException {
-		int result = 0;
-		try (Connection connection = ConnectionPool.getInstance().getConnection();
-				PreparedStatement statement = connection.prepareStatement(CHANGE_PROFILE_IMAGE_STATUS)) {
-			statement.setString(1, Alien.Status.NORMAL.name());
-			statement.setInt(2, alienId);
-			statement.setString(3, Alien.Status.UNDER_CONSIDERATION.name());
-			result = statement.executeUpdate();
-		} catch (SQLException e) {
-			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", CHANGE_PROFILE_IMAGE_STATUS, e.getMessage(),
-					e.getStackTrace());
-			throw new DaoException("Can not proceed request: " + CHANGE_PROFILE_IMAGE_STATUS, e);
-		}
-		return result == 1;
-	}
-
-	@Override
 	public boolean approveSuggestedImage(String alienImageUrl) throws DaoException {
-		int result = 0;
+		int result;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(CHANGE_IMAGE_STATUS)) {
 			statement.setString(1, Alien.Status.NORMAL.name());
@@ -671,7 +631,7 @@ public class AlienDaoImpl implements AlienDao {
 
 	@Override
 	public boolean declineSuggestedImage(String alienImageUrl) throws DaoException {
-		int result = 0;
+		int result;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(CHANGE_IMAGE_STATUS)) {
 			statement.setString(1, Alien.Status.DECLINED.name());

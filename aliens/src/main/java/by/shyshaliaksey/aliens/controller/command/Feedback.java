@@ -37,9 +37,9 @@ public class Feedback {
 		COMMENT_FEEDBACK("comment_feedback"), 
 		LOGOUT_STATUS("logout_status");
 
-		private String value;
+		private final String value;
 
-		private Key(String value) {
+		Key(String value) {
 			this.value = value;
 		}
 
@@ -53,11 +53,14 @@ public class Feedback {
 	 *	Enum that defines status codes for server response
 	 */
 	public enum Code {
-		OK(200), WRONG_INPUT(400), NOT_AUTHORIZED(403), NOT_FOUND(404), INTERNAL_SERVER_ERROR(500);
+		OK(200),
+		WRONG_INPUT(400),
+		NOT_AUTHORIZED(403),
+		INTERNAL_SERVER_ERROR(500);
 
-		private Integer statusCode;
+		private final Integer statusCode;
 
-		private Code(Integer statusCode) {
+		Code(Integer statusCode) {
 			this.statusCode = statusCode;
 		}
 

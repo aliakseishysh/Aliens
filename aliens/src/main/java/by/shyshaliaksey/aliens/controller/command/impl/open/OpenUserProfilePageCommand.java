@@ -61,7 +61,7 @@ public class OpenUserProfilePageCommand implements Command {
 			}
 		} catch (ServiceException e) {
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
-			logger.log(Level.ERROR, "Exception occured while redirecting to {}: {}", StaticPath.PAGE_PROFILE_JSP,
+			logger.log(Level.ERROR, "Exception occurred while redirecting to {}: {}", StaticPath.PAGE_PROFILE_JSP,
 					e.getMessage());
 		}
 		return router;

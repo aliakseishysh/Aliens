@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
 <article id="comment_${comment.id}" class="media content-section">
 	<img class="rounded-circle article-img" src="<c:url value="${comment.user.imageUrl}"/>" alt="${TEXT[TEMPLATE_COMMENT_IMAGE_ALT]}">
 	<div class="media-body">

@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class CommandAccessChecker {
 
 	public enum MapKey {
-		RESULT, ROUTER;
+		RESULT, ROUTER
 	}
 
 	/**
@@ -33,13 +33,14 @@ public class CommandAccessChecker {
 	 *                 HTTP-specific functionality in sending a response. For
 	 *                 example, it has methods to access HTTP headers and cookies.
 	 *                 The servlet container creates an HttpServletResponse object
-	 *                 and passes it as an argument to theservlet's service methods
+	 *                 and passes it as an argument to the servlet's service methods
 	 *                 (doGet, doPost, etc).
 	 * @return {@link MapKey#RESULT} Boolean object and {@link MapKey#ROUTER} to
 	 *         error page if result is false
 	 */
+	@SuppressWarnings("rawtypes")
 	public static Map<MapKey, Object> isUserHasPermission(Command command, HttpServletRequest request,
-			HttpServletResponse response) {
+														  HttpServletResponse response) {
 		Class<? extends Command> clazz = command.getClass();
 		Map<MapKey, Object> result = new EnumMap<>(MapKey.class);
 		try {
@@ -62,12 +63,12 @@ public class CommandAccessChecker {
 				result.put(MapKey.RESULT, Boolean.TRUE);
 				result.put(MapKey.ROUTER, null);
 			} else {
-				response.setStatus(403);
+				response.setStatus(Feedback.Code.NOT_AUTHORIZED.getStatusCode());
 				result.put(MapKey.RESULT, Boolean.FALSE);
 				result.put(MapKey.ROUTER, new Router(StaticPath.ERROR_PAGE_403_JSP.getValue(), null, Type.FORWARD));
 			}
 		} catch (NoSuchMethodException | SecurityException e) {
-			response.setStatus(500);
+			response.setStatus(Feedback.Code.INTERNAL_SERVER_ERROR.getStatusCode());
 			result.put(MapKey.RESULT, Boolean.FALSE);
 			result.put(MapKey.ROUTER, new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD));
 		}

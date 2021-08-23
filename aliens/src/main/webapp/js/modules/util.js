@@ -60,9 +60,9 @@ export class Feedback {
         elementInvalid.innerHTML = invalidFeedback;
     }
 
-    static setElementValidFeedback(elementlValid, validFeedback) {
-        if (elementlValid != null) {
-            elementlValid.innerHTML = validFeedback;
+    static setElementValidFeedback(elementValid, validFeedback) {
+        if (elementValid != null) {
+            elementValid.innerHTML = validFeedback;
         }
     }
 
@@ -78,7 +78,7 @@ export function removeParameterFromUrl(parameter) {
 }
 
 export function changeLocationIfUndefined(jqXHR) {
-    if (jqXHR.responseJSON == undefined) {
+    if (jqXHR.responseJSON === undefined) {
         let baseUrl = CONTROLLER + "?" + COMMAND + "=";
         switch(jqXHR.status) {
             case 400:

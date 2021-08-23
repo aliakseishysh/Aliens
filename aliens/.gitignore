@@ -1,5 +1,7 @@
 /target/
 /.settings/
+/.idea/
+aliens.iml
 /.project
 /.tern-project
 /test-output/

@@ -7,11 +7,8 @@ import by.shyshaliaksey.aliens.controller.RequestParameter;
 import by.shyshaliaksey.aliens.controller.command.CommandDefiner;
 import by.shyshaliaksey.aliens.controller.command.Feedback;
 import by.shyshaliaksey.aliens.model.connection.ConnectionPool;
-import by.shyshaliaksey.aliens.model.dao.DaoProvider;
-import by.shyshaliaksey.aliens.model.email.EmailPropertiesReader;
 import by.shyshaliaksey.aliens.model.entity.User.Role;
 import by.shyshaliaksey.aliens.model.service.FormPattern;
-import by.shyshaliaksey.aliens.model.service.ServiceProvider;
 import by.shyshaliaksey.aliens.model.util.DeploymentPropertiesReader;
 import by.shyshaliaksey.aliens.model.util.localization.LocaleAttribute;
 import by.shyshaliaksey.aliens.model.util.localization.LocaleKey;
@@ -36,11 +33,7 @@ public class ApplicationListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		ServletContextListener.super.contextInitialized(sce);
 		ConnectionPool.getInstance();
-		DaoProvider.getInstance();
-		EmailPropertiesReader.getPropeties();
-		ServiceProvider.getInstance();
 		setServletContextVariables(sce.getServletContext());
-		LocaleAttribute.LOCALIZATION_EN.getResourceBundle();
 	}
 
 	/**

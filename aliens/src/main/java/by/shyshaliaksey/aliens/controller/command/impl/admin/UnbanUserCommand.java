@@ -26,12 +26,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
- * Implementer of {@link Command} interface, designed for unbaning user through
+ * Implementer of {@link Command} interface, designed for unbanning user through
  * model layer.
  * 
  * @author Aliaksey Shysh
- * 
- * @see AdminService#unbanUser(String, String, String)
+ *
  * 
  */
 public class UnbanUserCommand implements Command {
@@ -58,7 +57,7 @@ public class UnbanUserCommand implements Command {
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException e) {
-			logger.log(Level.ERROR, "Exception occured while unbanning user: {} {}", e.getMessage(), e.getStackTrace());
+			logger.log(Level.ERROR, "Exception occurred while unbanning user: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

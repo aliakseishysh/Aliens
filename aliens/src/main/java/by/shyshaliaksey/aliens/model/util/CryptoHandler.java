@@ -42,14 +42,13 @@ public class CryptoHandler {
 			final int size = 32 * 8;
 			KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, size);
 			SecretKeyFactory factory = SecretKeyFactory.getInstance(algorithmName);
-			byte[] hash = factory.generateSecret(spec).getEncoded();
-			return hash;
+			return factory.generateSecret(spec).getEncoded();
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 			// can't happen in context of program
-			logger.log(Level.FATAL, "Error occured while instantiating SecretKeyFactory with algorithm {} {} {}",
+			logger.log(Level.FATAL, "Error occurred while instantiating SecretKeyFactory with algorithm {} {} {}",
 					algorithmName, e.getMessage(), e.getStackTrace());
 			throw new RuntimeException(
-					"Error occured while instantiating SecretKeyFactory with algorithm " + algorithmName, e);
+					"Error occurred while instantiating SecretKeyFactory with algorithm " + algorithmName, e);
 		}
 	}
 
@@ -82,10 +81,10 @@ public class CryptoHandler {
 			return DatatypeConverter.printHexBinary(hash);
 		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 			// can't happen in context of program
-			logger.log(Level.FATAL, "Error occured while instantiating SecretKeyFactory with algorithm {} {} {}",
+			logger.log(Level.FATAL, "Error occurred while instantiating SecretKeyFactory with algorithm {} {} {}",
 					algorithmName, e.getMessage(), e.getStackTrace());
 			throw new RuntimeException(
-					"Error occured while instantiating SecretKeyFactory with algorithm " + algorithmName, e);
+					"Error occurred while instantiating SecretKeyFactory with algorithm " + algorithmName, e);
 		}
 	}
 

@@ -33,8 +33,7 @@ import jakarta.servlet.http.Part;
  * through model layer.
  * 
  * @author Aliaksey Shysh
- * 
- * @see UserService#updateImage(String, String, Part, int, String)
+ *
  * 
  */
 public class UpdateUserImageCommand implements Command {
@@ -63,8 +62,8 @@ public class UpdateUserImageCommand implements Command {
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException | IOException | ServletException e) {
-			response.setStatus(500);
-			logger.log(Level.ERROR, "IOException occured while image updating: {} {}", e.getMessage(),
+			response.setStatus(Feedback.Code.INTERNAL_SERVER_ERROR.getStatusCode());
+			logger.log(Level.ERROR, "IOException occurred while image updating: {} {}", e.getMessage(),
 					e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}

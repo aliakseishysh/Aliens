@@ -32,11 +32,11 @@ public class ConnectionPool {
 	/**
 	 * {@link BlockingQueue} with free connections to database
 	 */
-	private BlockingQueue<ConnectionProxy> freeConnections;
+	private final BlockingQueue<ConnectionProxy> freeConnections;
 	/**
 	 * {@link BlockingQueue} with occupied connections to database
 	 */
-	private BlockingQueue<ConnectionProxy> occupiedConnections;
+	private final BlockingQueue<ConnectionProxy> occupiedConnections;
 
 	private ConnectionPool() {
 		occupiedConnections = new LinkedBlockingQueue<>();
@@ -149,7 +149,7 @@ public class ConnectionPool {
 			try {
 				DriverManager.deregisterDriver(driver);
 			} catch (SQLException e) {
-				logger.log(Level.ERROR, "Error occured while deregistering driver {}: {} {}", driver, e.getMessage(),
+				logger.log(Level.ERROR, "Error occurred while deregistering driver {}: {} {}", driver, e.getMessage(),
 						e.getStackTrace());
 			}
 		}

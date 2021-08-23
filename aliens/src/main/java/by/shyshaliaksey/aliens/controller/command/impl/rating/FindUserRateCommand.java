@@ -44,11 +44,11 @@ public class FindUserRateCommand implements Command {
 			ServiceProvider serviceProvider = ServiceProvider.getInstance();
 			RatingService ratingService = serviceProvider.getRatingService();
 			AlienService alienService = serviceProvider.getAlienService();
-			Integer alienId = alienService.findAlienId(alienName);
-			Integer userRate = ratingService.findUserRate(alienId, userId);
-			router = new Router(null, userRate.toString(), Type.AJAX_RESPONSE);
+			int alienId = alienService.findAlienId(alienName);
+			int userRate = ratingService.findUserRate(alienId, userId);
+			router = new Router(null, Integer.toString(userRate), Type.AJAX_RESPONSE);
 		} catch (ServiceException | NumberFormatException e) {
-			logger.log(Level.ERROR, "Error occured while processing FindUserRateCommand: {}", e.getMessage(), e);
+			logger.log(Level.ERROR, "Error occurred while processing FindUserRateCommand: {}", e.getMessage(), e);
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

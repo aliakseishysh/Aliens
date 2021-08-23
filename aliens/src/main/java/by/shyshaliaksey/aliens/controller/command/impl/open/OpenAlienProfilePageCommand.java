@@ -74,7 +74,7 @@ public class OpenAlienProfilePageCommand implements Command {
 
 		} catch (ServiceException | NumberFormatException e) {
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
-			logger.log(Level.ERROR, "Exception occured while opening {}: {}", StaticPath.PAGE_ALIEN_PROFILE_JSP,
+			logger.log(Level.ERROR, "Exception occurred while opening {}: {}", StaticPath.PAGE_ALIEN_PROFILE_JSP,
 					e.getMessage());
 		}
 		return router;

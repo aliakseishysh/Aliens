@@ -14,7 +14,7 @@ public interface AlienService {
 	 * 
 	 * @param alienName {@code String} alien name obtained from request
 	 * @return {@code int} alien id, otherwise throws ServiceException
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	int findAlienId(String alienName) throws ServiceException;
 
@@ -23,7 +23,7 @@ public interface AlienService {
 	 * 
 	 * @param pageNumber {@code int} page to search aliens at
 	 * @return {@code List<Alien>} with aliens at page
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	List<Alien> findNormalAliens(int pageNumber) throws ServiceException;
 
@@ -31,7 +31,7 @@ public interface AlienService {
 	 * Finds aliens count.
 	 * 
 	 * @return {@code int} alien number
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	int findAlienCount() throws ServiceException;
 
@@ -40,7 +40,7 @@ public interface AlienService {
 	 * 
 	 * @param alienId {@code int} alien id obtained from request
 	 * @return {@code int} alien comments number
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	int findAlienCommentsCount(int alienId) throws ServiceException;
 
@@ -50,7 +50,7 @@ public interface AlienService {
 	 * @param alienId {@code int} alien id obtained from request
 	 * @param page    {@code int} requested page obtained from request
 	 * @return {@code List<Comment>} comments in requested page
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	List<Comment> findAllCommentsInPage(int alienId, int page) throws ServiceException;
 
@@ -59,7 +59,7 @@ public interface AlienService {
 	 * 
 	 * @param alienId {@code int} alien id obtained from request
 	 * @return {@code List<String>} alien images urls
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	List<String> findImages(int alienId) throws ServiceException;
 
@@ -68,7 +68,7 @@ public interface AlienService {
 	 * 
 	 * @param pageNumber {@code int} requested page obtained from request
 	 * @return {@code List<Alien>} unapproved aliens in requested page
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	List<Alien> findUnapprovedAliens(int pageNumber) throws ServiceException;
 
@@ -76,7 +76,7 @@ public interface AlienService {
 	 * Finds number of aliens with {@link Alien.Status#UNDER_CONSIDERATION} status.
 	 * 
 	 * @return {@code int} number of aliens
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	int findUnapprovedAlienCount() throws ServiceException;
 
@@ -85,7 +85,7 @@ public interface AlienService {
 	 * status.
 	 * 
 	 * @return {@code int} number of aliens images
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	int findUnapprovedAliensImagesCount() throws ServiceException;
 
@@ -95,7 +95,7 @@ public interface AlienService {
 	 * 
 	 * @param page {@code int} requested page obtained from request
 	 * @return {@code List<Alien>} aliens with ids, names, urls.
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	List<Alien> findUnapprovedAliensImages(int page) throws ServiceException;
 
@@ -105,7 +105,7 @@ public interface AlienService {
 	 * @param alienId {@code int} alien id obtained from request
 	 * @param status  {@code Alien.Status} alien status
 	 * @return {@code Optional<Alien>} alien from database
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	Optional<Alien> findAlienByIdAndStatus(int alienId, Alien.Status status) throws ServiceException;
 

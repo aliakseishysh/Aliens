@@ -13,9 +13,9 @@ public class DatabaseFeedback {
 	public enum Key implements EnumValue {
 		EMPTY_MESSAGE(""), PASSWORD("password"), SALT("salt");
 
-		private String value;
+		private final String value;
 
-		private Key(String value) {
+		Key(String value) {
 			this.value = value;
 		}
 

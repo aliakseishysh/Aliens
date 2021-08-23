@@ -18,7 +18,7 @@ import by.shyshaliaksey.aliens.controller.EnumValue;
  */
 public class DeploymentPropertiesReader {
 
-	private static Logger logger = LogManager.getRootLogger();
+	private static final Logger logger = LogManager.getRootLogger();
 	private static final ResourceBundle resourceBundle;
 
 	static {
@@ -42,9 +42,9 @@ public class DeploymentPropertiesReader {
 		CURRENT_DEPLOYMENT(resourceBundle.getString("CURRENT_DEPLOYMENT")),
 		PROJECT_NAME(resourceBundle.getString("PROJECT_NAME"));
 
-		private String value;
+		private final String value;
 
-		private Deployment(String value) {
+		Deployment(String value) {
 			this.value = value;
 		}
 

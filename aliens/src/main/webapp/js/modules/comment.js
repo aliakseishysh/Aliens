@@ -13,7 +13,7 @@ export class Comment {
     }
 
     setCommentFeedback(commentStatus, commentFeedback) {
-        if (commentStatus == false) {
+        if (commentStatus === false) {
             this.#setCommentInvalid();
             this.#setCommentInvalidFeedback(commentFeedback);
             
@@ -25,7 +25,7 @@ export class Comment {
 
     validateComment() {
         let commentCheckResult = false;
-        if (this.#comment.value != "" && this.#comment.value.replaceAll('\n', '\\n').match(this.#comment.getAttribute("pattern"))) {
+        if (this.#comment.value !== "" && this.#comment.value.replaceAll('\n', '\\n').match(this.#comment.getAttribute("pattern"))) {
             commentCheckResult = true;
             this.#setCommentValid();
         }

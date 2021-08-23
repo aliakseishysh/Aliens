@@ -15,7 +15,7 @@ public interface UserDao {
 	 * 
 	 * @param userId {@code int} id of user
 	 * @return {@code Optional<User>} from database
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 * @see User
 	 */
 	Optional<User> findById(int userId) throws DaoException;
@@ -25,7 +25,7 @@ public interface UserDao {
 	 * 
 	 * @param userLogin {@code String} login name of user
 	 * @return {@code Optional<User>} from database
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 * @see User
 	 */
 	Optional<User> findByLogin(String userLogin) throws DaoException;
@@ -35,7 +35,7 @@ public interface UserDao {
 	 * 
 	 * @param email {@code String} email of user
 	 * @return {@code Optional<User>} from database
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 * @see User
 	 */
 	Optional<User> findByEmail(String email) throws DaoException;
@@ -49,7 +49,7 @@ public interface UserDao {
 	 * @return {@code Map<DatabaseFeedback.Key, Optional<String>>} with
 	 *         {@link DatabaseFeedback.Key#PASSWORD} and
 	 *         {@link DatabaseFeedback.Key#SALT} keys
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 * @see DatabaseFeedback
 	 */
 	Map<DatabaseFeedback.Key, Optional<String>> findUserLoginData(String userEmail) throws DaoException;
@@ -62,7 +62,7 @@ public interface UserDao {
 	 * @return {@code Map<DatabaseFeedback.Key, Optional<String>>} with
 	 *         {@link DatabaseFeedback.Key#PASSWORD} and
 	 *         {@link DatabaseFeedback.Key#SALT} keys
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 * @see DatabaseFeedback
 	 */
 	Map<DatabaseFeedback.Key, Optional<String>> findUserLoginData(int userId) throws DaoException;
@@ -78,7 +78,7 @@ public interface UserDao {
 	 * @param defaultImage    {@code String} default image url
 	 * @param defaultRole     {@code String} default user role
 	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 * @see User
 	 */
 	boolean registerUser(String email, String login, String passwordHashHex, String saltHex, String defaultImage,
@@ -89,11 +89,10 @@ public interface UserDao {
 	 * 
 	 * @param email    {@code String} current email of user
 	 * @param newEmail {@code String} new requested email of user
-	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 * @see User
 	 */
-	boolean updateUserEmail(String email, String newEmail) throws DaoException;
+	void updateUserEmail(String email, String newEmail) throws DaoException;
 
 	/**
 	 * Updates user current login with new login
@@ -101,7 +100,7 @@ public interface UserDao {
 	 * @param login  {@code String} login of user
 	 * @param userId {@code int} id of user
 	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 * @see User
 	 */
 	boolean updateUserLogin(String login, int userId) throws DaoException;
@@ -112,7 +111,7 @@ public interface UserDao {
 	 * @param hashedPassword {@code String} new hashed password
 	 * @param userId         {@code int} id of user
 	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 * @see User
 	 */
 	boolean updateUserPassword(String hashedPassword, int userId) throws DaoException;
@@ -123,7 +122,7 @@ public interface UserDao {
 	 * @param imageUrl {@code String} url of new image
 	 * @param userId   {@code int} id of user
 	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 * @see User
 	 */
 	boolean updateProfileImage(String imageUrl, int userId) throws DaoException;
@@ -135,7 +134,7 @@ public interface UserDao {
 	 * @param userLogin {@code String} login of user
 	 * @param banDate   {@code String} end date of user ban
 	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 * @see User
 	 */
 	boolean banUser(String userLogin, String banDate) throws DaoException;
@@ -147,7 +146,7 @@ public interface UserDao {
 	 * @param userLogin {@code String} login of user
 	 * @param unbanDate {@code String} current date
 	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 */
 	boolean unbanUser(String userLogin, String unbanDate) throws DaoException;
 
@@ -157,7 +156,7 @@ public interface UserDao {
 	 * 
 	 * @param userLogin {@code String} login of user
 	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 */
 	boolean promoteUser(String userLogin) throws DaoException;
 
@@ -167,7 +166,7 @@ public interface UserDao {
 	 * 
 	 * @param adminLogin {@code String} login of administrator
 	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 */
 	boolean demoteAdmin(String adminLogin) throws DaoException;
 
@@ -178,7 +177,7 @@ public interface UserDao {
 	 * @param alienId    {@code int} id of alien
 	 * @param newComment {@code String} new comment
 	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 */
 	boolean addNewComment(int userId, int alienId, String newComment) throws DaoException;
 
@@ -189,7 +188,7 @@ public interface UserDao {
 	 * 
 	 * @param commentId {@code int} id of comment
 	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 */
 	boolean deleteComment(int commentId) throws DaoException;
 
@@ -201,7 +200,7 @@ public interface UserDao {
 	 * @param commentId {@code int} id of comment
 	 * @param userId    {@code int} id of user
 	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 */
 	boolean deleteComment(int commentId, int userId) throws DaoException;
 
@@ -211,10 +210,9 @@ public interface UserDao {
 	 * @param email          {@code String} user email
 	 * @param token          {@code String} generated token
 	 * @param expirationDate {@code String} date of token expiration
-	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 */
-	boolean addNewToken(String email, String token, String expirationDate) throws DaoException;
+	void addNewToken(String email, String token, String expirationDate) throws DaoException;
 
 	/**
 	 * Method for adding new token for user email updating
@@ -223,20 +221,18 @@ public interface UserDao {
 	 * @param token          {@code String} generated token
 	 * @param expirationDate {@code String} date of token expiration
 	 * @param newEmail       {@code String} requested new user email
-	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 */
-	boolean addNewToken(String email, String token, String expirationDate, String newEmail) throws DaoException;
+	void addNewToken(String email, String token, String expirationDate, String newEmail) throws DaoException;
 
 	/**
 	 * Updates user status to {@link User.Status#NORMAL} and sets token expired
 	 * 
 	 * @param email {@code String} user email
 	 * @param token {@code String} token
-	 * @return true if count of affected rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 */
-	boolean activateAccountAndSetTokenExpired(String email, String token) throws DaoException;
+	void activateAccountAndSetTokenExpired(String email, String token) throws DaoException;
 
 	/**
 	 * Finds token information by specified token
@@ -244,7 +240,7 @@ public interface UserDao {
 	 * @param tokenRequestedContent {@code String} token
 	 * @param status                {@code String} token status
 	 * @return {@code Optional<Token>}
-	 * @throws DaoException
+	 * @throws DaoException if user dao exception occurred
 	 */
 	Optional<Token> findToken(String tokenRequestedContent, Token.Status status) throws DaoException;
 

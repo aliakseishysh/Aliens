@@ -1,6 +1,7 @@
 package by.shyshaliaksey.aliens.model.entity;
 
 import java.util.Date;
+import java.util.Objects;
 
 import by.shyshaliaksey.aliens.controller.EnumValue;
 
@@ -27,9 +28,9 @@ public class User {
 	public enum Role implements EnumValue {
 		ADMIN("ADMIN"), USER("USER"), GUEST("GUEST");
 
-		private String value;
+		private final String value;
 
-		private Role(String value) {
+		Role(String value) {
 			this.value = value;
 		}
 
@@ -59,23 +60,12 @@ public class User {
 		this.role = role;
 	}
 
-	public User() {
-	}
-
 	public int getId() {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public String getEmail() {
 		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public String getLogin() {
@@ -86,20 +76,13 @@ public class User {
 		this.login = login;
 	}
 
+	@SuppressWarnings("unused")
 	public String getImageUrl() {
 		return imageUrl;
 	}
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
 	public Role getRole() {
 		return role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
 	}
 
 	public Status getStatus() {
@@ -133,55 +116,19 @@ public class User {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		User other = (User) obj;
-		if (bannedToDate == null) {
-			if (other.bannedToDate != null) {
-				return false;
-			}
-		} else if (!bannedToDate.equals(other.bannedToDate)) {
-			return false;
-		}
-		if (email == null) {
-			if (other.email != null) {
-				return false;
-			}
-		} else if (!email.equals(other.email)) {
-			return false;
-		}
-		if (id != other.id) {
-			return false;
-		}
-		if (imageUrl == null) {
-			if (other.imageUrl != null) {
-				return false;
-			}
-		} else if (!imageUrl.equals(other.imageUrl)) {
-			return false;
-		}
-		if (login == null) {
-			if (other.login != null) {
-				return false;
-			}
-		} else if (!login.equals(other.login)) {
-			return false;
-		}
-		if (role != other.role) {
-			return false;
-		}
-		if (status != other.status) {
-			return false;
-		}
-		return true;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof User)) return false;
+
+		User user = (User) o;
+
+		if (id != user.id) return false;
+		if (!Objects.equals(email, user.email)) return false;
+		if (!Objects.equals(login, user.login)) return false;
+		if (!Objects.equals(imageUrl, user.imageUrl)) return false;
+		if (role != user.role) return false;
+		if (status != user.status) return false;
+		return Objects.equals(bannedToDate, user.bannedToDate);
 	}
 
 	@Override

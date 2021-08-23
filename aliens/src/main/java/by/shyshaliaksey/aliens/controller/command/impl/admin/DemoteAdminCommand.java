@@ -60,7 +60,7 @@ public class DemoteAdminCommand implements Command {
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException e) {
-			logger.log(Level.ERROR, "Exception occured while demoting: {} {}", e.getMessage(), e.getStackTrace());
+			logger.log(Level.ERROR, "Exception occurred while demoting: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

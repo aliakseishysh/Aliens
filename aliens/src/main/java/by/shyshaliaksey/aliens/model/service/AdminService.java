@@ -28,7 +28,7 @@ public interface AdminService {
 	 *                    session
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 * @see by.shyshaliaksey.aliens.model.util.localization.LocaleKey
 	 * @see by.shyshaliaksey.aliens.model.service.ValidationService
 	 */
@@ -46,7 +46,7 @@ public interface AdminService {
 	 *                    session
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 * @see by.shyshaliaksey.aliens.model.util.localization.LocaleKey
 	 * @see by.shyshaliaksey.aliens.model.service.ValidationService
 	 */
@@ -65,7 +65,7 @@ public interface AdminService {
 	 *                         current user session
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	Map<Feedback.Key, Object> promoteUser(String userLogin, String currentUserLogin) throws ServiceException;
 
@@ -82,7 +82,7 @@ public interface AdminService {
 	 *                          from current user session
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	Map<Feedback.Key, Object> demoteAdmin(String adminLogin, String currentAdminLogin) throws ServiceException;
 
@@ -103,7 +103,7 @@ public interface AdminService {
 	 *                              directory
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	Map<Feedback.Key, Object> addNewAlien(String alienName, String alienSmallDescription, String alienFullDescription,
 			Part alienImage, String serverDeploymentPath) throws ServiceException;
@@ -124,7 +124,7 @@ public interface AdminService {
 	 *                              from request
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	Map<Feedback.Key, Object> updateAlienInfo(int alienId, String alienName, String alienSmallDescription,
 			String alienFullDescription) throws ServiceException;
@@ -136,7 +136,7 @@ public interface AdminService {
 	 * @param alienId {@code int} alien id obtained from request
 	 * @return {@code true} if approval and adding to gallery were successful,
 	 *         {@code false} otherwise
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	boolean approveAlien(String alienId) throws ServiceException;
 
@@ -145,7 +145,7 @@ public interface AdminService {
 	 * 
 	 * @param alienId {@code int} alien id obtained from request
 	 * @return {@code true} if declining was successful, {@code false} otherwise
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	boolean declineAlien(String alienId) throws ServiceException;
 
@@ -155,7 +155,7 @@ public interface AdminService {
 	 * @param alienId {@code int} alien id obtained from request
 	 * @return {@code true} if approval and adding to gallery were successful,
 	 *         {@code false} otherwise
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	boolean approveAlienImage(String alienId) throws ServiceException;
 
@@ -164,7 +164,7 @@ public interface AdminService {
 	 * 
 	 * @param alienImageUrl {@code Part} alien image obtained from request
 	 * @return {@code true} if declining was successful, {@code false} otherwise
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	boolean declineAlienImage(String alienImageUrl) throws ServiceException;
 
@@ -182,7 +182,7 @@ public interface AdminService {
 	 *                             directory
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if service exception occurred
 	 */
 	Map<Feedback.Key, Object> updateAlienImage(int alienId, Part alienImage, String serverDeploymentPath)
 			throws ServiceException;

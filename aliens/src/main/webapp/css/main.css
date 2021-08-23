@@ -24,7 +24,7 @@ ul {
 	color: #ffffff;
 }
 
-.site-header .navbar-nav .nav-link.active {
+.site-header .navbar-nav .nav-link {
 	font-weight: 500;
 }
 
@@ -34,15 +34,6 @@ ul {
 	border: 1px solid #dddddd;
 	border-radius: 3px;
 	margin-bottom: 20px;
-}
-
-.article-title {
-	color: #444444;
-}
-
-a.article-title:hover {
-	color: #428bca;
-	text-decoration: none;
 }
 
 .article-content {
@@ -64,12 +55,6 @@ a.article-title:hover {
 .article-metadata a:hover {
 	color: #333;
 	text-decoration: none;
-}
-
-.article-svg {
-	width: 25px;
-	height: 25px;
-	vertical-align: middle;
 }
 
 .account-img {

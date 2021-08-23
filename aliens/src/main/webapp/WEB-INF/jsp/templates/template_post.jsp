@@ -1,6 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
 <article class="media content-section">
 	<img class="rounded-circle article-img"
 		src="<c:url value="${alien.imageUrl}"/>" alt="${TEXT[TEMPLATE_POST_IMAGE_ALT]}">

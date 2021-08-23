@@ -20,8 +20,7 @@ public class OpenBannedPageCommand implements Command {
 	@AllowedRoles({ Role.USER, Role.ADMIN })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		Router router = new Router(StaticPath.PAGE_BANNED_JSP.getValue(), null, Type.FORWARD);
-		return router;
+		return new Router(StaticPath.PAGE_BANNED_JSP.getValue(), null, Type.FORWARD);
 	}
 
 }

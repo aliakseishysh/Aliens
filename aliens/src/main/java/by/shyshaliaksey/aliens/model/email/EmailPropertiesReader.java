@@ -19,9 +19,9 @@ import org.apache.logging.log4j.Logger;
  */
 public class EmailPropertiesReader {
 
-	private static Logger logger = LogManager.getRootLogger();
-	private static ResourceBundle resourceBundle;
-	private static Properties properties;
+	private static final Logger logger = LogManager.getRootLogger();
+	private static final ResourceBundle resourceBundle;
+	private static final Properties properties;
 
 	private EmailPropertiesReader() {
 	}
@@ -39,7 +39,7 @@ public class EmailPropertiesReader {
 		}
 	}
 
-	public static Properties getPropeties() {
+	public static Properties getProperties() {
 		return properties;
 	}
 

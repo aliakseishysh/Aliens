@@ -54,7 +54,7 @@ public enum LocaleKey implements EnumValue {
 	TEMPLATE_NAV_ALIENS("template_nav_aliens"), TEMPLATE_NAV_HOME("template_nav_home"),
 	TEMPLATE_NAV_SUGGEST("template_nav_suggest"), TEMPLATE_NAV_LOGIN("template_nav_login"),
 	TEMPLATE_NAV_REGISTER("template_nav_register"), TEMPLATE_NAV_PROFILE("template_nav_profile"),
-	TEMPLATE_NAV_ADMIN_PAGE("tamplate_nav_admin_page"), TEMPLATE_NAV_SUGGESTED_ALIENS("template_nav_suggested_aliens"),
+	TEMPLATE_NAV_ADMIN_PAGE("template_nav_admin_page"), TEMPLATE_NAV_SUGGESTED_ALIENS("template_nav_suggested_aliens"),
 	TEMPLATE_NAV_SUGGESTED_IMAGES("template_nav_suggested_images"), TEMPLATE_NAV_LOGOUT("template_nav_logout"),
 	// Template post
 	TEMPLATE_POST_IMAGE_ALT("template_post_image_alt"),
@@ -196,9 +196,9 @@ public enum LocaleKey implements EnumValue {
 
 	EMPTY_MESSAGE("empty_message");
 
-	private String value;
+	private final String value;
 
-	private LocaleKey(String value) {
+	LocaleKey(String value) {
 		this.value = value;
 	}
 

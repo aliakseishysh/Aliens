@@ -1,5 +1,7 @@
 package by.shyshaliaksey.aliens.exception;
 
+import java.io.Serial;
+
 /**
  * Exception for methods in database layer
  * 
@@ -8,8 +10,10 @@ package by.shyshaliaksey.aliens.exception;
  */
 public class DaoException extends Exception {
 
+	@Serial
 	private static final long serialVersionUID = -3303410395502061392L;
 
+	@SuppressWarnings("unused")
 	public DaoException() {
 		super();
 	}
@@ -22,6 +26,7 @@ public class DaoException extends Exception {
 		super(message, cause);
 	}
 
+	@SuppressWarnings("unused")
 	public DaoException(Throwable cause) {
 		super(cause);
 	}

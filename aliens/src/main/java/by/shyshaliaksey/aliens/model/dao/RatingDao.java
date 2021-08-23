@@ -10,7 +10,7 @@ public interface RatingDao {
 	 * @param alienId   {@code int} id of alien
 	 * @param userId    {@code int} id of user
 	 * @param rateValue {@code int} rate value
-	 * @throws DaoException
+	 * @throws DaoException if rating dao exception occurred
 	 */
 	void addRate(int alienId, int userId, int rateValue) throws DaoException;
 
@@ -19,7 +19,7 @@ public interface RatingDao {
 	 * 
 	 * @param alienId id of alien
 	 * @return {@code double} calculated average rate of alien
-	 * @throws DaoException
+	 * @throws DaoException if rating dao exception occurred
 	 */
 	double calculateAverageRating(int alienId) throws DaoException;
 
@@ -29,7 +29,7 @@ public interface RatingDao {
 	 * @param alienId   {@code int} id of alien
 	 * @param userId    {@code int} id of user
 	 * @param rateValue {@code int} rate value
-	 * @throws DaoException
+	 * @throws DaoException if rating dao exception occurred
 	 */
 	void updateRate(int alienId, int userId, int rateValue) throws DaoException;
 
@@ -39,7 +39,7 @@ public interface RatingDao {
 	 * @param alienId {@code int} id of alien
 	 * @param userId  {@code int} id of user
 	 * @return true if count of rates equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if rating dao exception occurred
 	 */
 	boolean checkRateExistence(int alienId, int userId) throws DaoException;
 
@@ -49,7 +49,7 @@ public interface RatingDao {
 	 * @param alienId {@code int} id of alien
 	 * @param userId  {@code int} id of user
 	 * @return user rate if true, <b>-1</b> otherwise
-	 * @throws DaoException
+	 * @throws DaoException if rating dao exception occurred
 	 */
 	int findUserRate(int alienId, int userId) throws DaoException;
 

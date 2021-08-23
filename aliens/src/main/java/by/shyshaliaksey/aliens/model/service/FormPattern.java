@@ -20,14 +20,14 @@ public enum FormPattern implements EnumValue {
 	/*
 	 * p don't work in js
 	 */
-	VALID_ALIEN_SMALL_DESCRIPTION("(?=^.{6,100}$)^[\\s0-9a-zA-Zа-яА-Я!?#%*()\\-_\\|\\/,\\.…:;\']+$"),
-	VALID_ALIEN_FULL_DESCRIPTION("(?=^.{10,3000}$)^[\\s0-9a-zA-Zа-яА-Я!?#%*()\\-_\\|/,\\.…:;\']+$"),
-	VALID_COMMENT("(?=^.{3,300}$)^[\\s0-9a-zA-Zа-яА-Я!?#%*()\\-_\\|/,\\.…:;\']+$"),
+	VALID_ALIEN_SMALL_DESCRIPTION("(?=^.{6,100}$)^[\\s0-9a-zA-Zа-яА-Я!?#%*()\\-_\\|\\/,\\.…:;']+$"),
+	VALID_ALIEN_FULL_DESCRIPTION("(?=^.{10,3000}$)^[\\s0-9a-zA-Zа-яА-Я!?#%*()\\-_\\|/,\\.…:;']+$"),
+	VALID_COMMENT("(?=^.{3,300}$)^[\\s0-9a-zA-Zа-яА-Я!?#%*()\\-_\\|/,\\.…:;']+$"),
 	MAX_VALID_IMAGE_SIZE("1000000");
 
-	private String value;
+	private final String value;
 
-	private FormPattern(String value) {
+	FormPattern(String value) {
 		this.value = value;
 	}
 

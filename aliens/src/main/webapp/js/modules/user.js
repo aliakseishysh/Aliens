@@ -1,4 +1,3 @@
-import { WAS_VALIDATED_CLASS, IS_INVALID_CLASS, IS_VALID_CLASS } from "./bootstrap_classes.js";
 import { validateEmail, validateLogin, validatePassword, validatePasswordConfirmation, validatePasswordEquality, validateImage } from "./validation.js";
 import { Validator, ValidationCleaner, Feedback } from "./util.js";
 
@@ -26,10 +25,6 @@ export class EmailUpdateForm {
 
     validate() {
         return Validator.validateElement(this.#email, validateEmail);
-    }
-
-    getEmail() {
-        return this.#email.value;
     }
 
 }
@@ -60,10 +55,6 @@ export class LoginUpdateForm {
         return Validator.validateElement(this.#login, validateLogin);
     }
 
-    getLogin() {
-        return this.#login.value;
-    }
-
 }
 
 export class PasswordUpdateForm {
@@ -76,12 +67,12 @@ export class PasswordUpdateForm {
     #passwordValid;
     #passwordConfirmationValid;
 
-    constructor(form, password, passwordConfirmation, passwordInvalid, passswordConfirmationInvalid, passwordValid, passwordConfirmationValid) {
+    constructor(form, password, passwordConfirmation, passwordInvalid, passwordConfirmationInvalid, passwordValid, passwordConfirmationValid) {
         this.#form = form;
         this.#password = password;
         this.#passwordConfirmation = passwordConfirmation;
         this.#passwordInvalid = passwordInvalid;
-        this.#passwordConfirmationInvalid = passswordConfirmationInvalid;
+        this.#passwordConfirmationInvalid = passwordConfirmationInvalid;
         this.#passwordValid = passwordValid;
         this.#passwordConfirmationValid = passwordConfirmationValid;
     }
@@ -133,13 +124,7 @@ export class PasswordUpdateForm {
     }
 
     validatePassword() {
-        let isPasswordCorrect = Validator.validateElement(this.#password, validatePassword);
-        return isPasswordCorrect;
-    }
-
-    validatePasswordConfirmation() {
-        let isPasswordConfirmationCorrect = Validator.validateElement(this.#passwordConfirmation, validatePasswordConfirmation);
-        return isPasswordConfirmationCorrect;
+        return Validator.validateElement(this.#password, validatePassword);
     }
 
     getPassword() {
@@ -202,8 +187,7 @@ export class ImageUpdateForm {
     }
 
     validate() {
-        let result = Validator.validateElement(this.#image, validateImage);
-        return result;
+        return Validator.validateElement(this.#image, validateImage);
     }
 
     getImage() {
@@ -259,11 +243,11 @@ export class RegisterForm {
     #passwordUpdateForm;
 
     constructor(form, email, emailValid, emailInvalid, login, loginValid, loginInvalid, password, passwordValid, passwordInvalid,
-        passwordConfirmation, passwordConfirmationValid, passswordConfirmationInvalid) {
+        passwordConfirmation, passwordConfirmationValid, passwordConfirmationInvalid) {
         this.#emailUpdateForm = new EmailUpdateForm(form, email, emailInvalid, emailValid);
         this.#loginUpdateForm = new LoginUpdateForm(form, login, loginInvalid, loginValid);
         this.#passwordUpdateForm = new PasswordUpdateForm(form, password, passwordConfirmation, 
-            passwordInvalid, passswordConfirmationInvalid, passwordValid, passwordConfirmationValid);
+            passwordInvalid, passwordConfirmationInvalid, passwordValid, passwordConfirmationValid);
     }
 
     setFeedback(isEmailCorrect, emailValidFeedback, emailInvalidFeedback,

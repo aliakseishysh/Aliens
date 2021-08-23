@@ -31,8 +31,6 @@ import jakarta.servlet.http.Part;
  * database through model layer.
  * 
  * @author Aliaksey Shysh
- *
- * @see AdminService#addNewAlien(String, String, String, Part, String, String)
  * 
  */
 public class AddNewAlienCommand implements Command {
@@ -77,8 +75,8 @@ public class AddNewAlienCommand implements Command {
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException | IOException | ServletException e) {
-			response.setStatus(500);
-			logger.log(Level.ERROR, "Exception occured while alien adding: {} {}", e.getMessage(), e.getStackTrace());
+			response.setStatus(Feedback.Code.INTERNAL_SERVER_ERROR.getStatusCode());
+			logger.log(Level.ERROR, "Exception occurred while alien adding: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

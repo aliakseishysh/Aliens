@@ -52,7 +52,7 @@ public class UpdateRatingCommand implements Command {
 			Double averageRate = ratingService.calculateAverageRate(alienId);
 			router = new Router(null, averageRate.toString(), Type.AJAX_RESPONSE);
 		} catch (ServiceException | NumberFormatException e) {
-			logger.log(Level.ERROR, "Exception occured while rating updating: {}", e.getMessage());
+			logger.log(Level.ERROR, "Exception occurred while rating updating: {}", e.getMessage());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

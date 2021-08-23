@@ -11,9 +11,9 @@ import org.apache.logging.log4j.Logger;
 
 class ConnectionFactory {
 
-	private static Logger logger = LogManager.getRootLogger();
+	private static final Logger logger = LogManager.getRootLogger();
 
-	/**
+	/*
 	 * Static block for database driver registration
 	 */
 	static {
@@ -32,7 +32,7 @@ class ConnectionFactory {
 	/**
 	 * 
 	 * @return new {@link Connection} with provided data
-	 * @throws SQLException
+	 * @throws SQLException if can not create connection
 	 */
 	static Connection createConnection() throws SQLException {
 		return DriverManager.getConnection(DATABASE_URL + DATABASE_TIMEZONE, DATABASE_USERNAME, DATABASE_PASSWORD);

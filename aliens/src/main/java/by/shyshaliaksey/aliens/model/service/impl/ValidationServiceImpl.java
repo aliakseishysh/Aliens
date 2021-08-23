@@ -35,7 +35,7 @@ public final class ValidationServiceImpl implements ValidationService {
 			result.put(Feedback.Key.LOGIN_STATUS, Boolean.FALSE);
 			result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.LOGIN_FEEDBACK_INVALID.getValue());
 		}
-		int daysToBanInt = -1;
+		int daysToBanInt;
 		try {
 			daysToBanInt = Integer.parseInt(daysToBan);
 			if (validateDaysToBan(daysToBanInt)) {
@@ -165,7 +165,6 @@ public final class ValidationServiceImpl implements ValidationService {
 		}
 	}
 
-	@Override
 	public void validateAlienSmallDescriptionFormInput(Map<Key, Object> result, String smallDescription) {
 		if (validateAlienSmallDescription(smallDescription)) {
 			result.put(Feedback.Key.ALIEN_SMALL_DESCRIPTION_STATUS, Boolean.TRUE);
@@ -178,7 +177,6 @@ public final class ValidationServiceImpl implements ValidationService {
 		}
 	}
 
-	@Override
 	public void validateAlienFullDescriptionFormInput(Map<Key, Object> result, String fullDescription) {
 		if (validateAlienFullDescription(fullDescription)) {
 			result.put(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS, Boolean.TRUE);
@@ -192,20 +190,19 @@ public final class ValidationServiceImpl implements ValidationService {
 	}
 
 	private static boolean validateEmail(String email) {
-		return email != null ? Pattern.matches(FormPattern.VALID_EMAIL.getValue(), email) : false;
+		return email != null && Pattern.matches(FormPattern.VALID_EMAIL.getValue(), email);
 	}
 
 	private static boolean validateLogin(String login) {
-		return login != null ? Pattern.matches(FormPattern.VALID_LOGIN.getValue(), login) : false;
+		return login != null && Pattern.matches(FormPattern.VALID_LOGIN.getValue(), login);
 	}
 
 	private static boolean validatePassword(String password) {
-		return password != null ? Pattern.matches(FormPattern.VALID_PASSWORD.getValue(), password) : false;
+		return password != null && Pattern.matches(FormPattern.VALID_PASSWORD.getValue(), password);
 	}
 
 	private static boolean validateImageExtension(String imageExtension) {
-		return imageExtension != null ? Pattern.matches(FormPattern.VALID_IMAGE_EXTENSION.getValue(), imageExtension)
-				: false;
+		return imageExtension != null && Pattern.matches(FormPattern.VALID_IMAGE_EXTENSION.getValue(), imageExtension);
 	}
 
 	private static boolean validateImageSize(long imageSize) {
@@ -217,23 +214,19 @@ public final class ValidationServiceImpl implements ValidationService {
 	}
 
 	private static boolean validateAlienName(String alienName) {
-		return alienName != null ? Pattern.matches(FormPattern.VALID_ALIEN_NAME.getValue(), alienName) : false;
+		return alienName != null && Pattern.matches(FormPattern.VALID_ALIEN_NAME.getValue(), alienName);
 	}
 
 	private static boolean validateAlienSmallDescription(String alienSmallDescription) {
-		return alienSmallDescription != null
-				? Pattern.matches(FormPattern.VALID_ALIEN_SMALL_DESCRIPTION.getValue(), alienSmallDescription)
-				: false;
+		return alienSmallDescription != null && Pattern.matches(FormPattern.VALID_ALIEN_SMALL_DESCRIPTION.getValue(), alienSmallDescription);
 	}
 
 	private static boolean validateAlienFullDescription(String alienFullDescription) {
-		return alienFullDescription != null
-				? Pattern.matches(FormPattern.VALID_ALIEN_FULL_DESCRIPTION.getValue(), alienFullDescription)
-				: false;
+		return alienFullDescription != null && Pattern.matches(FormPattern.VALID_ALIEN_FULL_DESCRIPTION.getValue(), alienFullDescription);
 	}
 
 	private static boolean validateComment(String comment) {
-		return comment != null ? Pattern.matches(FormPattern.VALID_COMMENT.getValue(), comment) : false;
+		return comment != null && Pattern.matches(FormPattern.VALID_COMMENT.getValue(), comment);
 	}
 
 }

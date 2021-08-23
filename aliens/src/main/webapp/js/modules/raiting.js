@@ -1,4 +1,4 @@
-import { changeLocationIfUndefined } from "../modules/util.js";
+import { changeLocationIfUndefined } from "./util.js";
 
 function setRatingValue() {
     let ratingInput = $("input[type='radio']");
@@ -19,7 +19,7 @@ function setRatingValue() {
             }
         }
     });
-};
+}
 
 function updateRating(ratingValue) {
     let data = {};
@@ -38,7 +38,7 @@ function updateRating(ratingValue) {
             }
         }
     });
-};
+}
 
 export const rating = {
     setRatingValue: setRatingValue,

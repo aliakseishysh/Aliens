@@ -84,7 +84,7 @@ function banUser() {
                 jqXHR.responseJSON[LOGIN_FEEDBACK], jqXHR.responseJSON[DAYS_TO_BAN_FEEDBACK]);
         }
     });
-};
+}
 
 function unbanUser() {
     let enteredLogin = banUnbanFormLogin.value;
@@ -109,7 +109,7 @@ function unbanUser() {
                 jqXHR.responseJSON[LOGIN_FEEDBACK], null);
         }
     });
-};
+}
 
 function promoteUser() {
     let enteredLogin = promoteDemoteFormLogin.value;
@@ -130,7 +130,7 @@ function promoteUser() {
             promoteDemoteFormObject.setFeedback(jqXHR.responseJSON[LOGIN_STATUS], jqXHR.responseJSON[LOGIN_FEEDBACK]);
         }
     });
-};
+}
 
 function demoteAdmin() {
     let enteredLogin = promoteDemoteFormLogin.value;
@@ -151,7 +151,7 @@ function demoteAdmin() {
             promoteDemoteFormObject.setFeedback(jqXHR.responseJSON[LOGIN_STATUS], jqXHR.responseJSON[LOGIN_FEEDBACK]);
         }
     });
-};
+}
 
 function addNewAlien() {
     let formData = new FormData();
@@ -203,7 +203,7 @@ function addNewAlien() {
             );
         }
     });
-};
+}
 
 
 const adminPage = {
@@ -229,7 +229,7 @@ $(function() {
 $(document).ready(function () {
     banUnbanForm.addEventListener('submit', function(event) {
         banUnbanFormObject.removeValidationClasses();
-        if (event.submitter.id == "form-user-ban-unban-button-banuser") {
+        if (event.submitter.id === "form-user-ban-unban-button-banuser") {
             // in this case need to check 2 form fields
             banUnbanFormDaysInBan.setAttribute("required", "");
             if (banUnbanForm.checkValidity() === false || banUnbanFormDaysInBan.validity.valid && banUnbanFormDaysInBan.value <= 0) {
@@ -241,8 +241,8 @@ $(document).ready(function () {
                 event.preventDefault();
                 adminPage.banUser();
             }
-        } else if (event.submitter.id = "form-user-ban-unban-button-unbanuser") {
-            // in this case need to ckeck only login form field
+        } else if (event.submitter.id === "form-user-ban-unban-button-unbanuser") {
+            // in this case need to check only login form field
             banUnbanFormDaysInBan.removeAttribute("required")
             if (banUnbanForm.checkValidity() === false) {
                 banUnbanFormObject.setFeedback(false, true, STANDARD_LOGIN_FEEDBACK, "");
@@ -274,9 +274,9 @@ $(document).ready(function () {
             event.stopPropagation();
         } else {
             event.preventDefault();
-            if (event.submitter.id == "form-promote-demote-user-button-promoteuser") {
+            if (event.submitter.id === "form-promote-demote-user-button-promoteuser") {
                 adminPage.promoteUser();
-            } else if (event.submitter.id = "form-promote-demote-user-button-demoteadmin") {
+            } else if (event.submitter.id === "form-promote-demote-user-button-demoteadmin") {
                 adminPage.demoteAdmin();
             }
         }
@@ -296,7 +296,7 @@ $(document).ready(function () {
         alienForm.removeImageValidationClasses();
         let validationInfoResult = alienForm.validateInfo();
         let validationImageResult = alienForm.validateImage();
-        if(!validationInfoResult.some(element => element == false) && validationImageResult) {
+        if(!validationInfoResult.some(element => element === false) && validationImageResult) {
             event.preventDefault();
             adminPage.addNewAlien();
         } else {

@@ -50,7 +50,7 @@ public class AdminDeclineAlienCommand implements Command {
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException e) {
 			response.setStatus(Feedback.Code.INTERNAL_SERVER_ERROR.getStatusCode());
-			logger.log(Level.ERROR, "Exception occured while alien declining: {} {}", e.getMessage(), e.getStackTrace());
+			logger.log(Level.ERROR, "Exception occurred while alien declining: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

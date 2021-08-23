@@ -42,10 +42,10 @@ public class DeleteCommentCommand implements Command {
 			String commentId = request.getParameter(RequestParameter.COMMENT_ID.getValue());
 			ServiceProvider serviceProvider = ServiceProvider.getInstance();
 			UserService userService = serviceProvider.getUserService();
-			Boolean deleteCommentResult = userService.deleteComment(commentId, currentUser);
-			router = new Router(null, deleteCommentResult.toString(), Type.AJAX_RESPONSE);
+			boolean deleteCommentResult = userService.deleteComment(commentId, currentUser);
+			router = new Router(null, Boolean.toString(deleteCommentResult), Type.AJAX_RESPONSE);
 		} catch (ServiceException e) {
-			logger.log(Level.ERROR, "Exception occured while deleting comment: {}", e.getMessage());
+			logger.log(Level.ERROR, "Exception occurred while deleting comment: {}", e.getMessage());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

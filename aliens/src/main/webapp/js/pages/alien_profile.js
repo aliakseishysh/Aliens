@@ -27,7 +27,7 @@ let formNewCommentComment;
 let formNewCommentCommentInvalidFeedback;
 let currentAlienName;
 let currentAlienDescriptionSmall;
-let currentAliendDescriptionFull;
+let currentAlienDescriptionFull;
 let currentAlienImage;
 
 let alienId;
@@ -41,7 +41,7 @@ $(function() {
 
     currentAlienName = document.getElementById("alien-name");
     currentAlienDescriptionSmall = document.getElementById("alien-small-description");
-    currentAliendDescriptionFull = document.getElementById("alien-big-description");
+    currentAlienDescriptionFull = document.getElementById("alien-big-description");
     currentAlienImage = document.getElementById("alien-image");
 
     formAlienUpdateInfo = document.getElementById("form-alien-update-info");
@@ -93,7 +93,7 @@ function updateAlienInfo() {
                 jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK], jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK]);
             currentAlienName.innerHTML = formAlienUpdateInfoName.value;
             currentAlienDescriptionSmall.innerHTML = formAlienUpdateInfoDescriptionSmall.value;
-            currentAliendDescriptionFull.innerHTML = formAlienUpdateInfoDescriptionFull.value;
+            currentAlienDescriptionFull.innerHTML = formAlienUpdateInfoDescriptionFull.value;
         },
         error: function (jqXHR, textStatus, errorThrown) {
             changeLocationIfUndefined(jqXHR);
@@ -103,7 +103,7 @@ function updateAlienInfo() {
                 jqXHR.responseJSON[ALIEN_SMALL_DESCRIPTION_FEEDBACK], jqXHR.responseJSON[ALIEN_FULL_DESCRIPTION_FEEDBACK]);
         }
     });
-};
+}
 
 function updateAlienImage() {
     let formData = new FormData();
@@ -134,7 +134,7 @@ function updateAlienImage() {
             );
         }
     });
-};
+}
 
 function addNewComment() {
     let data = {};
@@ -153,7 +153,7 @@ function addNewComment() {
             commentForm.setCommentFeedback(jqXHR.responseJSON[ALIEN_NAME_STATUS], jqXHR.responseJSON[COMMENT_FEEDBACK]);
         }
     });
-};
+}
 
 function deleteComment(commentId, div) {
     let data = {};
@@ -171,7 +171,7 @@ function deleteComment(commentId, div) {
             changeLocationIfUndefined(jqXHR);
         }
     });
-};
+}
 
 const alienProfile = {
     updateAlienInfo: updateAlienInfo,
@@ -209,7 +209,7 @@ $(function() {
             let validationResult = alienForm.validateInfo();
 
             if (!validationResult[0] || !validationResult[1] || !validationResult[2]) {
-                alienForm.setFeedbackInfo(validationInfoResult[0], validationInfoResult[1], validationInfoResult[2], "", "", "", 
+                alienForm.setFeedbackInfo(validationResult[0], validationResult[1], validationResult[2], "", "", "",
                 STANDARD_ALIEN_NAME_FEEDBACK, STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK, STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK);
                 event.preventDefault();
                 event.stopPropagation();

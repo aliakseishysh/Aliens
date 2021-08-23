@@ -40,11 +40,11 @@ public class OpenAdminSuggestedAliensImagesPageCommand implements Command {
 			List<Alien> aliens = alienService
 					.findUnapprovedAliensImages((int) request.getAttribute(RequestAttribute.CURRENT_PAGE.getValue()));
 			request.setAttribute(RequestAttribute.ALIEN_LIST.getValue(), aliens);
-			router = new Router(StaticPath.PAGE_ADMIN_SUGGESTED_ALIENS_INAGES_JSP.getValue(), null, Type.FORWARD);
+			router = new Router(StaticPath.PAGE_ADMIN_SUGGESTED_ALIENS_IMAGES_JSP.getValue(), null, Type.FORWARD);
 		} catch (ServiceException e) {
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
-			logger.log(Level.ERROR, "Exception occured while opening {}: {}",
-					StaticPath.PAGE_ADMIN_SUGGESTED_ALIENS_INAGES_JSP, e.getMessage());
+			logger.log(Level.ERROR, "Exception occurred while opening {}: {}",
+					StaticPath.PAGE_ADMIN_SUGGESTED_ALIENS_IMAGES_JSP, e.getMessage());
 		}
 		return router;
 	}

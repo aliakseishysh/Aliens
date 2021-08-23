@@ -24,10 +24,10 @@ export class BanUnbanForm {
             this.#setLoginInvalid();
             this.#setLoginInvalidFeedback(loginFeedback);
         }
-        if (isDaysInBanCorrect == true || isDaysInBanCorrect == null) {
+        if (isDaysInBanCorrect === true || isDaysInBanCorrect == null) {
             this.#setDaysInBanValid();
             this.#setDaysInBanValidFeedback(daysInBanFeedback);
-        } else if (isDaysInBanCorrect == false) {
+        } else if (isDaysInBanCorrect === false) {
             this.#setDaysInBanInvalid();
             this.#setDaysInBanInvalidFeedback(daysInBanFeedback);
         }

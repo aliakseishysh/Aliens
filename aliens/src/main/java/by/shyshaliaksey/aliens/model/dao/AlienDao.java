@@ -17,7 +17,7 @@ public interface AlienDao {
 	 * @param aliensPerPageLimit aliens limit per page
 	 * @return {@code List<Alien>} with {@link Alien.Status#NORMAL} status from
 	 *         database
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 * @see Alien
 	 */
 	List<Alien> findAll(int fromRecord, int aliensPerPageLimit) throws DaoException;
@@ -27,7 +27,7 @@ public interface AlienDao {
 	 * 
 	 * @param alienId id of requested alien
 	 * @return requested {@code Optional<Alien>} from database
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 * @see Alien
 	 */
 	Optional<Alien> findById(int alienId) throws DaoException;
@@ -38,7 +38,7 @@ public interface AlienDao {
 	 * @param alienId id of requested alien
 	 * @param status  status of requested alien
 	 * @return requested {@code Optional<Alien>} from database
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 * @see Alien
 	 */
 	Optional<Alien> findByIdAndStatus(int alienId, Alien.Status status) throws DaoException;
@@ -48,7 +48,7 @@ public interface AlienDao {
 	 * 
 	 * @param alienName name of requested alien
 	 * @return requested {@code Optional<Alien>} from database
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 * @see Alien
 	 */
 	Optional<Alien> findByName(String alienName) throws DaoException;
@@ -62,7 +62,7 @@ public interface AlienDao {
 	 * @param alienFullDescription  full description of new alien
 	 * @param imageUrl              profile image of new alien
 	 * @return generated id of new alien
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 * @see Alien
 	 */
 	boolean addNewAlienAndImageToGallery(String alienName, String alienSmallDescription,
@@ -76,11 +76,10 @@ public interface AlienDao {
 	 * @param alienSmallDescription small description of suggested alien
 	 * @param alienFullDescription  full description of suggested alien
 	 * @param imageUrl              profile image of suggested alien
-	 * @return generated id of new alien
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 * @see Alien
 	 */
-	int suggestNewAlien(String alienName, String alienSmallDescription, String alienFullDescription, String imageUrl)
+	void suggestNewAlien(String alienName, String alienSmallDescription, String alienFullDescription, String imageUrl)
 			throws DaoException;
 
 	/**
@@ -90,7 +89,7 @@ public interface AlienDao {
 	 * @param alienId  id of alien
 	 * @param imageUrl url of new image
 	 * @return true if count of added rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 * @see Alien
 	 */
 	boolean suggestNewAlienImage(int alienId, String imageUrl) throws DaoException;
@@ -102,7 +101,7 @@ public interface AlienDao {
 	 * @param alienId  id of alien
 	 * @param imageUrl url of new image
 	 * @return true if count of added rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 * @see Alien
 	 */
 	boolean addNewImageToGallery(int alienId, String imageUrl) throws DaoException;
@@ -115,7 +114,7 @@ public interface AlienDao {
 	 * @param alienSmallDescription small description of alien
 	 * @param alienFullDescription  full description of alien
 	 * @return true if count of added rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 * @see Alien
 	 */
 	boolean updateAlienInfo(int alienId, String alienName, String alienSmallDescription, String alienFullDescription)
@@ -127,7 +126,7 @@ public interface AlienDao {
 	 * @param alienId  id of alien
 	 * @param imageUrl url of new image
 	 * @return true if count of added rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 * @see Alien
 	 */
 	boolean updateAlienImageAndAddToGallery(int alienId, String imageUrl) throws DaoException;
@@ -136,7 +135,7 @@ public interface AlienDao {
 	 * Finds alien count with {@link Alien.Status#NORMAL} status
 	 * 
 	 * @return {@code int} alien count with {@link Alien.Status#NORMAL} status
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 */
 	int findAlienCount() throws DaoException;
 
@@ -146,7 +145,7 @@ public interface AlienDao {
 	 * @param alienId id of alien
 	 * @return {@code int} alien comment count with {@link Comment.Status#NORMAL}
 	 *         status
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 * @see Comment
 	 * @see Alien
 	 */
@@ -160,7 +159,7 @@ public interface AlienDao {
 	 * @param fromRecord           start id record in database
 	 * @param commentsPerPageLimit comments limit per page
 	 * @return {@code List<Comment>} comments for specified alien
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 * @see Comment
 	 * @see Alien
 	 */
@@ -171,7 +170,7 @@ public interface AlienDao {
 	 * 
 	 * @param alienId id of alien
 	 * @return {@code List<String>} images urls for specified alien
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 * @see Comment
 	 * @see Alien
 	 */
@@ -185,7 +184,7 @@ public interface AlienDao {
 	 * @param aliensPerPageLimit aliens limit per page
 	 * @return {@code List<Alien>} aliens with
 	 *         {@link Alien.Status#UNDER_CONSIDERATION} status
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 * @see Alien
 	 */
 	List<Alien> findAllUnapprovedAliens(int fromRecord, int aliensPerPageLimit) throws DaoException;
@@ -195,7 +194,7 @@ public interface AlienDao {
 	 * 
 	 * @return {@code int} alien count with {@link Alien.Status#UNDER_CONSIDERATION}
 	 *         status
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 */
 	int findUnapprovedAlienCount() throws DaoException;
 
@@ -205,7 +204,7 @@ public interface AlienDao {
 	 * 
 	 * @return {@code int} number of aliens images with
 	 *         {@link Alien.Status#UNDER_CONSIDERATION} status
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 */
 	int findUnapprovedAliensImagesCount() throws DaoException;
 
@@ -216,7 +215,7 @@ public interface AlienDao {
 	 * @param imagesPerPageLimit images limit per page
 	 * @return {@code List<Alien>} aliens {@link Alien#Alien(int, String, String)}
 	 *         with {@link Alien.Status#UNDER_CONSIDERATION} status
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 */
 	List<Alien> findUnapprovedAliensImages(int fromRecord, int imagesPerPageLimit) throws DaoException;
 
@@ -226,7 +225,7 @@ public interface AlienDao {
 	 * 
 	 * @param alienId id of alien
 	 * @return true if count of updated rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 */
 	boolean approveAlien(int alienId) throws DaoException;
 
@@ -236,29 +235,9 @@ public interface AlienDao {
 	 * 
 	 * @param alienId id of alien
 	 * @return true if count of updated rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 */
 	boolean declineAlien(int alienId) throws DaoException;
-
-	/**
-	 * Declines alien profile image with specified id (changes status to
-	 * {@link Alien.Status#DECLINED})
-	 * 
-	 * @param alienId id of alien
-	 * @return true if count of updated rows equals 1, false otherwise
-	 * @throws DaoException
-	 */
-	boolean declineProfileImage(int alienId) throws DaoException;
-
-	/**
-	 * Approves alien profile image with specified id (changes status to
-	 * {@link Alien.Status#NORMAL})
-	 * 
-	 * @param alienId id of alien
-	 * @return true if count of updated rows equals 1, false otherwise
-	 * @throws DaoException
-	 */
-	boolean approveProfileImage(int alienId) throws DaoException;
 
 	/**
 	 * Approves alien suggested image with specified url (changes status to
@@ -266,7 +245,7 @@ public interface AlienDao {
 	 * 
 	 * @param alienImageUrl url of new image
 	 * @return true if count of updated rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 */
 	boolean approveSuggestedImage(String alienImageUrl) throws DaoException;
 
@@ -276,7 +255,7 @@ public interface AlienDao {
 	 * 
 	 * @param alienImageUrl url of new image
 	 * @return true if count of updated rows equals 1, false otherwise
-	 * @throws DaoException
+	 * @throws DaoException if dao exception occurred
 	 */
 	boolean declineSuggestedImage(String alienImageUrl) throws DaoException;
 

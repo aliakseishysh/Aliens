@@ -26,7 +26,7 @@ import by.shyshaliaksey.aliens.model.service.UserService;
 import by.shyshaliaksey.aliens.model.service.ValidationService;
 import by.shyshaliaksey.aliens.model.util.DateHandler;
 import by.shyshaliaksey.aliens.model.util.DeploymentPropertiesReader;
-import by.shyshaliaksey.aliens.model.util.EmailMessanger;
+import by.shyshaliaksey.aliens.model.util.EmailMessenger;
 import by.shyshaliaksey.aliens.model.util.FileHandler;
 import by.shyshaliaksey.aliens.model.util.CryptoHandler;
 import by.shyshaliaksey.aliens.model.util.localization.LocaleAttribute;
@@ -102,10 +102,9 @@ public class UserServiceImpl implements UserService {
 	public Optional<User> findUserByEmail(String email) throws ServiceException {
 		try {
 			UserDao userDao = DaoProvider.getInstance().getUserDao();
-			Optional<User> user = userDao.findByEmail(email);
-			return user;
+			return userDao.findByEmail(email);
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when finding user by email " + email + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occurred when finding user by email " + email + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -130,18 +129,18 @@ public class UserServiceImpl implements UserService {
 					String hashedPasswordHex = DatatypeConverter.printHexBinary(hashedPassword);
 					UserDao userDao = DaoProvider.getInstance().getUserDao();
 					Optional<User> userOptional = userDao.findByEmail(email);
-					boolean registerResult = false;
+					boolean registerResult;
 
-					if (!userOptional.isPresent() || !userOptional.get().getLogin().equals(login)) {
+					if (userOptional.isEmpty() || !userOptional.get().getLogin().equals(login)) {
 						registerResult = userDao.registerUser(email, login, hashedPasswordHex, saltHex,
 								IMAGE_DEFAULT.getValue(), Role.USER);
 						if (registerResult) {
 							String token = CryptoHandler.createToken();
-							final int minutesToExpriration = 5;
-							String expirationTime = DateHandler.prepareDate(minutesToExpriration, Calendar.MINUTE);
+							final int minutesToExpiration = 5;
+							String expirationTime = DateHandler.prepareDate(minutesToExpiration, Calendar.MINUTE);
 							userDao.addNewToken(email, token, expirationTime);
-							EmailMessanger.sendEmail(email, token,
-									EmailMessanger.Function.REGISTER, locale);
+							EmailMessenger.sendEmail(email, token,
+									EmailMessenger.Function.REGISTER, locale);
 							result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 							result.put(Feedback.Key.EMAIL_FEEDBACK, LocaleKey.CHECK_YOUR_EMAIL.getValue());
 							result.put(Feedback.Key.LOGIN_FEEDBACK, LocaleKey.EMPTY_MESSAGE.getValue());
@@ -186,7 +185,7 @@ public class UserServiceImpl implements UserService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when finding user register: " + e.getMessage(), e);
+			throw new ServiceException("Error occurred when finding user register: " + e.getMessage(), e);
 		}
 	}
 
@@ -194,16 +193,15 @@ public class UserServiceImpl implements UserService {
 	public Optional<User> findByLogin(String login) throws ServiceException {
 		try {
 			UserDao userDao = DaoProvider.getInstance().getUserDao();
-			Optional<User> user = userDao.findByLogin(login);
-			return user;
+			return userDao.findByLogin(login);
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when finding user by login " + login + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occurred when finding user by login " + login + " :" + e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public Map<Feedback.Key, Object> makeRequestForNewEmail(String email, String newEmail, int userId,
-			LocaleAttribute locale) throws ServiceException {
+	public Map<Feedback.Key, Object> makeRequestForNewEmail(String email, String newEmail,
+															LocaleAttribute locale) throws ServiceException {
 		try {
 			ValidationService validationService = ServiceProvider.getInstance().getValidationService();
 			Map<Feedback.Key, Object> result = new EnumMap<>(Feedback.Key.class);
@@ -212,14 +210,14 @@ public class UserServiceImpl implements UserService {
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.EMAIL_STATUS))) {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				Optional<User> userOld = userDao.findByEmail(newEmail);
-				if (!userOld.isPresent()) {
+				if (userOld.isEmpty()) {
 					String token = CryptoHandler.createToken();
-					final int minutesToExpriration = 5;
-					String expirationTime = DateHandler.prepareDate(minutesToExpriration, Calendar.MINUTE);
+					final int minutesToExpiration = 5;
+					String expirationTime = DateHandler.prepareDate(minutesToExpiration, Calendar.MINUTE);
 					userDao.addNewToken(email, token, expirationTime, newEmail);
 					// send message
-					boolean isMessageSent = EmailMessanger.sendEmail(newEmail, token,
-							EmailMessanger.Function.CHANGE_EMAIL, locale);
+					boolean isMessageSent = EmailMessenger.sendEmail(newEmail, token,
+							EmailMessenger.Function.CHANGE_EMAIL, locale);
 					if (isMessageSent) {
 						result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.OK);
 						result.put(Feedback.Key.EMAIL_STATUS, Boolean.TRUE);
@@ -239,7 +237,7 @@ public class UserServiceImpl implements UserService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured while changing email " + email + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occurred while changing email " + email + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -253,7 +251,7 @@ public class UserServiceImpl implements UserService {
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.LOGIN_STATUS))) {
 				UserDao userDao = DaoProvider.getInstance().getUserDao();
 				Optional<User> userOld = userDao.findByLogin(newLogin);
-				if (!userOld.isPresent()) {
+				if (userOld.isEmpty()) {
 					Optional<User> user = userDao.findByLogin(login);
 					if (user.isPresent() && user.get().getId() == userId) {
 						boolean updateResult = userDao.updateUserLogin(newLogin, userId);
@@ -282,7 +280,7 @@ public class UserServiceImpl implements UserService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured while changing login " + login + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occurred while changing login " + login + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -324,7 +322,7 @@ public class UserServiceImpl implements UserService {
 						result.put(Feedback.Key.PASSWORD_STATUS, Boolean.FALSE);
 						result.put(Feedback.Key.PASSWORD_FEEDBACK, LocaleKey.PASSWORD_FEEDBACK_INVALID.getValue());
 						result.put(Feedback.Key.PASSWORD_CONFIRMATION_STATUS, Boolean.FALSE);
-						result.put(Feedback.Key.PASSWORD_FEEDBACK,
+						result.put(Feedback.Key.PASSWORD_CONFIRMATION_FEEDBACK,
 								LocaleKey.PASSWORD_CONFIRMATION_FEEDBACK_INVALID.getValue());
 					}
 				} else {
@@ -341,7 +339,7 @@ public class UserServiceImpl implements UserService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when finding user by Id " + userId + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occurred when finding user by Id " + userId + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -383,8 +381,8 @@ public class UserServiceImpl implements UserService {
 				result.put(Feedback.Key.RESPONSE_CODE, Feedback.Code.WRONG_INPUT);
 			}
 			return result;
-		} catch (ServiceException | DaoException e) {
-			throw new ServiceException("Error occured when updating image for userId " + userId + " :" + e.getMessage(),
+		} catch (DaoException e) {
+			throw new ServiceException("Error occurred when updating image for userId " + userId + " :" + e.getMessage(),
 					e);
 		}
 	}
@@ -414,7 +412,7 @@ public class UserServiceImpl implements UserService {
 			return result;
 		} catch (DaoException e) {
 			throw new ServiceException(
-					"Error occured while adding comment for user " + currentUserId + " :" + e.getMessage(), e);
+					"Error occurred while adding comment for user " + currentUserId + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -432,7 +430,7 @@ public class UserServiceImpl implements UserService {
 			return result;
 		} catch (DaoException e) {
 			throw new ServiceException(
-					"Error occured while deleting comment " + commentIdString + " :" + e.getMessage(), e);
+					"Error occurred while deleting comment " + commentIdString + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -454,7 +452,7 @@ public class UserServiceImpl implements UserService {
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
-				if (!alienInDatabase.isPresent()) {
+				if (alienInDatabase.isEmpty()) {
 					String newFileName = FileHandler.prepareAlienImageName(fileName);
 					String imageUrl = StaticPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
 					alienDao.suggestNewAlien(alienName, alienSmallDescription, alienFullDescription, imageUrl);
@@ -490,7 +488,7 @@ public class UserServiceImpl implements UserService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when suggesting new alien " + alienName + " :" + e.getMessage(),
+			throw new ServiceException("Error occurred when suggesting new alien " + alienName + " :" + e.getMessage(),
 					e);
 		}
 	}
@@ -551,44 +549,39 @@ public class UserServiceImpl implements UserService {
 
 		DaoException e) {
 			throw new ServiceException(
-					"Error occured when suggesting new alien image " + alienName + " :" + e.getMessage(), e);
+					"Error occurred when suggesting new alien image " + alienName + " :" + e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public boolean setNewEmail(String tokenRequested) throws ServiceException {
+	public void setNewEmail(String tokenRequested) throws ServiceException {
 		try {
-			boolean result = false;
 			UserDao userDao = DaoProvider.getInstance().getUserDao();
 			Optional<Token> tokenOptional = userDao.findToken(tokenRequested, Token.Status.NORMAL);
 			if (tokenOptional.isPresent()) {
 				Token token = tokenOptional.get();
 				boolean isExpired = DateHandler.isExpired(token.getExpirationDate());
 				if (!isExpired) {
-					boolean updateResult = userDao.updateUserEmail(token.getEmail(), token.getNewEmail());
-					result = updateResult;
+					userDao.updateUserEmail(token.getEmail(), token.getNewEmail());
 				}
 			}
-			return result;
 		} catch (DaoException e) {
 			throw new ServiceException("Can not activate user account", e);
 		}
 	}
 
 	@Override
-	public boolean activateAccount(String tokenRequested) throws ServiceException {
+	public void activateAccount(String tokenRequested) throws ServiceException {
 		try {
-			boolean result = false;
 			UserDao userDao = DaoProvider.getInstance().getUserDao();
 			Optional<Token> tokenOptional = userDao.findToken(tokenRequested, Token.Status.NORMAL);
 			if (tokenOptional.isPresent()) {
 				Token token = tokenOptional.get();
 				boolean isExpired = DateHandler.isExpired(token.getExpirationDate());
 				if (!isExpired) {
-					result = userDao.activateAccountAndSetTokenExpired(token.getEmail(), tokenRequested);
+					userDao.activateAccountAndSetTokenExpired(token.getEmail(), tokenRequested);
 				}
 			}
-			return result;
 		} catch (DaoException e) {
 			throw new ServiceException("Can not activate user account", e);
 		}

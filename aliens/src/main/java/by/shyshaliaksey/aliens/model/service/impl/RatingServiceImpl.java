@@ -13,8 +13,7 @@ public class RatingServiceImpl implements RatingService {
 	@Override
 	public int findUserRate(int alienId, int userId) throws ServiceException {
 		try {
-			int userRate = ratingDao.findUserRate(alienId, userId);
-			return userRate;
+			return ratingDao.findUserRate(alienId, userId);
 		} catch (DaoException e) {
 			throw new ServiceException("Can not find user rate: " + e.getMessage(), e);
 		}
@@ -43,8 +42,7 @@ public class RatingServiceImpl implements RatingService {
 	@Override
 	public Double calculateAverageRate(int alienId) throws ServiceException {
 		try {
-			double averageRate = ratingDao.calculateAverageRating(alienId);
-			return averageRate;
+			return ratingDao.calculateAverageRating(alienId);
 		} catch (DaoException e) {
 			throw new ServiceException("Can not calculate average rate: " + e.getMessage(), e);
 		}
@@ -53,8 +51,7 @@ public class RatingServiceImpl implements RatingService {
 	@Override
 	public boolean checkRateExistence(int alienId, int userId) throws ServiceException {
 		try {
-			boolean result = ratingDao.checkRateExistence(alienId, userId);
-			return result;
+			return ratingDao.checkRateExistence(alienId, userId);
 		} catch (DaoException e) {
 			throw new ServiceException("Can not check rate existence: " + e.getMessage(), e);
 		}

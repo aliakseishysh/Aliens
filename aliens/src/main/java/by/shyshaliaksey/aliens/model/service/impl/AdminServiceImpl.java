@@ -72,7 +72,7 @@ public class AdminServiceImpl implements AdminService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when banning user " + userLogin + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occurred when banning user " + userLogin + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -108,7 +108,7 @@ public class AdminServiceImpl implements AdminService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when unbanning user " + userLogin + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occurred when unbanning user " + userLogin + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -150,7 +150,7 @@ public class AdminServiceImpl implements AdminService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when promoting user " + userLogin + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occurred when promoting user " + userLogin + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -192,7 +192,7 @@ public class AdminServiceImpl implements AdminService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when demoting admin " + adminLogin + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occurred when demoting admin " + adminLogin + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -214,7 +214,7 @@ public class AdminServiceImpl implements AdminService {
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.ALIEN_FULL_DESCRIPTION_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.IMAGE_STATUS))) {
 				Optional<Alien> alienInDatabase = alienDao.findByName(alienName);
-				if (!alienInDatabase.isPresent()) {
+				if (alienInDatabase.isEmpty()) {
 					String newFileName = FileHandler.prepareAlienImageName(fileName);
 					String imageUrl = StaticPath.ALIEN_IMAGE_FOLDER.getValue() + newFileName;
 					boolean uploadToDeployment = FileHandler.uploadImage(serverDeploymentPath,
@@ -268,7 +268,7 @@ public class AdminServiceImpl implements AdminService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when adding new alien " + alienName + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occurred when adding new alien " + alienName + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -316,7 +316,7 @@ public class AdminServiceImpl implements AdminService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when adding new alien " + alienName + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occurred when adding new alien " + alienName + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -365,7 +365,7 @@ public class AdminServiceImpl implements AdminService {
 			}
 			return result;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when updating alien image " + " :" + e.getMessage(), e);
+			throw new ServiceException("Error occurred when updating alien image " + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -376,11 +376,11 @@ public class AdminServiceImpl implements AdminService {
 			AlienDao alienDao = DaoProvider.getInstance().getAlienDao();
 			boolean approvingResult = alienDao.approveAlien(alienId);
 			Optional<Alien> alien = alienDao.findById(alienId);
-			String imageUrl = alien.get().getImageUrl();
+			String imageUrl = alien.orElseThrow(() -> new ServiceException("Alien is not present")).getImageUrl();
 			boolean galleryAddResult = alienDao.addNewImageToGallery(alienId, imageUrl);
 			return approvingResult && galleryAddResult;
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when approving alien " + alienIdString + " :" + e.getMessage(),
+			throw new ServiceException("Error occurred when approving alien " + alienIdString + " :" + e.getMessage(),
 					e);
 		}
 	}
@@ -390,10 +390,9 @@ public class AdminServiceImpl implements AdminService {
 		int alienId = Integer.parseInt(alienIdString);
 		try {
 			AlienDao adminDao = DaoProvider.getInstance().getAlienDao();
-			boolean approvingResult = adminDao.declineAlien(alienId);
-			return approvingResult;
+			return adminDao.declineAlien(alienId);
 		} catch (DaoException e) {
-			throw new ServiceException("Error occured when declining alien " + alienIdString + " :" + e.getMessage(),
+			throw new ServiceException("Error occurred when declining alien " + alienIdString + " :" + e.getMessage(),
 					e);
 		}
 	}
@@ -402,11 +401,10 @@ public class AdminServiceImpl implements AdminService {
 	public boolean approveAlienImage(String alienImageUrl) throws ServiceException {
 		try {
 			AlienDao adminDao = DaoProvider.getInstance().getAlienDao();
-			boolean changeImageStatus = adminDao.approveSuggestedImage(alienImageUrl);
-			return changeImageStatus;
+			return adminDao.approveSuggestedImage(alienImageUrl);
 		} catch (DaoException e) {
 			throw new ServiceException(
-					"Error occured when approving alien image " + alienImageUrl + " :" + e.getMessage(), e);
+					"Error occurred when approving alien image " + alienImageUrl + " :" + e.getMessage(), e);
 		}
 	}
 
@@ -414,11 +412,10 @@ public class AdminServiceImpl implements AdminService {
 	public boolean declineAlienImage(String alienImageUrl) throws ServiceException {
 		try {
 			AlienDao adminDao = DaoProvider.getInstance().getAlienDao();
-			boolean changeImageStatus = adminDao.declineSuggestedImage(alienImageUrl);
-			return changeImageStatus;
+			return adminDao.declineSuggestedImage(alienImageUrl);
 		} catch (DaoException e) {
 			throw new ServiceException(
-					"Error occured when declining alien image " + alienImageUrl + " :" + e.getMessage(), e);
+					"Error occurred when declining alien image " + alienImageUrl + " :" + e.getMessage(), e);
 		}
 	}
 

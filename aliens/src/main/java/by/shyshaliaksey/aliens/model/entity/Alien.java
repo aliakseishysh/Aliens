@@ -1,5 +1,7 @@
 package by.shyshaliaksey.aliens.model.entity;
 
+import java.util.Objects;
+
 /**
  * Class {@code Alien} designed for storing information about alien
  * 
@@ -8,36 +10,18 @@ package by.shyshaliaksey.aliens.model.entity;
  */
 public class Alien {
 
-	private int id;
-	private String name;
+	private final int id;
+	private final String name;
 	private String smallDescription;
 	private String bigDescription;
-	private String imageUrl;
-	private Status status;
+	private final String imageUrl;
 
 	public enum Status {
 		NORMAL, UNDER_CONSIDERATION, DECLINED
 	}
 
-	public Alien(int id, String name, String smallDescription, String bigDescription, String imageUrl, Status status) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.smallDescription = smallDescription;
-		this.bigDescription = bigDescription;
-		this.imageUrl = imageUrl;
-		this.status = status;
-	}
-
 	public Alien(int id, String name, String smallDescription, String bigDescription, String imageUrl) {
 		this.id = id;
-		this.name = name;
-		this.smallDescription = smallDescription;
-		this.bigDescription = bigDescription;
-		this.imageUrl = imageUrl;
-	}
-
-	public Alien(String name, String smallDescription, String bigDescription, String imageUrl) {
 		this.name = name;
 		this.smallDescription = smallDescription;
 		this.bigDescription = bigDescription;
@@ -54,48 +38,23 @@ public class Alien {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
+	@SuppressWarnings("unused")
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	@SuppressWarnings("unused")
 	public String getSmallDescription() {
 		return smallDescription;
 	}
 
-	public void setSmallDescription(String smallDescription) {
-		this.smallDescription = smallDescription;
-	}
-
+	@SuppressWarnings("unused")
 	public String getBigDescription() {
 		return bigDescription;
 	}
 
-	public void setBigDescription(String bigDescription) {
-		this.bigDescription = bigDescription;
-	}
-
 	public String getImageUrl() {
 		return imageUrl;
-	}
-
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
-	}
-
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
 	}
 
 	@Override
@@ -107,62 +66,28 @@ public class Alien {
 		result = prime * result + ((imageUrl == null) ? 0 : imageUrl.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((smallDescription == null) ? 0 : smallDescription.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		return result;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Alien)) return false;
+
+		Alien alien = (Alien) o;
+
+		if (id != alien.id) return false;
+		if (!Objects.equals(name, alien.name)) return false;
+		if (!Objects.equals(smallDescription, alien.smallDescription))
 			return false;
-		}
-		if (getClass() != obj.getClass()) {
+		if (!Objects.equals(bigDescription, alien.bigDescription))
 			return false;
-		}
-		Alien other = (Alien) obj;
-		if (bigDescription == null) {
-			if (other.bigDescription != null) {
-				return false;
-			}
-		} else if (!bigDescription.equals(other.bigDescription)) {
-			return false;
-		}
-		if (id != other.id) {
-			return false;
-		}
-		if (imageUrl == null) {
-			if (other.imageUrl != null) {
-				return false;
-			}
-		} else if (!imageUrl.equals(other.imageUrl)) {
-			return false;
-		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		} else if (!name.equals(other.name)) {
-			return false;
-		}
-		if (smallDescription == null) {
-			if (other.smallDescription != null) {
-				return false;
-			}
-		} else if (!smallDescription.equals(other.smallDescription)) {
-			return false;
-		}
-		if (status != other.status) {
-			return false;
-		}
-		return true;
+		return Objects.equals(imageUrl, alien.imageUrl);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append("Alien [id=");
 		builder.append(id);
 		builder.append(", name=");
@@ -173,8 +98,6 @@ public class Alien {
 		builder.append(bigDescription);
 		builder.append(", imageUrl=");
 		builder.append(imageUrl);
-		builder.append(", status=");
-		builder.append(status);
 		builder.append("]");
 		return builder.toString();
 	}

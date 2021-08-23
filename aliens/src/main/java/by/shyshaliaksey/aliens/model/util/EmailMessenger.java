@@ -21,17 +21,17 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
 /**
- * Class {@code EmailMessanger} designed for preparing email messages and
+ * Class {@code EmailMessenger} designed for preparing email messages and
  * sending them
  * 
  * @author Aliaksey Shysh
  *
  */
-public class EmailMessanger {
+public class EmailMessenger {
 
 	private static final Logger logger = LogManager.getRootLogger();
 
-	private EmailMessanger() {
+	private EmailMessenger() {
 	}
 
 	public enum Function {
@@ -48,7 +48,7 @@ public class EmailMessanger {
 	 * @return {@code true} if message sent, {@code false} otherwise
 	 */
 	public static boolean sendEmail(String emailTo, String token, Function function, LocaleAttribute locale) {
-		Properties properties = EmailPropertiesReader.getPropeties();
+		Properties properties = EmailPropertiesReader.getProperties();
 		final String userKey = "mail.smtp.user";
 		final String passwordKey = "mail.smtp.password";
 		final String user = properties.getProperty(userKey);
@@ -80,32 +80,33 @@ public class EmailMessanger {
 	 * @param token    {@code String} token for generating message
 	 * @param function {@code Function} current function to execute
 	 * @param locale   {@code LocaleAttribute} current user locale
-	 * @throws MessagingException
+	 * @throws MessagingException if can not send message
 	 */
 	private static void prepareMessage(Message message, String token, Function function, LocaleAttribute locale)
 			throws MessagingException {
 		final String contentType = "text/html; charset=UTF-8";
 		message.setHeader("Content-Type", "text/plain; charset=UTF-8");
 		switch (function) {
-		case REGISTER:
-			String subjectRegister = locale.getLocalizedMessage(LocaleKey.EMAIL_SUBJECT_REGISTER.getValue());
-			String contentRegister = locale.getLocalizedMessage(LocaleKey.EMAIL_CONTENT_REGISTER.getValue());
-			message.setSubject(subjectRegister);
-			String registerLink = buildRegisterLink(token);
-			String registerContent = buildMessage(contentRegister, registerLink);
-			message.setContent(registerContent, contentType);
-			break;
-		case CHANGE_EMAIL:
-			String subjectChangeEmail = locale.getLocalizedMessage(LocaleKey.EMAIL_SUBJECT_CHANGE_EMAIL.getValue());
-			String contentChangeEmail = locale.getLocalizedMessage(LocaleKey.EMAIL_CONTENT_CHANGE_EMAIL.getValue());
-			message.setSubject(subjectChangeEmail);
-			String emailUpdateLink = buildEmailUpdateLink(token);
-			String emailUpdateContent = buildMessage(contentChangeEmail, emailUpdateLink);
-			message.setContent(emailUpdateContent, contentType);
-			break;
-		default:
-			logger.log(Level.ERROR, "Current function currently unsupported: {}", function.name());
-			throw new UnsupportedOperationException("Current function currently unsupported: " + function.name());
+			case REGISTER -> {
+				String subjectRegister = locale.getLocalizedMessage(LocaleKey.EMAIL_SUBJECT_REGISTER.getValue());
+				String contentRegister = locale.getLocalizedMessage(LocaleKey.EMAIL_CONTENT_REGISTER.getValue());
+				message.setSubject(subjectRegister);
+				String registerLink = buildRegisterLink(token);
+				String registerContent = buildMessage(contentRegister, registerLink);
+				message.setContent(registerContent, contentType);
+			}
+			case CHANGE_EMAIL -> {
+				String subjectChangeEmail = locale.getLocalizedMessage(LocaleKey.EMAIL_SUBJECT_CHANGE_EMAIL.getValue());
+				String contentChangeEmail = locale.getLocalizedMessage(LocaleKey.EMAIL_CONTENT_CHANGE_EMAIL.getValue());
+				message.setSubject(subjectChangeEmail);
+				String emailUpdateLink = buildEmailUpdateLink(token);
+				String emailUpdateContent = buildMessage(contentChangeEmail, emailUpdateLink);
+				message.setContent(emailUpdateContent, contentType);
+			}
+			default -> {
+				logger.log(Level.ERROR, "Current function currently unsupported: {}", function.name());
+				throw new UnsupportedOperationException("Current function currently unsupported: " + function.name());
+			}
 		}
 	}
 

@@ -17,10 +17,10 @@ public enum LocaleAttribute implements EnumValue {
 	LOCALIZATION_RU("Русский", new LocalizationReader(new Locale("ru", "RU")).getResourceBundle()),
 	LOCALIZATION_EN("English", new LocalizationReader(new Locale("en", "GB")).getResourceBundle());
 
-	private String value;
-	private ResourceBundle resourceBundle;
+	private final String value;
+	private final ResourceBundle resourceBundle;
 
-	private LocaleAttribute(String value, ResourceBundle resourceBundle) {
+	LocaleAttribute(String value, ResourceBundle resourceBundle) {
 		this.value = value;
 		this.resourceBundle = resourceBundle;
 	}

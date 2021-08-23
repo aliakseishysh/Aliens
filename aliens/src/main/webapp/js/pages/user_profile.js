@@ -107,7 +107,7 @@ function updateUserEmail() {
             );
         }
     });
-};
+}
 
 function updateUserLogin() {
     let data = {};
@@ -137,7 +137,7 @@ function updateUserLogin() {
             );
         }
     });
-};
+}
 
 function updateUserPassword() {
     let data = {};
@@ -171,7 +171,7 @@ function updateUserPassword() {
             );
         }
     });
-};
+}
 
 function updateUserImage(image) {
     let formData = new FormData();
@@ -189,8 +189,7 @@ function updateUserImage(image) {
         success: function (data, textStatus, jqXHR) {
             imageUpdateForm.setFeedback(jqXHR.responseJSON[IMAGE_STATUS], "");
             let imageContainer = document.getElementById("account-image");
-            let newImagePath = jqXHR.responseJSON[IMAGE_PATH];
-            imageContainer.src = newImagePath;
+            imageContainer.src = jqXHR.responseJSON[IMAGE_PATH];
         },
         error: function (jqXHR, textStatus, errorThrown) {
             changeLocationIfUndefined(jqXHR);
@@ -198,7 +197,7 @@ function updateUserImage(image) {
             imageUpdateForm.setFeedback(jqXHR.responseJSON[IMAGE_STATUS], jqXHR.responseJSON[IMAGE_FEEDBACK]);
         }
     });
-};
+}
 
 const userProfile = {
     updateUserEmail: updateUserEmail,
@@ -267,7 +266,7 @@ $(document).ready(function () {
     formUpdatePassword.addEventListener('submit', function(event) {
         passwordUpdateForm.removeValidation();
         let validationResult = passwordUpdateForm.validate();
-        if (!validationResult.some(element => element == false)) {
+        if (!validationResult.some(element => element === false)) {
             event.preventDefault();
             userProfile.updateUserPassword();
         } else {

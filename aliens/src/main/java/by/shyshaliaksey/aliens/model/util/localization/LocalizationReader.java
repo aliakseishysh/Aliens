@@ -16,8 +16,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class LocalizationReader {
 
-	private static Logger logger = LogManager.getRootLogger();
-	private ResourceBundle resourceBundle;
+	private static final Logger logger = LogManager.getRootLogger();
+	private final ResourceBundle resourceBundle;
 
 	public LocalizationReader(Locale locale) {
 		try {

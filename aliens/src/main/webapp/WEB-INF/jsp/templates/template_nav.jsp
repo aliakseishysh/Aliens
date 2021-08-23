@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <header class="site-header">
 	<nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
 		<div class="container">
@@ -23,7 +23,7 @@
 				
 				</div>
 				<div class="navbar-nav nav-item nav-link">
-					<div class="dropdown" id="nav-dropdawn-container">
+					<div class="dropdown" id="nav-dropdown-container">
 						  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						  		${CURRENT_LOCALIZATION_NAME}
 						  </button>

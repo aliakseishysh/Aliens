@@ -21,8 +21,7 @@ public class OpenSuggestAlienPageCommand implements Command {
 	@AllowedRoles({ Role.USER })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		Router router = new Router(StaticPath.PAGE_SUGGEST_ALIEN_JSP.getValue(), null, Type.FORWARD);
-		return router;
+		return new Router(StaticPath.PAGE_SUGGEST_ALIEN_JSP.getValue(), null, Type.FORWARD);
 	}
 
 }

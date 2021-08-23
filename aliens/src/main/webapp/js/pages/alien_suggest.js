@@ -111,7 +111,7 @@ function suggestNewAlien() {
             );
         }
     });
-};
+}
 
 function suggestNewAlienImage() {
     let formData = new FormData();
@@ -150,7 +150,7 @@ function suggestNewAlienImage() {
             );
         }
     });
-};
+}
 
 
 const suggestAlienPage = {
@@ -173,7 +173,7 @@ $(function () {
     formAlienSuggest.addEventListener('submit', function(event) {
         alienSuggestForm.removeValidationClasses();
         let validationResult = alienSuggestForm.validate();
-        if(!validationResult.some(element => element == false)) {
+        if(!validationResult.some(element => element === false)) {
             event.preventDefault();
             alienSuggestForm.setFeedbackInfo(true, true, true, "", "", "", 
                 STANDARD_ALIEN_NAME_FEEDBACK, STANDARD_ALIEN_SMALL_DESCRIPTION_FEEDBACK, STANDARD_ALIEN_FULL_DESCRIPTION_FEEDBACK

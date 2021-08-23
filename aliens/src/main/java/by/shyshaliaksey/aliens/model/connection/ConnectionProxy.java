@@ -30,7 +30,7 @@ class ConnectionProxy implements Connection {
 	/**
 	 * Connection to database
 	 */
-	private Connection connection;
+	private final Connection connection;
 
 	ConnectionProxy(Connection connection) {
 		this.connection = connection;
@@ -41,14 +41,14 @@ class ConnectionProxy implements Connection {
 	 * 
 	 * @see by.shyshaliaksey.aliens.model.connection.ConnectionPool
 	 */
-	public void close() throws SQLException {
+	public void close() {
 		ConnectionPool.getInstance().releaseConnection(this);
 	}
 
 	/**
 	 * Closes {@link #connection}
 	 * 
-	 * @throws SQLException
+	 * @throws SQLException if can not close connection
 	 */
 	public void reallyClose() throws SQLException {
 		connection.close();

@@ -24,11 +24,11 @@ public interface Command {
 	 *                 HTTP-specific functionality in sending a response. For
 	 *                 example, it has methods to access HTTP headers and cookies.
 	 *                 The servlet container creates an HttpServletResponse object
-	 *                 and passes it as an argument to theservlet's service methods
+	 *                 and passes it as an argument to the servlet's service methods
 	 *                 (doGet, doPost, etc).
 	 * @return Router to proceed forward/redirect/ajax response
 	 * @see Router
 	 */
-	public abstract Router execute(HttpServletRequest request, HttpServletResponse response);
+	Router execute(HttpServletRequest request, HttpServletResponse response);
 
 }

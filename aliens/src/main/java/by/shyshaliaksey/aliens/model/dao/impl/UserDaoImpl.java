@@ -9,9 +9,7 @@ import static by.shyshaliaksey.aliens.model.dao.ColumnName.USER_PASSWORD_HASH;
 import static by.shyshaliaksey.aliens.model.dao.ColumnName.USER_BANNED_TO_DATE;
 import static by.shyshaliaksey.aliens.model.dao.ColumnName.USER_IMAGE_URL;
 import static by.shyshaliaksey.aliens.model.dao.ColumnName.USER_ROLE_TYPE;
-import static by.shyshaliaksey.aliens.model.dao.ColumnName.TOKEN_ID;
 import static by.shyshaliaksey.aliens.model.dao.ColumnName.TOKEN_EMAIL;
-import static by.shyshaliaksey.aliens.model.dao.ColumnName.TOKEN;
 import static by.shyshaliaksey.aliens.model.dao.ColumnName.TOKEN_EXPIRATION;
 import static by.shyshaliaksey.aliens.model.dao.ColumnName.TOKEN_NEW_EMAIL;
 
@@ -271,7 +269,7 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public boolean registerUser(String email, String login, String passwordHashHex, String saltHex, String defaultImage,
 			Role defaultRole) throws DaoException {
-		int rowsAdded = 0;
+		int rowsAdded;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(REGISTER)) {
 			statement.setString(1, email);
@@ -290,24 +288,22 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public boolean updateUserEmail(String email, String newEmail) throws DaoException {
-		int result = 0;
+	public void updateUserEmail(String email, String newEmail) throws DaoException {
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(UPDATE_EMAIL_BY_EMAIL)) {
 			statement.setString(1, newEmail);
 			statement.setString(2, email);
-			result = statement.executeUpdate();
+			statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", UPDATE_EMAIL_BY_EMAIL, e.getMessage(),
 					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + UPDATE_EMAIL_BY_EMAIL, e);
 		}
-		return result == 1;
 	}
 
 	@Override
 	public boolean updateUserLogin(String login, int userId) throws DaoException {
-		int result = 0;
+		int result;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(UPDATE_LOGIN)) {
 			statement.setString(1, login);
@@ -323,7 +319,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public boolean updateUserPassword(String hashedPassword, int userId) throws DaoException {
-		int result = 0;
+		int result;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(UPDATE_PASSWORD)) {
 			statement.setString(1, hashedPassword);
@@ -339,7 +335,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public boolean updateProfileImage(String newFileName, int userId) throws DaoException {
-		int result = 0;
+		int result;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(UPDATE_PROFILE_IMAGE)) {
 			statement.setString(1, newFileName);
@@ -355,7 +351,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public boolean banUser(String userLogin, String banDate) throws DaoException {
-		int result = 0;
+		int result;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(BAN_UNBAN)) {
 			statement.setString(1, User.Status.BANNED.name());
@@ -373,7 +369,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public boolean unbanUser(String userLogin, String unbanDate) throws DaoException {
-		int result = 0;
+		int result;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(BAN_UNBAN)) {
 			statement.setString(1, User.Status.NORMAL.name());
@@ -391,7 +387,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public boolean promoteUser(String userLogin) throws DaoException {
-		int result = 0;
+		int result;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(PROMOTE_DEMOTE)) {
 			statement.setString(1, Role.ADMIN.getValue());
@@ -407,7 +403,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public boolean demoteAdmin(String adminLogin) throws DaoException {
-		int result = 0;
+		int result;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(PROMOTE_DEMOTE)) {
 			statement.setString(1, Role.USER.getValue());
@@ -423,7 +419,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public boolean addNewComment(int userId, int alienId, String newComment) throws DaoException {
-		int rowsAdded = 0;
+		int rowsAdded;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(ADD_NEW_COMMENT)) {
 			statement.setInt(1, userId);
@@ -441,7 +437,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public boolean deleteComment(int commentId) throws DaoException {
-		int result = 0;
+		int result;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(CHANGE_COMMENT_STATUS_ADMIN)) {
 			statement.setString(1, Comment.Status.DELETED.name());
@@ -457,7 +453,7 @@ public class UserDaoImpl implements UserDao {
 
 	@Override
 	public boolean deleteComment(int commentId, int userId) throws DaoException {
-		int result = 0;
+		int result;
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(CHANGE_COMMENT_STATUS_USER)) {
 			statement.setString(1, Comment.Status.DELETED.name());
@@ -473,26 +469,23 @@ public class UserDaoImpl implements UserDao {
 	}
 
 	@Override
-	public boolean addNewToken(String email, String token, String expirationDate) throws DaoException {
-		int rowsAdded = 0;
+	public void addNewToken(String email, String token, String expirationDate) throws DaoException {
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(ADD_NEW_TOKEN)) {
 			statement.setString(1, email);
 			statement.setString(2, token);
 			statement.setString(3, expirationDate);
 			statement.setString(4, Token.Status.NORMAL.name());
-			rowsAdded = statement.executeUpdate();
+			statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", ADD_NEW_TOKEN, e.getMessage(),
 					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + ADD_NEW_TOKEN, e);
 		}
-		return rowsAdded == 1;
-	}
+    }
 
 	@Override
-	public boolean addNewToken(String email, String token, String expirationDate, String newEmail) throws DaoException {
-		int rowsAdded = 0;
+	public void addNewToken(String email, String token, String expirationDate, String newEmail) throws DaoException {
 		try (Connection connection = ConnectionPool.getInstance().getConnection();
 				PreparedStatement statement = connection.prepareStatement(ADD_NEW_UPDATE_EMAIL_TOKEN)) {
 			statement.setString(1, email);
@@ -500,18 +493,17 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(3, expirationDate);
 			statement.setString(4, Token.Status.NORMAL.name());
 			statement.setString(5, newEmail);
-			rowsAdded = statement.executeUpdate();
+			statement.executeUpdate();
 		} catch (SQLException e) {
 			logger.log(Level.ERROR, "Can not proceed `{}` request: {} {}", ADD_NEW_UPDATE_EMAIL_TOKEN, e.getMessage(),
 					e.getStackTrace());
 			throw new DaoException("Can not proceed request: " + ADD_NEW_UPDATE_EMAIL_TOKEN, e);
 		}
-		return rowsAdded == 1;
 	}
-	
+
+	@SuppressWarnings("ThrowFromFinallyBlock")
 	@Override
-	public boolean activateAccountAndSetTokenExpired(String email, String token) throws DaoException {
-		boolean result = false;
+	public void activateAccountAndSetTokenExpired(String email, String token) throws DaoException {
 		final Connection connection = ConnectionPool.getInstance().getConnection();
 		try (PreparedStatement updateStatus = connection.prepareStatement(CHANGE_USER_STATUS);
 				PreparedStatement expireToken = connection.prepareStatement(SET_TOKEN_STATUS)) {
@@ -526,7 +518,6 @@ public class UserDaoImpl implements UserDao {
 				int addReflectedRows = expireToken.executeUpdate();
 				if (addReflectedRows == 1) {
 					connection.commit();
-					result = true;
 				} else {
 					connection.rollback();
 				}
@@ -553,7 +544,6 @@ public class UserDaoImpl implements UserDao {
 						"Can not proceed request: " + CHANGE_USER_STATUS + " " + SET_TOKEN_STATUS + " " + e.getMessage(), e);
 			}
 		}
-		return result;
 	}
 
 	@Override
@@ -565,12 +555,10 @@ public class UserDaoImpl implements UserDao {
 			statement.setString(2, status.name());
 			ResultSet resultSet = statement.executeQuery();
 			if (resultSet.next()) {
-				int tokenId = resultSet.getInt(TOKEN_ID);
 				String tokenEmail = resultSet.getString(TOKEN_EMAIL);
-				String tokenContent = resultSet.getString(TOKEN);
 				String tokenExpiration = resultSet.getString(TOKEN_EXPIRATION);
 				String tokenNewEmail = resultSet.getString(TOKEN_NEW_EMAIL);
-				Token token = new Token(tokenId, tokenEmail, tokenContent, status, tokenExpiration, tokenNewEmail);
+				Token token = new Token(tokenEmail, tokenExpiration, tokenNewEmail);
 				result = Optional.of(token);
 			}
 		} catch (SQLException e) {

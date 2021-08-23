@@ -29,9 +29,9 @@ public enum RequestParameter implements EnumValue {
 	TOKEN("token"), 
 	LOCALE("locale");
 
-	private String value;
+	private final String value;
 
-	private RequestParameter(String value) {
+	RequestParameter(String value) {
 		this.value = value;
 	}
 

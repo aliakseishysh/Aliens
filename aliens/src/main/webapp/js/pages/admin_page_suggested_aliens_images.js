@@ -31,29 +31,23 @@ function sendPost(data, url, div) {
     });
 }
 
+function setApproveDeclineEvent(button, func) {
+    button.addEventListener('click', function(event) {
+        let alienImageUrl = button.parentElement.parentElement.children[1].children[0].children[0].getAttribute("src");
+        let urlArray = alienImageUrl.split("/");
+        alienImageUrl = urlArray[urlArray.length - 1];
+        let data = {};
+        data[IMAGE] = alienImageUrl;
+        sendPost(data, func, button.parentElement.parentElement.parentElement.parentElement);
+    })
+}
+
 $(document).ready(function () {
-
     buttonsApprove.forEach(button => 
-        button.addEventListener('click', function(event) {
-            let alienImageUrl = button.parentElement.parentElement.children[1].children[0].children[0].getAttribute("src");
-            let urlArray = alienImageUrl.split("/");
-            alienImageUrl = urlArray[urlArray.length - 1];
-            let data = {};
-            data[IMAGE] = alienImageUrl;
-            sendPost(data, approveUrl, button.parentElement.parentElement.parentElement.parentElement);
-        })
+        setApproveDeclineEvent(button, approveUrl)
     );
-
-    buttonsDecline.forEach(button => 
-        button.addEventListener('click', function(event) {
-            let alienImageUrl = button.parentElement.parentElement.children[1].children[0].children[0].getAttribute("src");
-            let urlArray = alienImageUrl.split("/");
-            alienImageUrl = urlArray[urlArray.length - 1];
-            let data = {};
-            data[IMAGE] = alienImageUrl;
-            sendPost(data, declineUrl, button.parentElement.parentElement.parentElement.parentElement);
-        }
-    ));
-
+    buttonsDecline.forEach(button =>
+        setApproveDeclineEvent(button, declineUrl)
+    );
 });
 

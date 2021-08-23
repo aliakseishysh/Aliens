@@ -29,7 +29,6 @@ import by.shyshaliaksey.aliens.controller.command.Router;
 public class Controller extends HttpServlet {
 
 	private static final Logger logger = LogManager.getRootLogger();
-	private static final long serialVersionUID = -6656382914151361780L;
 
 	public Controller() {
 		super();
@@ -59,7 +58,7 @@ public class Controller extends HttpServlet {
 	 *                 HTTP-specific functionality in sending a response. For
 	 *                 example, it has methods to access HTTP headers and cookies.
 	 *                 The servlet container creates an HttpServletResponse object
-	 *                 and passes it as an argument to theservlet's service methods
+	 *                 and passes it as an argument to the servlet's service methods
 	 *                 (doGet, doPost, etc).
 	 * @see CommandDefiner
 	 * @see CommandAccessChecker
@@ -68,27 +67,22 @@ public class Controller extends HttpServlet {
 			throws IOException, ServletException {
 		String commandName = request.getParameter(RequestParameter.COMMAND.getValue());
 		Command command = CommandDefiner.defineCommand(commandName);
-		Map<CommandAccessChecker.MapKey, Object> isUserHasPremission = CommandAccessChecker.isUserHasPermission(command,
+		Map<CommandAccessChecker.MapKey, Object> isUserHasPermission = CommandAccessChecker.isUserHasPermission(command,
 				request, response);
 		Router router;
-		if (isUserHasPremission.get(CommandAccessChecker.MapKey.RESULT) == Boolean.TRUE) {
+		if (isUserHasPermission.get(CommandAccessChecker.MapKey.RESULT) == Boolean.TRUE) {
 			router = command.execute(request, response);
 		} else {
-			router = (Router) isUserHasPremission.get(CommandAccessChecker.MapKey.ROUTER);
+			router = (Router) isUserHasPermission.get(CommandAccessChecker.MapKey.ROUTER);
 		}
 		switch (router.getRouterType()) {
-		case AJAX_RESPONSE:
-			response.getWriter().write(router.getJsonResponse());
-			break;
-		case FORWARD:
-			request.getRequestDispatcher(router.getPageToGo()).forward(request, response);
-			break;
-		case REDIRECT:
-			response.sendRedirect(request.getContextPath() + router.getPageToGo());
-			break;
-		default:
-			logger.log(Level.ERROR, "Invalid RouterType value: {}", commandName);
-			request.getRequestDispatcher(ERROR_PAGE_500_JSP.getValue()).forward(request, response);
+			case AJAX_RESPONSE -> response.getWriter().write(router.getJsonResponse());
+			case FORWARD -> request.getRequestDispatcher(router.getPageToGo()).forward(request, response);
+			case REDIRECT -> response.sendRedirect(request.getContextPath() + router.getPageToGo());
+			default -> {
+				logger.log(Level.ERROR, "Invalid RouterType value: {}", commandName);
+				request.getRequestDispatcher(ERROR_PAGE_500_JSP.getValue()).forward(request, response);
+			}
 		}
 	}
 

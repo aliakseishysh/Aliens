@@ -23,7 +23,7 @@ public enum StaticPath implements EnumValue {
 	PAGE_REGISTER_JSP("/WEB-INF/jsp/page_register.jsp"),
 	PAGE_SUGGEST_ALIEN_JSP("/WEB-INF/jsp/page_user_suggest_alien.jsp"),
 	PAGE_ADMIN_SUGGESTED_ALIENS_JSP("/WEB-INF/jsp/page_admin_suggested_aliens.jsp"),
-	PAGE_ADMIN_SUGGESTED_ALIENS_INAGES_JSP("/WEB-INF/jsp/page_admin_suggested_aliens_images.jsp"),
+	PAGE_ADMIN_SUGGESTED_ALIENS_IMAGES_JSP("/WEB-INF/jsp/page_admin_suggested_aliens_images.jsp"),
 	// Error Pages
 	ERROR_PAGE_400_JSP("/WEB-INF/jsp/error_pages/error_page_400.jsp"),
 	ERROR_PAGE_403_JSP("/WEB-INF/jsp/error_pages/error_page_403.jsp"),
@@ -59,9 +59,9 @@ public enum StaticPath implements EnumValue {
 	FORM_REGISTER("/WEB-INF/jsp/templates/forms/form_register.jsp"),
 	FORM_NEW_COMMENT("/WEB-INF/jsp/templates/forms/form_new_comment.jsp");
 
-	private String value;
+	private final String value;
 
-	private StaticPath(String value) {
+	StaticPath(String value) {
 		this.value = value;
 	}
 

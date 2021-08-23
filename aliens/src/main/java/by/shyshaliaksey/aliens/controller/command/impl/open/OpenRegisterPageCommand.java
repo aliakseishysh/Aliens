@@ -20,8 +20,7 @@ public class OpenRegisterPageCommand implements Command {
 	@AllowedRoles({ Role.GUEST })
 	@Override
 	public Router execute(HttpServletRequest request, HttpServletResponse response) {
-		Router router = new Router(StaticPath.PAGE_REGISTER_JSP.getValue(), null, Type.FORWARD);
-		return router;
+		return new Router(StaticPath.PAGE_REGISTER_JSP.getValue(), null, Type.FORWARD);
 
 	}
 

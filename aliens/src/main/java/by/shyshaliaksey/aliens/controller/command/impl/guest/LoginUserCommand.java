@@ -30,8 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * model layer.
  * 
  * @author Aliaksey Shysh
- * 
- * @see UserService#userLogIn(String, String)
+ *
  * 
  */
 public class LoginUserCommand implements Command {
@@ -46,7 +45,7 @@ public class LoginUserCommand implements Command {
 		try {
 			String email = request.getParameter(RequestParameter.EMAIL.getValue());
 			String password = request.getParameter(RequestParameter.PASSWORD.getValue());
-			User user = null;
+			User user;
 			UserService userService = ServiceProvider.getInstance().getUserService();
 			result = userService.authorizeUser(email, password);
 
@@ -63,7 +62,7 @@ public class LoginUserCommand implements Command {
 					.toString();
 			if (Boolean.TRUE.equals(result.get(Feedback.Key.EMAIL_STATUS))
 					&& Boolean.TRUE.equals(result.get(Feedback.Key.PASSWORD_STATUS))) {
-				user = userService.findUserByEmail(email).get();
+				user = userService.findUserByEmail(email).orElseThrow(() -> new ServiceException("No such user"));
 				request.getSession(true).setAttribute(RequestAttribute.CURRENT_USER.getValue(), user);
 				request.getSession().setAttribute(RequestAttribute.LOGIN_NAME.getValue(), user.getLogin());
 				request.getSession().setAttribute(RequestAttribute.CURRENT_USER_ROLE.getValue(),
@@ -76,8 +75,8 @@ public class LoginUserCommand implements Command {
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException e) {
-			response.setStatus(500);
-			logger.log(Level.ERROR, "Exception occured while user logining: {} {}", e.getMessage(), e.getStackTrace());
+			response.setStatus(Feedback.Code.INTERNAL_SERVER_ERROR.getStatusCode());
+			logger.log(Level.ERROR, "Exception occurred while user logging: {} {}", e.getMessage(), e.getStackTrace());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

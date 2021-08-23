@@ -28,9 +28,7 @@ import jakarta.servlet.http.HttpServletResponse;
  * system through model layer.
  * 
  * @author Aliaksey Shysh
- * 
- * @see UserService#registerUser(String, String, String, String, String, Role,
- *      String, LocaleAttribute)
+ *
  * 
  */
 public class RegisterUserCommand implements Command {
@@ -70,8 +68,8 @@ public class RegisterUserCommand implements Command {
 			response.setStatus(((Feedback.Code) result.get(Feedback.Key.RESPONSE_CODE)).getStatusCode());
 			router = new Router(null, jsonResponse, Type.AJAX_RESPONSE);
 		} catch (ServiceException e) {
-			response.setStatus(500);
-			logger.log(Level.ERROR, "Exception occured while register: {}", e.getMessage());
+			response.setStatus(Feedback.Code.INTERNAL_SERVER_ERROR.getStatusCode());
+			logger.log(Level.ERROR, "Exception occurred while register: {}", e.getMessage());
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
 		}
 		return router;

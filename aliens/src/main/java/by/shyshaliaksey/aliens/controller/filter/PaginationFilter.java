@@ -38,36 +38,34 @@ public class PaginationFilter implements Filter {
 			CommandDefiner commandDefiner = CommandDefiner.fromString(commandString);
 			AlienService alienService = ServiceProvider.getInstance().getAlienService();
 			int requestedPage = 1;
-			double aliensCount = 0;
+			double aliensCount;
 			int pagesCount = 0;
 			if (requestedPageString != null) {
 				requestedPage = Integer.parseInt(requestedPageString);
 			}
 			switch (commandDefiner) {
-			case OPEN_HOME_PAGE:
-				aliensCount = alienService.findAlienCount();
-				pagesCount = (int) Math.ceil(aliensCount / PaginationConfiguration.HOME_ALIENS_PER_PAGE);
-				setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
-				break;
-			case OPEN_ALIEN_PROFILE_PAGE:
-				int alienId = Integer.parseInt(request.getParameter(RequestParameter.ALIEN_ID.getValue()));
-				double commentsCount = alienService.findAlienCommentsCount(alienId);
-				pagesCount = (int) Math.ceil(commentsCount / PaginationConfiguration.ALIEN_PROFILE_COMMENTS_PER_PAGE);
-				setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
-				break;
-			case OPEN_ADMIN_SUGGESTED_ALIENS_PAGE:
-				aliensCount = alienService.findUnapprovedAlienCount();
-				pagesCount = (int) Math.ceil(aliensCount / PaginationConfiguration.ADMIN_SUGGESTED_ALIENS_PER_PAGE);
-				setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
-				break;
-			case OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE:
-				double imagesCount = alienService.findUnapprovedAliensImagesCount();
-				pagesCount = (int) Math.ceil(imagesCount / PaginationConfiguration.ADMIN_SUGGESTED_ALIENS_IMAGES_PER_PAGE);
-				setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
-				break;
-			default:
-				setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
-
+				case OPEN_HOME_PAGE -> {
+					aliensCount = alienService.findAlienCount();
+					pagesCount = (int) Math.ceil(aliensCount / PaginationConfiguration.HOME_ALIENS_PER_PAGE);
+					setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
+				}
+				case OPEN_ALIEN_PROFILE_PAGE -> {
+					int alienId = Integer.parseInt(request.getParameter(RequestParameter.ALIEN_ID.getValue()));
+					double commentsCount = alienService.findAlienCommentsCount(alienId);
+					pagesCount = (int) Math.ceil(commentsCount / PaginationConfiguration.ALIEN_PROFILE_COMMENTS_PER_PAGE);
+					setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
+				}
+				case OPEN_ADMIN_SUGGESTED_ALIENS_PAGE -> {
+					aliensCount = alienService.findUnapprovedAlienCount();
+					pagesCount = (int) Math.ceil(aliensCount / PaginationConfiguration.ADMIN_SUGGESTED_ALIENS_PER_PAGE);
+					setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
+				}
+				case OPEN_ADMIN_SUGGESTED_ALIENS_IMAGES_PAGE -> {
+					double imagesCount = alienService.findUnapprovedAliensImagesCount();
+					pagesCount = (int) Math.ceil(imagesCount / PaginationConfiguration.ADMIN_SUGGESTED_ALIENS_IMAGES_PER_PAGE);
+					setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
+				}
+				default -> setAttributesOrForward(request, response, chain, pagesCount, requestedPage);
 			}
 		} catch (NumberFormatException | ServiceException e) {
 			request.getRequestDispatcher(StaticPath.ERROR_PAGE_400_JSP.getValue()).forward(request, response);

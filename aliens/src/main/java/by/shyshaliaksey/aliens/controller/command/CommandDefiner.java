@@ -81,7 +81,7 @@ public enum CommandDefiner implements EnumValue {
 	UPDATE_USER_IMAGE("update-user-image", new UpdateUserImageCommand()),
 	UPDATE_USER_PASSWORD("update-password", new UpdateUserPasswordCommand()),
 	FIND_USER_RATE("update-user-rate", new FindUserRateCommand()), BAN_USER("ban-user", new BanUserCommand()),
-	UNBAN_USER("unban-user", new UnbanUserCommand()), PROMOTE_USER("pronote-user", new PromoteUserCommand()),
+	UNBAN_USER("unban-user", new UnbanUserCommand()), PROMOTE_USER("promote-user", new PromoteUserCommand()),
 	DEMOTE_ADMIN("denote-admin", new DemoteAdminCommand()),
 	UPDATE_ALIEN_INFO("update-alien-info", new UpdateAlienInfoCommand()),
 	UPDATE_ALIEN_IMAGE("update-alien-image", new UpdateAlienImageCommand()),
@@ -89,10 +89,10 @@ public enum CommandDefiner implements EnumValue {
 	ADD_NEW_COMMENT("add-new-comment", new AddNewCommentCommand()),
 	DELETE_COMMENT("delete-comment", new DeleteCommentCommand());
 
-	private String value;
-	private Command command;
+	private final String value;
+	private final Command command;
 
-	private CommandDefiner(String value, Command command) {
+	CommandDefiner(String value, Command command) {
 		this.value = value;
 		this.command = command;
 	}
@@ -114,8 +114,7 @@ public enum CommandDefiner implements EnumValue {
 	 */
 	public static Command defineCommand(String commandName) {
 		CommandDefiner commandDefiner = CommandDefiner.fromString(commandName);
-		Command command = commandDefiner.getCommand();
-		return command;
+		return commandDefiner.getCommand();
 	}
 
 	/**

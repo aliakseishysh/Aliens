@@ -10,7 +10,7 @@ public class Router {
 	 *	Enum defining types of response answer
 	 */
 	public enum Type {
-		AJAX_RESPONSE, FORWARD, REDIRECT;
+		AJAX_RESPONSE, FORWARD, REDIRECT
 	}
 
 	private final String pageToGo;
@@ -22,7 +22,6 @@ public class Router {
 	 * @param pageToGo contains information about url address to send response (may be null if {@link Type#AJAX_RESPONSE})
 	 * @param jsonResponse contains response to ajax request (may be null if server error occurred) 
 	 * @param type contains information about current response type 
-	 * @see Controller
 	 */
 	public Router(String pageToGo, String jsonResponse, Type type) {
 		this.pageToGo = pageToGo;

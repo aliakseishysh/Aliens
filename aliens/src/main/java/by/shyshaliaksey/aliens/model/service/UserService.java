@@ -32,7 +32,7 @@ public interface UserService {
 	 * @param password {@code String} user password obtained from request
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if user service exception occurred
 	 */
 	Map<Feedback.Key, Object> authorizeUser(String email, String password) throws ServiceException;
 
@@ -41,7 +41,7 @@ public interface UserService {
 	 * 
 	 * @param email {@code String} user email obtained from request
 	 * @return {@code Optional<User>} user from database
-	 * @throws ServiceException
+	 * @throws ServiceException if user service exception occurred
 	 */
 	Optional<User> findUserByEmail(String email) throws ServiceException;
 
@@ -63,7 +63,7 @@ public interface UserService {
 	 *                       user session
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if user service exception occurred
 	 */
 	Map<Feedback.Key, Object> registerUser(String email, String login, String password, String passwordRepeat,
 			LocaleAttribute locale) throws ServiceException;
@@ -73,7 +73,7 @@ public interface UserService {
 	 * 
 	 * @param login {@code String} user login obtained from request
 	 * @return {@code Optional<User>} user from database
-	 * @throws ServiceException
+	 * @throws ServiceException if user service exception occurred
 	 */
 	Optional<User> findByLogin(String login) throws ServiceException;
 
@@ -87,13 +87,12 @@ public interface UserService {
 	 * 
 	 * @param email    {@code String} current user email obtained from session
 	 * @param newEmail {@code String} requested user email obtained from request
-	 * @param userId   {@code int} current user id obtained from session
 	 * @param locale   {@code String} current user locale obtained from session
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if user service exception occurred
 	 */
-	Map<Feedback.Key, Object> makeRequestForNewEmail(String email, String newEmail, int userId, LocaleAttribute locale)
+	Map<Feedback.Key, Object> makeRequestForNewEmail(String email, String newEmail, LocaleAttribute locale)
 			throws ServiceException;
 
 	/**
@@ -107,7 +106,7 @@ public interface UserService {
 	 * @param userId   {@code int} user id obtained from session
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if user service exception occurred
 	 */
 	Map<Feedback.Key, Object> changeLogin(String login, String newLogin, int userId) throws ServiceException;
 
@@ -124,7 +123,7 @@ public interface UserService {
 	 * @param userId          {@code int} user id obtained from current user session
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if user service exception occurred
 	 */
 	Map<Feedback.Key, Object> changePassword(String password, String passwordConfirm, int userId)
 			throws ServiceException;
@@ -132,7 +131,7 @@ public interface UserService {
 	/**
 	 * Updates user profile image.
 	 * 
-	 * Calls method to validate form input. Creates new image name and uploades it
+	 * Calls method to validate form input. Creates new image name and uploads it
 	 * to server. Then makes a call to database in an attempt update user image
 	 * profile url. Returns feedback back to implementer of
 	 * {@link by.shyshaliaksey.aliens.controller.command.Command} interface.
@@ -144,7 +143,7 @@ public interface UserService {
 	 *                             session
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if user service exception occurred
 	 */
 	Map<Feedback.Key, Object> updateImage(String serverDeploymentPath, Part userImage, int userId)
 			throws ServiceException;
@@ -161,7 +160,7 @@ public interface UserService {
 	 * @param newComment    {@code String} new comment to add
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if user service exception occurred
 	 */
 	Map<Feedback.Key, Object> addNewComment(int currentUserId, String alienIdString, String newComment)
 			throws ServiceException;
@@ -175,7 +174,7 @@ public interface UserService {
 	 * @param commentIdString {@code String} comment id obtained from request
 	 * @param currentUser     {@code User} current user obtained from session
 	 * @return {@code true} if deleting was successful, otherwise {@code false}
-	 * @throws ServiceException
+	 * @throws ServiceException if user service exception occurred
 	 */
 	boolean deleteComment(String commentIdString, User currentUser) throws ServiceException;
 
@@ -195,7 +194,7 @@ public interface UserService {
 	 * @param serverDeploymentPath  {@code String} path to server deployment
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if user service exception occurred
 	 */
 	Map<Feedback.Key, Object> suggestNewAlien(String alienName, String alienSmallDescription,
 			String alienFullDescription, Part alienImage, String serverDeploymentPath) throws ServiceException;
@@ -212,7 +211,7 @@ public interface UserService {
 	 * @param serverDeploymentPath {@code String} path to server deployment
 	 * @return {@code Map<Feedback.Key, Object>} that contains information about
 	 *         status code and feedback keys for future localization.
-	 * @throws ServiceException
+	 * @throws ServiceException if user service exception occurred
 	 */
 	Map<Feedback.Key, Object> suggestNewAlienImage(String alienName, Part alienImage, String serverDeploymentPath)
 			throws ServiceException;
@@ -225,11 +224,9 @@ public interface UserService {
 	 * 
 	 * @param tokenRequested {@code String} token obtained from request (from user
 	 *                       mail)
-	 * @return {@code true} if email updating was successful, otherwise
-	 *         {@code false}
-	 * @throws ServiceException
+	 * @throws ServiceException if user service exception occurred
 	 */
-	boolean setNewEmail(String tokenRequested) throws ServiceException;
+	void setNewEmail(String tokenRequested) throws ServiceException;
 
 	/**
 	 * Activates user account by token.
@@ -239,10 +236,8 @@ public interface UserService {
 	 * 
 	 * @param tokenRequested {@code String} token obtained from request (from user
 	 *                       mail)
-	 * @return {@code true} if account activating was successful, otherwise
-	 *         {@code false}
-	 * @throws ServiceException
+	 * @throws ServiceException if user service exception occurred
 	 */
-	boolean activateAccount(String tokenRequested) throws ServiceException;
+	void activateAccount(String tokenRequested) throws ServiceException;
 
 }

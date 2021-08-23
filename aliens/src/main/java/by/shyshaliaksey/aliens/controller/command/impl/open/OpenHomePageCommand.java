@@ -43,7 +43,7 @@ public class OpenHomePageCommand implements Command {
 			router = new Router(StaticPath.PAGE_HOME_JSP.getValue(), null, Type.FORWARD);
 		} catch (ServiceException e) {
 			router = new Router(StaticPath.ERROR_PAGE_500_JSP.getValue(), null, Type.FORWARD);
-			logger.log(Level.ERROR, "Exception occured while opening {}: {}", StaticPath.PAGE_HOME_JSP, e.getMessage());
+			logger.log(Level.ERROR, "Exception occurred while opening {}: {}", StaticPath.PAGE_HOME_JSP, e.getMessage());
 		}
 		return router;
 	}
